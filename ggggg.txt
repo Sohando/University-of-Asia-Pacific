@@ -1,0 +1,116 @@
+processes=()
+blocks=()
+
+p=0
+b=0
+
+function read_values {
+	for ((i = 0; i < $p; ++i))
+	do 
+		printf "Enter process %d: " `expr $i + 1`
+		read processes[$i]
+	done
+	printf "\n"
+
+	for ((i = 0; i < $b; ++i))
+	do 
+		printf "Enter block %d: " `expr $i + 1`
+		read blocks[$i]
+		
+	done
+	printf "\n"
+
+	printf "Processes: "
+	for ((i = 0; i < $p; ++i))
+	do 
+		printf "%d " ${processes[$i]} 
+	done
+	printf "\n"
+
+	printf "Blocks: "
+	for ((i = 0; i < $b; ++i))
+	do 
+		printf "%d " ${blocks[$i]}
+	done
+	printf "\n"
+	
+}
+function first_fit {	
+	for ((i = 0; i < p; ++i))
+	do 
+		taken=0
+		for ((j = 0; j < b; ++j))
+		do
+			if (( ${processes[$i]} <= ${blocks[$j]} ))
+			then	
+				taken=1
+				echo "Process " $i " in Block" $j
+				(( blocks[$j] = ${blocks[$j]} - ${processes[$i]} ))
+				break
+			fi
+		done
+		if ((!taken))
+		then
+			echo "Process " $i " not allocated"
+		fi
+	done
+}
+
+function best_fit {
+	for ((i = 0; i < p; ++i)) 
+	do
+		max=10000
+		idx=-1
+		for ((j = 0; j < b; ++j))
+		do	
+			if (( ${processes[$i]} <= ${blocks[$j]} && ${blocks[$j]} - ${processes[$i]} < max ))
+			then	
+				max=$((${blocks[$j]} - ${processes[$i]}))
+				idx=$j
+			fi
+		done
+		if (( idx != -1))
+		then
+			echo "Process " $i " in Block" $idx
+			(( blocks[$idx] = ${blocks[$idx]} - ${processes[$i]} ))
+		else
+			echo "Process " $i " not allocated"
+		fi
+	done 	
+}
+
+function worst_fit {
+	for ((i = 0; i < p; ++i)) 
+	do
+		min=-10000
+		idx=-1
+		for ((j = 0; j < b; ++j))
+		do	
+			if (( ${processes[$i]} <= ${blocks[$j]} && ${blocks[$j]} - ${processes[$i]} > min ))
+			then	
+				min=$((${blocks[$j]} - ${processes[$i]}))
+				idx=$j
+			fi
+		done
+		if (( idx != -1))
+		then
+			echo "Process " $i " in Block" $idx
+			(( blocks[$idx] = ${blocks[$idx]} - ${processes[$i]} ))
+		else
+			echo "Process " $i " not allocated"
+		fi
+	done 	
+}
+function main {
+	printf "Enter Number of process: "
+	read p
+	printf "Enter Number of Blocks: "
+	read b
+
+	read_values 
+	# first_fit
+	# best_fit
+	worst_fit
+}
+
+main
