@@ -1,0 +1,29 @@
+int main(void)
+{
+/*Just checking in
+wheth, the comment section
+works or not...1 */
+int a,b,c=1.2.34.890.234;
+char d,e,f;
+float g,h,i;
+double ab,cd,ef;
+a=115;
+d='t';
+e='\\';
+f='adr';
+f='\"';
+g=4.23567;
+//This is just a simple comment...2
+ef=6.89E-10;
+ab=314789E+10;
+cd=345E90;
+if(a<=b&&b==c)
+{print('\0');
+g=9.45.78.12;
+ed=145E23.6;}
+int _aa, _a1, bcd1, def_2;
+int 12dfr,120efgh;
+##Testing
+return -1;
+//end of code f='adrgg'
+}

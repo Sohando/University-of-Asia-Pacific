@@ -1,0 +1,151 @@
+Line 1:            <INT>
+Line 1:            <ID, main>
+Line 1:            <PAREN, (>
+Line 1:            <VOID>
+Line 1:            <PAREN, )>
+
+Line 2:            <CURL, {>
+
+Line 3:            COMMENT /*Just checking in
+wheth, the comment section
+works or not...1 */
+
+Line 4:            <INT>
+Line 4:            <ID, a>
+Line 4:            <COMMA, ,>
+Line 4:            <ID, b>
+Line 4:            <COMMA, ,>
+Line 4:            <ID, c>
+Line 4:            <ASSIGNOP, =>
+Line 4:            L E X I C A L ERROR 1.2.34.890.234
+Line 4:            <SEMICOLON, ;>
+
+Line 5:            <CHAR>
+Line 5:            <ID, d>
+Line 5:            <COMMA, ,>
+Line 5:            <ID, e>
+Line 5:            <COMMA, ,>
+Line 5:            <ID, f>
+Line 5:            <SEMICOLON, ;>
+
+Line 6:            <FLOAT>
+Line 6:            <ID, g>
+Line 6:            <COMMA, ,>
+Line 6:            <ID, h>
+Line 6:            <COMMA, ,>
+Line 6:            <ID, i>
+Line 6:            <SEMICOLON, ;>
+
+Line 7:            <DOUBLE>
+Line 7:            <ID, ab>
+Line 7:            <COMMA, ,>
+Line 7:            <ID, cd>
+Line 7:            <COMMA, ,>
+Line 7:            <ID, ef>
+Line 7:            <SEMICOLON, ;>
+
+Line 8:            <ID, a>
+Line 8:            <ASSIGNOP, =>
+Line 8:            <CONST_INT, 115>
+Line 8:            <SEMICOLON, ;>
+
+Line 9:            <ID, d>
+Line 9:            <ASSIGNOP, =>
+Line 9:            <CONST_CHAR, 't'>
+Line 9:            <SEMICOLON, ;>
+
+Line 10:            <ID, e>
+Line 10:            <ASSIGNOP, =>
+Line 10:            <CONST_CHAR, '\\'>
+Line 10:            <SEMICOLON, ;>
+
+Line 11:            <ID, f>
+Line 11:            <ASSIGNOP, =>
+Line 11:            L E X I C A L ERROR 'adr'
+Line 11:            <SEMICOLON, ;>
+
+Line 12:            <ID, f>
+Line 12:            <ASSIGNOP, =>
+Line 12:            <CONST_CHAR, '\"'>
+Line 12:            <SEMICOLON, ;>
+
+Line 13:            <ID, g>
+Line 13:            <ASSIGNOP, =>
+Line 13:            <CONST_FLOAT, 4.23567>
+Line 13:            <SEMICOLON, ;>
+
+Line 14:            COMMENT //This is just a simple comment...2
+
+Line 15:            <ID, ef>
+Line 15:            <ASSIGNOP, =>
+Line 15:            <CONST_FLOAT, 6.89E-10>
+Line 15:            <SEMICOLON, ;>
+
+Line 16:            <ID, ab>
+Line 16:            <ASSIGNOP, =>
+Line 16:            <CONST_FLOAT, 314789E+10>
+Line 16:            <SEMICOLON, ;>
+
+Line 17:            <ID, cd>
+Line 17:            <ASSIGNOP, =>
+Line 17:            <CONST_FLOAT, 345E90>
+Line 17:            <SEMICOLON, ;>
+
+Line 18:            <IF>
+Line 18:            <PAREN, (>
+Line 18:            <ID, a>
+Line 18:            <RELOP, <=>
+Line 18:            <ID, b>
+Line 18:            <LOGICOP, &&>
+Line 18:            <ID, b>
+Line 18:            <RELOP, ==>
+Line 18:            <ID, c>
+Line 18:            <PAREN, )>
+
+Line 19:            <CURL, {>
+Line 19:            <ID, print>
+Line 19:            <PAREN, (>
+Line 19:            <CONST_CHAR, '\0'>
+Line 19:            <PAREN, )>
+Line 19:            <SEMICOLON, ;>
+
+Line 20:            <ID, g>
+Line 20:            <ASSIGNOP, =>
+Line 20:            L E X I C A L ERROR 9.45.78.12
+Line 20:            <SEMICOLON, ;>
+
+Line 21:            <ID, ed>
+Line 21:            <ASSIGNOP, =>
+Line 21:            L E X I C A L ERROR 145E23.6
+Line 21:            <SEMICOLON, ;>
+Line 21:            <CURL, }>
+
+Line 22:            <INT>
+Line 22:            <ID, _aa>
+Line 22:            <COMMA, ,>
+Line 22:            <ID, _a1>
+Line 22:            <COMMA, ,>
+Line 22:            <ID, bcd1>
+Line 22:            <COMMA, ,>
+Line 22:            <ID, def_2>
+Line 22:            <SEMICOLON, ;>
+
+Line 23:            <INT>
+Line 23:            L E X I C A L ERROR 12dfr
+Line 23:            <COMMA, ,>
+Line 23:            L E X I C A L ERROR 120efgh
+Line 23:            <SEMICOLON, ;>
+
+Line 24:            L E X I C A L ERROR #
+Line 24:            L E X I C A L ERROR #
+Line 24:            <ID, Testing>
+
+Line 25:            <RETURN>
+Line 25:            <CONST_INT, -1>
+Line 25:            <SEMICOLON, ;>
+
+Line 26:            COMMENT //end of code f='adrgg'
+
+Line 27:            <CURL, }>
+
+TOTAL ERROR: 8
