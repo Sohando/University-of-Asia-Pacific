@@ -50,7 +50,7 @@ INVAL_ID {DIGITS}{ID}
 SNGL_COMMENT [/][/][^\n]*
 MLTY_COMMENT [/][*][^*]*[*]+([^*/][^*]*[*]+)*[/]  
 %%
-{foo} {
+"\\\\\\\"///" {
     cout << "hello" << endl;
 }
 {WHITESPACE} {
