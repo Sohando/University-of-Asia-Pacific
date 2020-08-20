@@ -269,6 +269,16 @@ class Display {
             glFlush();
         }
 } display;
+class Keyboard {
+    public:        
+        static void keyBoard(unsigned char key, int x, int y) {
+            switch (key) {
+                case 27:
+                    exit(0);
+                    break;
+            }
+        }
+} kbd;
 class Mouse {
     public:    
         static void mouse(int button, int state, int x, int y) {
@@ -306,6 +316,7 @@ int main(int argc, char** argv) {
     glutInitWindowPosition(100, 100);
     glutCreateWindow("OPENGL Canvus");    
     glutMouseFunc(mouse.mouse);
+    glutKeyboardFunc(kbd.keyBoard);
     glutMotionFunc(mouse.mouseMotion);
     glutDisplayFunc(display.displayMe);
     glutMainLoop();
