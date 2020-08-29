@@ -26,6 +26,9 @@ class Globals {
             glClearColor(1.0, 1.0, 1.0, 0);
             glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
         }
+        inline float randFloat() {
+            return (float(rand() % 11) / 10); 
+        }
 } Gb;
 class OPENGL_LAB {
     public:       
@@ -39,6 +42,7 @@ class OPENGL_LAB {
         }
         void Lines2D(float x1, float y1, float x2, float y2) {
             glColor3f(Gb.genColor(), Gb.genColor(), Gb.genColor());
+            glLineWidth(3.0f);
             glBegin(GL_LINES);
                 glVertex2f(x1, y1);
                 glVertex2f(x2, y2);
@@ -131,7 +135,7 @@ class Assignments {
             vertex.resize(6, vector<float>(3));
             for (int i = 0; i < vertex.size(); ++i) {
                 for (int j = 0; j < vertex[i].size(); ++j) {
-                    vertex[i][j] = (float(rand() % 11) / 10);
+                    vertex[i][j] = Gb.randFloat();
                 }   
             }
             draw.Polygon(vertex);
