@@ -71,9 +71,9 @@ class OPENGL_LAB {
         void Polygon(vector<vector<float>>& vertex) {
             glColor3f(Gb.genColor(), Gb.genColor(), Gb.genColor());
             glBegin(GL_POLYGON);
-                cout << vertex.size() << endl;
+                // cout << vertex.size() << endl;
                 for (int i = 0; i < vertex.size(); ++i) {
-                    cout << vertex[i][0] << " " << vertex[i][1] << " " << vertex[i][2] << endl; 
+                    // cout << vertex[i][0] << " " << vertex[i][1] << " " << vertex[i][2] << endl; 
                     glVertex3f(vertex[i][0], vertex[i][1], vertex[i][2]);
                 }
             glEnd();
@@ -254,36 +254,114 @@ class LineClippingAlgorithom {
             // Second Point
             if (region1(x2, y2)) {
                 reg2 = 1;
-                cout << "Point inside region 1" << endl;
+                cout << "Point 2 inside region 1" << endl;
             } else if (region6(x2, y2)) {
                 reg2 = 6;
-                cout << "Point inside region 6" << endl;
+                cout << "Point 2 inside region 6" << endl;
             } else if (region7(x2, y2)) {
                 reg2 = 7;
-                cout << "Point inside region 7" << endl;
+                cout << "Point 2 inside region 7" << endl;
             } else if (region8(x2, y2)) {
                 reg2 = 8;
-                cout << "Point inside region 8" << endl;
+                cout << "Point 2 inside region 8" << endl;
             } else if (region9(x2, y2)) {
                 reg2 = 9;
-                cout << "Point inside region 9" << endl;
+                cout << "Point 2 inside region 9" << endl;
             } else if (region2(x2, y2)) {
                 reg2 = 2;
-                cout << "Point inside region 2" << endl;
+                cout << "Point 2 inside region 2" << endl;
             } else if (region3(x2, y2)) {
                 reg2 = 3;
-                cout << "Point inside region 3" << endl;
+                cout << "Point 2 inside region 3" << endl;
             } else if (region4(x2, y2)) {
                 reg2 = 4;
-                cout << "Point inside region 4" << endl;
+                cout << "Point 2 inside region 4" << endl;
             } else if (region5(x2, y2)) {
                 reg2 = 5;
-                cout << "Point inside region 5" << endl;
+                cout << "Point 2 inside region 5" << endl;
             }
             // cout << reg1 << " " << reg2 << endl;
             if (reg1 == reg2) {
                 cout << "In the same region" << endl;
+                if (reg1 == 1) 
+                    cout << "No need to clip" << endl;
+                else 
+                    cout << "visible" << endl;
             }
+            // switch(reg1) {
+            //     case 1:
+            //         if (reg2 != 1) {
+            //             // clip
+            //             cout << "clip" << endl;
+            //         } else {
+            //             cout << "Visible" << endl;
+            //         }
+            //         break;
+            //     case 2:
+            //         if (reg2 == 4 or reg2 == 9 or reg2 == 7 or reg2 == 6) {
+            //             // no clip
+            //         } else {
+            //             // clip
+            //             cout << "clip" << endl;
+            //         }
+            //         break;
+            //     case 3:
+            //         if (reg2 == 6 or reg2 == 8) {
+            //             // no clip
+            //         } else {
+            //             // clip
+            //             cout << "clip" << endl;
+            //         }
+            //         break;
+            //     case 4:
+            //         if (reg2 == 2 or reg2 == 9) {
+            //             // no clip
+            //         } else {
+            //             // clip
+            //             cout << "clip" << endl;
+            //         }
+            //         break;
+            //     case 5:
+            //         if (reg2 == 8 or reg2 == 9) {
+            //             // no clip
+            //         } else {
+            //             // clip
+            //             cout << "clip" << endl;
+            //         }
+            //         break;
+            //     case 6:
+            //         if (reg2 == 7 or reg2 == 2 or reg2 == 8 or reg2 == 3) {
+            //             // no clip
+            //         } else {
+            //             // clip
+            //             cout << "clip" << endl;
+            //         }
+            //         break;
+            //     case 7:
+            //         if (reg2 == 2 or reg2 == 6) {
+            //             // no clip
+            //         } else {
+            //             // clip
+            //             cout << "clip" << endl;
+            //         }
+            //         break;
+            //     case 8:
+            //         if (reg2 == 6 or reg2 == 3 or reg2 == 5 or reg2 == 9) {
+            //             // no clip
+            //         } else {
+            //             // clip
+            //             cout << "clip" << endl;
+            //         }
+            //         break;
+            //     case 9:
+            //         if (reg2 == 2 or reg2 == 8 or reg2 == 5 or reg2 == 4) {
+            //             // no clip
+            //         } else {
+            //             // clip                        
+            //             cout << "clip" << endl;
+            //         }
+            //         break;
+            // }
         }
 } lnClip;
 class Display {
@@ -292,7 +370,7 @@ class Display {
             glColor3f(0, 0, 0);
             glRasterPos3f(pos1, pos2, pos3);            
             for (int i = 0; i < (int)String.size(); ++i) {
-                glutBitmapCharacter(GLUT_BITMAP_HELVETICA_10, String[i]);  // Updates the position
+                glutBitmapCharacter(GLUT_BITMAP_HELVETICA_12, String[i]);  // Updates the position
             }
             /*
             GLUT_BITMAP_8_BY_13
@@ -330,6 +408,9 @@ class Display {
             // hw.circle_pixels();
             // hw.Triangle();
             // hw.Examples();
+            showText("6 2 7", -.5, 0, 0);
+            showText("3 1 4", -.5, -.1, 0);
+            showText("8 5 9", -.5, -.2, 0);
             string dmp = makeString(lnClip.x1, lnClip.y1, 0) + " f";
             showText(dmp, lnClip.x1, lnClip.y1, 0);
             dmp = makeString(lnClip.x2, lnClip.y2, 0) + " s";
