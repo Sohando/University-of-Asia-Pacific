@@ -2,6 +2,7 @@
 #include <GL/glut.h>
 #include <bits/stdc++.h>
 using namespace std;
+#define dbg(x, y) cout << __LINE__ << ": " << x << " " << y << endl;
 // CLASSES
 class Globals {
     public:
@@ -9,7 +10,7 @@ class Globals {
         bool motion = false;
         int prev_x = 0, prev_y = 0;
         int new_x = 0, new_y = 0;
-        
+        pair<float, float> xxx, yyy;
         float colors[2][3] = {
             {1, 1, 0},
             {0, 1, 1}
@@ -162,7 +163,7 @@ class LineClippingAlgorithom {
     public:
         // Variables
         float x_max, y_max, x_min, y_min;
-        float x1, y1, x2, y2;
+        float x1, y1, x2, y2, x3, x4, y3, y4, x_val, y_val;
         int reg1, reg2;
         vector<vector<float>> vertex;
         // Methods    
@@ -178,6 +179,8 @@ class LineClippingAlgorithom {
             x_min = X[1];
             y_max = X[2];
             x_max = X[3];
+            x_val = x1 + (x2 - x1) * ((y_max - y1) / (y2 - y1));
+            y_val = y1 + (y2 - y1) * ((x_max - x1) / (x2 - x1));
         }
         void genVertex() {
             vertex.resize(4, vector<float>(3));
@@ -193,6 +196,10 @@ class LineClippingAlgorithom {
             vertex[3][0] = x_min;
             vertex[3][1] = y_max;
             vertex[3][2] = 0;
+        }
+        bool inside(float x, float y) {
+            return (x <= x_max and x >= x_min) and (y <= y_max and y >= y_min);
+            // return (x - x_max <= 0.0001 and x - x_min <= 0.0001) and (y - y_max <= 0.001 and y - y_min <= 0.0001);
         }
         bool region1(float x, float y) {
             return (x < x_max and x > x_min) and (y < y_max and y > y_min);
@@ -221,147 +228,119 @@ class LineClippingAlgorithom {
         bool region9(float x, float y) {
             return (x > x_max) and (y < y_min);
         }
+        pair<float, float> intrsctPnt(float x, float y) { 
+            if (region1(x, y)) {
+                // cout << "Point inside region 1" << endl;
+                cout << x << " " << y << endl;
+                return {x, y};
+                reg1 = 1;
+            } else if (region6(x, y)) {
+                reg1 = 6;
+                x3 = x_min;
+                y3 =  y1 + (y2 - y1) * ((x_min - x1) / (x2 - x1));
+                dbg(x3, y3);
+                if(inside(x3, y3)) {
+                    printf("\n%f %f", x3, y3);
+                    return {x3, y3};
+                }
+                x4 = x1 + (x2 - x1) * ((y_max - y1) / (y2 - y1));
+                y4 = y_max;
+                if(inside(x4, y4)) {
+                    printf("\n%f %f", x4, y4);
+                    return {x4, y4};
+                }
+                // cout << "Point inside region 6" << endl;
+            } else if (region7(x, y)) {
+                reg1 = 7;
+                x3 = x_max;
+                y3 = y1 + (y2 - y1) * ((x_max - x1) / (x2 - x1));
+                if(inside(x3, y3)) {
+                    printf("\n%f %f", x3, y3);
+                    return {x3, y3};
+                }
+                x4 = x1 + (x2 - x1) * ((y_max - y1) / (y2 - y1));
+                y4 = y_max;
+                if(inside(x4, y4)) {
+                    printf("\n%f %f", x4, y4);
+                    return {x4, y4};
+                }
+                // cout << "Point inside region 7" << endl;
+            } else if (region8(x, y)) {
+                reg1 = 8;
+                x3 = x_min;
+y3 = y1 + (y2 - y1) * ((x_min - x1) / (x2 - x1));
+                if(inside(x3, y3)) {
+                    printf("\n%f %f", x3, y3);
+                    return {x3, y3};
+                }
+ x4 = x1 + (x2 - x1) * ((y_min - y1) / (y2 - y1));
+                y4 = y_min;
+                if(inside(x4, y4)) {
+                    printf("\n%f %f", x4, y4);  
+                    return {x4, y4};
+                }
+                // cout << "Point inside region 8" << endl;
+            } else if (region9(x, y)) {
+                reg1 = 9;
+                x3 = x_max;
+y3 = y1 + (y2 - y1) * ((x_max - x1) / (x2 - x1));
+                if(inside(x3, y3)) {
+                    printf("\n%f %f", x3, y3);
+                    return {x3, y3};
+                }
+ x4 = x1 + (x2 - x1) * ((y_min - y1) / (y2 - y1));
+                y4 = y_min;
+                if(inside(x4, y4)) {
+                    printf("\n%f %f", x4, y4);
+                    return {x4, y4};
+                }   
+                // cout << "Point inside region 9" << endl;
+            } else if (region2(x, y)) {
+                reg1 = 2;
+x3 = x1 + (x2 - x1) * ((y_max - y1) / (y2 - y1));
+                y3 = y_max;
+                if(inside(x3, y3)) {
+                    printf("\n%f %f", x3, y3);
+                    return {x3, y3};
+                }
+                // cout << "Point inside region 2" << endl;
+            } else if (region3(x, y)) {
+                reg1 = 3;
+                x3 = x_min;
+y3 = y1 + (y2 - y1) * ((x_min - x1) / (x2 - x1));
+                if(inside(x3, y3)) {
+                    printf("\n%f %f", x3, y3);
+                    return {x3, y3};
+                }
+                // cout << "Point inside region 3" << endl;
+            } else if (region4(x, y)) {
+                reg1 = 4;
+                x3 = x_max;
+y3 = y1 + (y2 - y1) * ((x_max - x1) / (x2 - x1));
+                if(inside(x3, y3)) {
+                    printf("\n%f %f", x3, y3);
+                    return {x3, y3};
+                }
+                // cout << "Point inside region 4" << endl;
+            } else if (region5(x, y)) {
+                reg1 = 5;
+x3 = x1 + (x2 - x1) * ((y_min - y1) / (y2 - y1));
+                y3 = y_min;
+                if(inside(x3, y3)) {
+                    printf("\n%f %f", x3, y3);
+                    return {x3, y3};
+                }
+                // cout << "Point inside region 5" << endl;
+            }
+            return {-10.0, -10.0};
+        }
         void runTheAlgo() {
             // First Point
-            if (region1(x1, y1)) {
-                cout << "Point inside region 1" << endl;
-                reg1 = 1;
-            } else if (region6(x1, y1)) {
-                reg1 = 6;
-                cout << "Point inside region 6" << endl;
-            } else if (region7(x1, y1)) {
-                reg1 = 7;
-                cout << "Point inside region 7" << endl;
-            } else if (region8(x1, y1)) {
-                reg1 = 8;
-                cout << "Point inside region 8" << endl;
-            } else if (region9(x1, y1)) {
-                reg1 = 9;
-                cout << "Point inside region 9" << endl;
-            } else if (region2(x1, y1)) {
-                reg1 = 2;
-                cout << "Point inside region 2" << endl;
-            } else if (region3(x1, y1)) {
-                reg1 = 3;
-                cout << "Point inside region 3" << endl;
-            } else if (region4(x1, y1)) {
-                reg1 = 4;
-                cout << "Point inside region 4" << endl;
-            } else if (region5(x1, y1)) {
-                reg1 = 5;
-                cout << "Point inside region 5" << endl;
-            }
+            Gb.xxx = intrsctPnt(x1, y1);
+            // cout << endl;
             // Second Point
-            if (region1(x2, y2)) {
-                reg2 = 1;
-                cout << "Point 2 inside region 1" << endl;
-            } else if (region6(x2, y2)) {
-                reg2 = 6;
-                cout << "Point 2 inside region 6" << endl;
-            } else if (region7(x2, y2)) {
-                reg2 = 7;
-                cout << "Point 2 inside region 7" << endl;
-            } else if (region8(x2, y2)) {
-                reg2 = 8;
-                cout << "Point 2 inside region 8" << endl;
-            } else if (region9(x2, y2)) {
-                reg2 = 9;
-                cout << "Point 2 inside region 9" << endl;
-            } else if (region2(x2, y2)) {
-                reg2 = 2;
-                cout << "Point 2 inside region 2" << endl;
-            } else if (region3(x2, y2)) {
-                reg2 = 3;
-                cout << "Point 2 inside region 3" << endl;
-            } else if (region4(x2, y2)) {
-                reg2 = 4;
-                cout << "Point 2 inside region 4" << endl;
-            } else if (region5(x2, y2)) {
-                reg2 = 5;
-                cout << "Point 2 inside region 5" << endl;
-            }
-            // cout << reg1 << " " << reg2 << endl;
-            if (reg1 == reg2) {
-                cout << "In the same region" << endl;
-                if (reg1 == 1) 
-                    cout << "No need to clip" << endl;
-                else 
-                    cout << "visible" << endl;
-            }
-            // switch(reg1) {
-            //     case 1:
-            //         if (reg2 != 1) {
-            //             // clip
-            //             cout << "clip" << endl;
-            //         } else {
-            //             cout << "Visible" << endl;
-            //         }
-            //         break;
-            //     case 2:
-            //         if (reg2 == 4 or reg2 == 9 or reg2 == 7 or reg2 == 6) {
-            //             // no clip
-            //         } else {
-            //             // clip
-            //             cout << "clip" << endl;
-            //         }
-            //         break;
-            //     case 3:
-            //         if (reg2 == 6 or reg2 == 8) {
-            //             // no clip
-            //         } else {
-            //             // clip
-            //             cout << "clip" << endl;
-            //         }
-            //         break;
-            //     case 4:
-            //         if (reg2 == 2 or reg2 == 9) {
-            //             // no clip
-            //         } else {
-            //             // clip
-            //             cout << "clip" << endl;
-            //         }
-            //         break;
-            //     case 5:
-            //         if (reg2 == 8 or reg2 == 9) {
-            //             // no clip
-            //         } else {
-            //             // clip
-            //             cout << "clip" << endl;
-            //         }
-            //         break;
-            //     case 6:
-            //         if (reg2 == 7 or reg2 == 2 or reg2 == 8 or reg2 == 3) {
-            //             // no clip
-            //         } else {
-            //             // clip
-            //             cout << "clip" << endl;
-            //         }
-            //         break;
-            //     case 7:
-            //         if (reg2 == 2 or reg2 == 6) {
-            //             // no clip
-            //         } else {
-            //             // clip
-            //             cout << "clip" << endl;
-            //         }
-            //         break;
-            //     case 8:
-            //         if (reg2 == 6 or reg2 == 3 or reg2 == 5 or reg2 == 9) {
-            //             // no clip
-            //         } else {
-            //             // clip
-            //             cout << "clip" << endl;
-            //         }
-            //         break;
-            //     case 9:
-            //         if (reg2 == 2 or reg2 == 8 or reg2 == 5 or reg2 == 4) {
-            //             // no clip
-            //         } else {
-            //             // clip                        
-            //             cout << "clip" << endl;
-            //         }
-            //         break;
-            // }
+            Gb.yyy = intrsctPnt(x2, y2);
+            // draw.Lines2D(x.first, x.second, y.first, y.second);
         }
 } lnClip;
 class Display {
@@ -398,8 +377,16 @@ class Display {
             Gb.CanvusSettings();
             // draw.Triangle();
             draw.Polygon(lnClip.vertex);
+            draw.Lines2D(lnClip.vertex[0][0], lnClip.vertex[0][1] - .3, lnClip.vertex[3][0], lnClip.vertex[3][1] + .3);
+            draw.Lines2D(lnClip.vertex[1][0], lnClip.vertex[1][1] - .3, lnClip.vertex[2][0], lnClip.vertex[2][1] + .3);
+            draw.Lines2D(lnClip.vertex[0][0] - .3, lnClip.vertex[0][1], lnClip.vertex[1][0] + .3, lnClip.vertex[1][1]);
+            draw.Lines2D(lnClip.vertex[2][0] + .3, lnClip.vertex[2][1], lnClip.vertex[3][0] - .3, lnClip.vertex[3][1]);
             draw.Lines2D(lnClip.x1, lnClip.y1, lnClip.x2, lnClip.y2);
             // draw.Points();
+            cout << Gb.xxx.first << " 1 " << Gb.xxx.second << endl;
+            cout << Gb.yyy.first << " 2 " << Gb.yyy.second << endl;
+            if (Gb.xxx.first != -10.00 and Gb.yyy.first != -10.000)
+                draw.Lines2D(Gb.xxx.first, Gb.xxx.second, Gb.yyy.first, Gb.yyy.second);
             // draw.Quads();
             // draw.Circle(.2, .2, .7);
             // draw.Circle(-.2, -.2, .7);
