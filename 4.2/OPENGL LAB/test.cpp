@@ -163,11 +163,23 @@ class LineClippingAlgorithom {
         // Variables
         float x_max, y_max, x_min, y_min;
         float x1, y1, x2, y2;
+        int reg1, reg2;
         vector<vector<float>> vertex;
-        // Methods
+        // Methods    
         LineClippingAlgorithom() {
+            // draw.Polygon(vertex);
+        }        
+        void input() {
             cin >> y_max >> y_min >> x_max >> x_min;
             cin >> x1 >> y1 >> x2 >> y2;
+            vector<float> X = {y_max, y_min, x_max, x_min};        
+            sort(X.begin(), X.end());
+            y_min = X[0];
+            x_min = X[1];
+            y_max = X[2];
+            x_max = X[3];
+        }
+        void genVertex() {
             vertex.resize(4, vector<float>(3));
             vertex[0][0] = x_min;
             vertex[0][1] = y_min;
@@ -181,8 +193,6 @@ class LineClippingAlgorithom {
             vertex[3][0] = x_min;
             vertex[3][1] = y_max;
             vertex[3][2] = 0;
-
-            // draw.Polygon(vertex);
         }
         bool region1(float x, float y) {
             return (x < x_max and x > x_min) and (y < y_max and y > y_min);
@@ -215,47 +225,97 @@ class LineClippingAlgorithom {
             // First Point
             if (region1(x1, y1)) {
                 cout << "Point inside region 1" << endl;
+                reg1 = 1;
             } else if (region6(x1, y1)) {
+                reg1 = 6;
                 cout << "Point inside region 6" << endl;
             } else if (region7(x1, y1)) {
+                reg1 = 7;
                 cout << "Point inside region 7" << endl;
             } else if (region8(x1, y1)) {
+                reg1 = 8;
                 cout << "Point inside region 8" << endl;
             } else if (region9(x1, y1)) {
+                reg1 = 9;
                 cout << "Point inside region 9" << endl;
             } else if (region2(x1, y1)) {
+                reg1 = 2;
                 cout << "Point inside region 2" << endl;
             } else if (region3(x1, y1)) {
+                reg1 = 3;
                 cout << "Point inside region 3" << endl;
             } else if (region4(x1, y1)) {
+                reg1 = 4;
                 cout << "Point inside region 4" << endl;
             } else if (region5(x1, y1)) {
+                reg1 = 5;
                 cout << "Point inside region 5" << endl;
             }
             // Second Point
             if (region1(x2, y2)) {
+                reg2 = 1;
                 cout << "Point inside region 1" << endl;
             } else if (region6(x2, y2)) {
+                reg2 = 6;
                 cout << "Point inside region 6" << endl;
             } else if (region7(x2, y2)) {
+                reg2 = 7;
                 cout << "Point inside region 7" << endl;
             } else if (region8(x2, y2)) {
+                reg2 = 8;
                 cout << "Point inside region 8" << endl;
             } else if (region9(x2, y2)) {
+                reg2 = 9;
                 cout << "Point inside region 9" << endl;
             } else if (region2(x2, y2)) {
+                reg2 = 2;
                 cout << "Point inside region 2" << endl;
             } else if (region3(x2, y2)) {
+                reg2 = 3;
                 cout << "Point inside region 3" << endl;
             } else if (region4(x2, y2)) {
+                reg2 = 4;
                 cout << "Point inside region 4" << endl;
             } else if (region5(x2, y2)) {
+                reg2 = 5;
                 cout << "Point inside region 5" << endl;
+            }
+            // cout << reg1 << " " << reg2 << endl;
+            if (reg1 == reg2) {
+                cout << "In the same region" << endl;
             }
         }
 } lnClip;
 class Display {
     public:
+        static void showText(string String, float pos1, float pos2, float pos3) {
+            glColor3f(0, 0, 0);
+            glRasterPos3f(pos1, pos2, pos3);            
+            for (int i = 0; i < (int)String.size(); ++i) {
+                glutBitmapCharacter(GLUT_BITMAP_HELVETICA_10, String[i]);  // Updates the position
+            }
+            /*
+            GLUT_BITMAP_8_BY_13
+            GLUT_BITMAP_9_BY_15
+            GLUT_BITMAP_TIMES_ROMAN_10
+            GLUT_BITMAP_TIMES_ROMAN_24
+            GLUT_BITMAP_HELVETICA_10
+            GLUT_BITMAP_HELVETICA_12
+            GLUT_BITMAP_HELVETICA_18
+             */
+        }
+        static string makeString(float pos1, float pos2, float pos3) { 
+            string one, two, three;
+            string dump = "";
+            stringstream ss;
+            ss << pos1;
+            ss >> one;
+            stringstream ss1;
+            ss1 << pos2;
+            ss1 >> two;
+            dump = "(" + one + ", " + two + ")";            
+            return dump;
+        }
         static void displayMe() {
             Gb.CanvusSettings();
             // draw.Triangle();
@@ -270,6 +330,14 @@ class Display {
             // hw.circle_pixels();
             // hw.Triangle();
             // hw.Examples();
+            string dmp = makeString(lnClip.x1, lnClip.y1, 0) + " f";
+            showText(dmp, lnClip.x1, lnClip.y1, 0);
+            dmp = makeString(lnClip.x2, lnClip.y2, 0) + " s";
+            showText(dmp, lnClip.x2, lnClip.y2, 0);
+            for (int i = 0; i < 4; ++i) {
+                dmp = makeString(lnClip.vertex[i][0], lnClip.vertex[i][1], 0);
+                showText(dmp, lnClip.vertex[i][0], lnClip.vertex[i][1], 0);
+            }
             glFlush();
         }
 } display;
@@ -314,6 +382,8 @@ int main(int argc, char** argv) {
     srand((unsigned int)time(NULL));
     glutInit(&argc, argv);
     // hw.inputs();
+    lnClip.input();
+    lnClip.genVertex();
     lnClip.runTheAlgo();
     glutInitDisplayMode(GLUT_SINGLE);
     glutInitWindowSize(900, 500);
