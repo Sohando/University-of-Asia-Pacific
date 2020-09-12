@@ -1,0 +1,13 @@
+type_specifier  : INT 
+
+Error at line 3 : syntax error, unexpected RCURL 
+
+Line   : 4
+
+
+Error   : 1
+
+
+
+Symbol Table
+
