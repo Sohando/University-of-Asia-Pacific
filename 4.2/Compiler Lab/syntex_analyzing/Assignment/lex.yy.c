@@ -756,9 +756,11 @@ char *yytext;
 #include "y.tab.h"
 // typedef symbolInfo* YYSTYPEl
 using namespace std;
-// #define YYSTYPE symbolInfo*
-
-
+//#ifdef YYSTYPE
+//    #define YYSTYPE symbolInfo*
+//#endif
+// 
+// 
 // extern YYSTYPE yylval;
 extern symbolTable* table;
 
@@ -772,8 +774,8 @@ int i=0;
 int j=0;
 int check;
 
-#line 776 "lex.yy.c"
-#line 777 "lex.yy.c"
+#line 778 "lex.yy.c"
+#line 779 "lex.yy.c"
 
 #define INITIAL 0
 #define COMMENT 1
@@ -993,9 +995,9 @@ YY_DECL
 		}
 
 	{
-#line 40 "1305115.l"
+#line 42 "1305115.l"
 
-#line 999 "lex.yy.c"
+#line 1001 "lex.yy.c"
 
 	while ( /*CONSTCOND*/1 )		/* loops until end-of-file is reached */
 		{
@@ -1055,112 +1057,112 @@ do_action:	/* This label is used only to access EOF actions. */
 case 1:
 /* rule 1 can match eol */
 YY_RULE_SETUP
-#line 41 "1305115.l"
+#line 43 "1305115.l"
 {//printf("newline is found\n"); 
 //printf("new line is found\n");
 line++;}
 	YY_BREAK
 case 2:
 YY_RULE_SETUP
-#line 45 "1305115.l"
+#line 47 "1305115.l"
 {return PRINTLN; //newly added
 }
 	YY_BREAK
 case 3:
 YY_RULE_SETUP
-#line 48 "1305115.l"
+#line 50 "1305115.l"
 {return IF;}
 	YY_BREAK
 case 4:
 YY_RULE_SETUP
-#line 50 "1305115.l"
+#line 52 "1305115.l"
 {return ELSE;}
 	YY_BREAK
 case 5:
 YY_RULE_SETUP
-#line 52 "1305115.l"
+#line 54 "1305115.l"
 {return FOR;}
 	YY_BREAK
 case 6:
 YY_RULE_SETUP
-#line 54 "1305115.l"
+#line 56 "1305115.l"
 {return 	DO;}
 	YY_BREAK
 case 7:
 YY_RULE_SETUP
-#line 56 "1305115.l"
+#line 58 "1305115.l"
 {return WHILE;}
 	YY_BREAK
 case 8:
 YY_RULE_SETUP
-#line 58 "1305115.l"
+#line 60 "1305115.l"
 {return BREAK;}
 	YY_BREAK
 case 9:
 YY_RULE_SETUP
-#line 60 "1305115.l"
+#line 62 "1305115.l"
 {return INT;}
 	YY_BREAK
 case 10:
 YY_RULE_SETUP
-#line 62 "1305115.l"
+#line 64 "1305115.l"
 {return CHAR;}
 	YY_BREAK
 case 11:
 YY_RULE_SETUP
-#line 64 "1305115.l"
+#line 66 "1305115.l"
 {return DOUBLE;}
 	YY_BREAK
 case 12:
 YY_RULE_SETUP
-#line 66 "1305115.l"
+#line 68 "1305115.l"
 {return FLOAT;}
 	YY_BREAK
 case 13:
 YY_RULE_SETUP
-#line 68 "1305115.l"
+#line 70 "1305115.l"
 {return VOID;}
 	YY_BREAK
 case 14:
 YY_RULE_SETUP
-#line 70 "1305115.l"
+#line 72 "1305115.l"
 {return RETURN;}
 	YY_BREAK
 case 15:
 YY_RULE_SETUP
-#line 72 "1305115.l"
+#line 74 "1305115.l"
 {return CASE;}
 	YY_BREAK
 case 16:
 YY_RULE_SETUP
-#line 74 "1305115.l"
+#line 76 "1305115.l"
 {return SWITCH;}
 	YY_BREAK
 case 17:
 YY_RULE_SETUP
-#line 76 "1305115.l"
+#line 78 "1305115.l"
 {return DEFAULT;}
 	YY_BREAK
 case 18:
 YY_RULE_SETUP
-#line 78 "1305115.l"
+#line 80 "1305115.l"
 {return CONTINUE;}
 	YY_BREAK
 case 19:
 YY_RULE_SETUP
-#line 80 "1305115.l"
+#line 82 "1305115.l"
 {return MAIN; //NEWLY ADDED
 }
 	YY_BREAK
 case 20:
 YY_RULE_SETUP
-#line 83 "1305115.l"
+#line 85 "1305115.l"
 {return NOT; //NEWLY ADDED
 }
 	YY_BREAK
 case 21:
 YY_RULE_SETUP
-#line 86 "1305115.l"
+#line 88 "1305115.l"
 {//insertion
     symbolInfo *s= new  symbolInfo(yytext, "CONST_INT",0);
     s->val.i=atoi(yytext);
@@ -1171,7 +1173,7 @@ YY_RULE_SETUP
 	YY_BREAK
 case 22:
 YY_RULE_SETUP
-#line 94 "1305115.l"
+#line 96 "1305115.l"
 {// .90875 is not taken as a float but 0.90875 is taken??
 symbolInfo *s= new  symbolInfo(yytext, "CONST_FLOAT",0);
 s->val.f=atof(yytext);
@@ -1182,7 +1184,7 @@ return CONST_FLOAT;
 	YY_BREAK
 case 23:
 YY_RULE_SETUP
-#line 102 "1305115.l"
+#line 104 "1305115.l"
 {
 symbolInfo *s= new  symbolInfo(yytext, "CONST_CHAR",0);//problem as it is multi character for having quotation
 yylval = (YYSTYPE)s;
@@ -1194,7 +1196,7 @@ return CONST_CHAR;
 	YY_BREAK
 case 24:
 YY_RULE_SETUP
-#line 111 "1305115.l"
+#line 113 "1305115.l"
 {
 symbolInfo *s= new  symbolInfo(yytext,"CONST_CHAR",0);
 yylval = (YYSTYPE)s;
@@ -1204,7 +1206,7 @@ return CONST_CHAR;
 	YY_BREAK
 case 25:
 YY_RULE_SETUP
-#line 118 "1305115.l"
+#line 120 "1305115.l"
 {
 symbolInfo *s= new  symbolInfo(yytext, "ADDOP",0);
 yylval = (YYSTYPE)s;
@@ -1213,7 +1215,7 @@ return ADDOP;
 	YY_BREAK
 case 26:
 YY_RULE_SETUP
-#line 124 "1305115.l"
+#line 126 "1305115.l"
 {
 symbolInfo *s= new  symbolInfo(yytext, "MULOP",0);
 yylval = (YYSTYPE)s;
@@ -1222,7 +1224,7 @@ return MULOP;
 	YY_BREAK
 case 27:
 YY_RULE_SETUP
-#line 130 "1305115.l"
+#line 132 "1305115.l"
 {//WHY NOT (++|--)
 symbolInfo *s= new  symbolInfo(yytext, "INCOP",0);
 yylval = (YYSTYPE)s;
@@ -1231,7 +1233,7 @@ return INCOP;
 	YY_BREAK
 case 28:
 YY_RULE_SETUP
-#line 136 "1305115.l"
+#line 138 "1305115.l"
 {//WHY NOT (++|--) //NEWLY ADDED
 symbolInfo *s= new  symbolInfo(yytext, "DECOP",0);
 yylval = (YYSTYPE)s;
@@ -1240,7 +1242,7 @@ return DECOP;
 	YY_BREAK
 case 29:
 YY_RULE_SETUP
-#line 142 "1305115.l"
+#line 144 "1305115.l"
 {
 symbolInfo *s= new  symbolInfo(yytext, "RELOP",0);
 yylval = (YYSTYPE)s;
@@ -1249,12 +1251,12 @@ return RELOP;
 	YY_BREAK
 case 30:
 YY_RULE_SETUP
-#line 148 "1305115.l"
+#line 150 "1305115.l"
 {return ASSIGNOP;}
 	YY_BREAK
 case 31:
 YY_RULE_SETUP
-#line 150 "1305115.l"
+#line 152 "1305115.l"
 { // CHANGED // PREVIOUS "&&"|"||"|"!" 
 symbolInfo *s= new  symbolInfo(yytext, "LOGICOP",0);
 yylval = (YYSTYPE)s;
@@ -1263,47 +1265,47 @@ return LOGICOP;
 	YY_BREAK
 case 32:
 YY_RULE_SETUP
-#line 156 "1305115.l"
+#line 158 "1305115.l"
 {return LPAREN;}
 	YY_BREAK
 case 33:
 YY_RULE_SETUP
-#line 158 "1305115.l"
+#line 160 "1305115.l"
 {return RPAREN;}
 	YY_BREAK
 case 34:
 YY_RULE_SETUP
-#line 160 "1305115.l"
+#line 162 "1305115.l"
 {return LCURL;}
 	YY_BREAK
 case 35:
 YY_RULE_SETUP
-#line 162 "1305115.l"
+#line 164 "1305115.l"
 {return RCURL;}
 	YY_BREAK
 case 36:
 YY_RULE_SETUP
-#line 164 "1305115.l"
+#line 166 "1305115.l"
 {return LTHIRD;}
 	YY_BREAK
 case 37:
 YY_RULE_SETUP
-#line 166 "1305115.l"
+#line 168 "1305115.l"
 {return RTHIRD;}
 	YY_BREAK
 case 38:
 YY_RULE_SETUP
-#line 168 "1305115.l"
+#line 170 "1305115.l"
 {return COMMA;}
 	YY_BREAK
 case 39:
 YY_RULE_SETUP
-#line 170 "1305115.l"
+#line 172 "1305115.l"
 {return SEMICOLON;}
 	YY_BREAK
 case 40:
 YY_RULE_SETUP
-#line 172 "1305115.l"
+#line 174 "1305115.l"
 {//whether _A_b_c is a variable or not
 	symbolInfo *s;
 	s= table->lookOut(yytext);
@@ -1312,14 +1314,15 @@ YY_RULE_SETUP
 			s= new symbolInfo(yytext, "ID",0);
 			// printf("%s\n",s->name.c_str());	
 		}
-        cout << typeid(yylval).name() << " " << typeid(s).name() << " " << typeid(YYSTYPE).name() << endl;
+        // cout << typeid(yylval).name() << " " << typeid(s).name() << " " << typeid(YYSTYPE).name() << endl;
 		yylval = (YYSTYPE)s;
+        // cout << "foo" << endl;
     return ID;
 }
 	YY_BREAK
 case 41:
 YY_RULE_SETUP
-#line 185 "1305115.l"
+#line 188 "1305115.l"
 {
 //may be for whitespace is ignored 
 //printf("white space is found\n");
@@ -1327,7 +1330,7 @@ YY_RULE_SETUP
 	YY_BREAK
 case 42:
 YY_RULE_SETUP
-#line 190 "1305115.l"
+#line 193 "1305115.l"
 {//for 10.2E0.5675 but not 10.2 E .34567 // \.
 
 error++;
@@ -1335,7 +1338,7 @@ error++;
 	YY_BREAK
 case 43:
 YY_RULE_SETUP
-#line 195 "1305115.l"
+#line 198 "1305115.l"
 {//for 12.E // for\.
 
 error++;
@@ -1343,7 +1346,7 @@ error++;
 	YY_BREAK
 case 44:
 YY_RULE_SETUP
-#line 199 "1305115.l"
+#line 202 "1305115.l"
 {//for 12E.12345 //problem for\.
 
 error++;
@@ -1351,7 +1354,7 @@ error++;
 	YY_BREAK
 case 45:
 YY_RULE_SETUP
-#line 204 "1305115.l"
+#line 207 "1305115.l"
 {//12abdc
 printf("invalid prefix in id,%s\n",yytext);
 error++;
@@ -1359,7 +1362,7 @@ error++;
 	YY_BREAK
 case 46:
 YY_RULE_SETUP
-#line 209 "1305115.l"
+#line 212 "1305115.l"
 {//'abc'
 
 error++;
@@ -1370,7 +1373,7 @@ case 47:
 (yy_c_buf_p) = yy_cp -= 1;
 YY_DO_BEFORE_ACTION; /* set up yytext again */
 YY_RULE_SETUP
-#line 213 "1305115.l"
+#line 216 "1305115.l"
 {
 
 error++;
@@ -1379,7 +1382,7 @@ error++;
 	YY_BREAK
 case 48:
 YY_RULE_SETUP
-#line 219 "1305115.l"
+#line 222 "1305115.l"
 {//1.2.3 123.45.667 .... a.s.f.g
 
 error++;
@@ -1387,7 +1390,7 @@ error++;
 	YY_BREAK
 case 49:
 YY_RULE_SETUP
-#line 224 "1305115.l"
+#line 227 "1305115.l"
 {	//for multiline comment state
 	i=0;
 	start_l=line;
@@ -1405,7 +1408,7 @@ YY_RULE_SETUP
 	YY_BREAK
 case 50:
 YY_RULE_SETUP
-#line 238 "1305115.l"
+#line 241 "1305115.l"
 {//fprintf(logout,"%s",yytext);
 	while(yytext[j]!='\0'){
 		c[i]=yytext[j];
@@ -1417,13 +1420,13 @@ YY_RULE_SETUP
 case 51:
 /* rule 51 can match eol */
 YY_RULE_SETUP
-#line 245 "1305115.l"
+#line 248 "1305115.l"
 {line++;
 }
 	YY_BREAK
 case 52:
 YY_RULE_SETUP
-#line 247 "1305115.l"
+#line 250 "1305115.l"
 {
 	printf("comment is ended \n");
 	while(yytext[j]!='\0'){
@@ -1440,7 +1443,7 @@ YY_RULE_SETUP
 }
 	YY_BREAK
 case YY_STATE_EOF(COMMENT):
-#line 261 "1305115.l"
+#line 264 "1305115.l"
 {//for unfinished comment
 	error++;
 	printf("no end of comment %s\n",yytext);
@@ -1451,7 +1454,7 @@ case YY_STATE_EOF(COMMENT):
 	YY_BREAK
 case 53:
 YY_RULE_SETUP
-#line 269 "1305115.l"
+#line 272 "1305115.l"
 {//for singleline comment 
 	BEGIN SCOMMENT;
 	printf("single line comment is started\n");
@@ -1466,7 +1469,7 @@ YY_RULE_SETUP
 	YY_BREAK
 case 54:
 YY_RULE_SETUP
-#line 280 "1305115.l"
+#line 283 "1305115.l"
 {//fprintf(logout,"%s",yytext);
 	while(yytext[j]!='\0'){
 		c[i]=yytext[j];
@@ -1478,7 +1481,7 @@ YY_RULE_SETUP
 case 55:
 /* rule 55 can match eol */
 YY_RULE_SETUP
-#line 287 "1305115.l"
+#line 290 "1305115.l"
 {
 	j=0;
 	line++; 
@@ -1493,7 +1496,7 @@ YY_RULE_SETUP
 	YY_BREAK
 case 56:
 YY_RULE_SETUP
-#line 301 "1305115.l"
+#line 304 "1305115.l"
 {//single line string
 	
 	//s.insertItem(yytext,"STRING");
@@ -1502,7 +1505,7 @@ YY_RULE_SETUP
 	YY_BREAK
 case 57:
 YY_RULE_SETUP
-#line 307 "1305115.l"
+#line 310 "1305115.l"
 {	//both for multi line string
 	start_l=line;
 	BEGIN MULTISTRING;
@@ -1517,7 +1520,7 @@ YY_RULE_SETUP
 case 58:
 /* rule 58 can match eol */
 YY_RULE_SETUP
-#line 317 "1305115.l"
+#line 320 "1305115.l"
 {
 	printf("newline in string is found");
 	while(yytext[j]!='\0'){
@@ -1531,7 +1534,7 @@ YY_RULE_SETUP
 case 59:
 /* rule 59 can match eol */
 YY_RULE_SETUP
-#line 326 "1305115.l"
+#line 329 "1305115.l"
 {
 	
 	while(i!=0){
@@ -1545,7 +1548,7 @@ YY_RULE_SETUP
 	YY_BREAK
 case 60:
 YY_RULE_SETUP
-#line 337 "1305115.l"
+#line 340 "1305115.l"
 {
 	printf("\nstring is ended %s\n",yytext);
 	while(yytext[j]!='\0'){
@@ -1566,7 +1569,7 @@ YY_RULE_SETUP
 	YY_BREAK
 case 61:
 YY_RULE_SETUP
-#line 354 "1305115.l"
+#line 357 "1305115.l"
 {
 	printf("%s",yytext);
 	while(yytext[j]!='\0'){
@@ -1578,7 +1581,7 @@ YY_RULE_SETUP
 	YY_BREAK
 case 62:
 YY_RULE_SETUP
-#line 362 "1305115.l"
+#line 365 "1305115.l"
 {
 
 error++;
@@ -1586,10 +1589,10 @@ error++;
 	YY_BREAK
 case 63:
 YY_RULE_SETUP
-#line 366 "1305115.l"
+#line 369 "1305115.l"
 ECHO;
 	YY_BREAK
-#line 1593 "lex.yy.c"
+#line 1596 "lex.yy.c"
 case YY_STATE_EOF(INITIAL):
 case YY_STATE_EOF(SCOMMENT):
 case YY_STATE_EOF(MULTISTRING):
@@ -2596,7 +2599,7 @@ void yyfree (void * ptr )
 
 #define YYTABLES_NAME "yytables"
 
-#line 366 "1305115.l"
+#line 369 "1305115.l"
 
 
 

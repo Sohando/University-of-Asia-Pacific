@@ -8,10 +8,6 @@
 #define debug(x) cerr << __LINE__ << ": " << #x << " = " << (x) << endl
 using namespace std;
 
-#define YYSTYPE symbolInfo*
-// typedef symbolInfo* YYSTYPE;
-extern YYSTYPE yylval;
-
 FILE *output;
 string cmp;
 symbolInfo* notget;
@@ -34,22 +30,57 @@ int yylex(void);
 %token  INT MAIN LPAREN RPAREN LCURL RCURL SEMICOLON FLOAT CHAR COMMA ID LTHIRD RTHIRD CONST_INT CONST_FLOAT CONST_CHAR FOR IF WHILE PRINTLN RETURN LOGICOP RELOP ASSIGNOP ADDOP NOT MULOP INCOP DECOP STRING ELSE DO BREAK DOUBLE VOID CASE SWITCH CONTINUE DEFAULT
 %nonassoc LOWER_THAN_ELSE
 %nonassoc ELSE
+%nonassoc WITH_COMMA
+%nonassoc WITHOUT_COMMA
 
 
 %%
 
-Program : INT MAIN LPAREN RPAREN compound_statement { fprintf(output,"program : INT MAIN LPAREN RPAREN compound_statement\n\n");}
-	;
-
-
-compound_statement : LCURL var_declaration statements RCURL {fprintf(output,"compound_statement : LCURL var_declaration statements RCURL\n\n");}
-		   | LCURL statements RCURL {fprintf(output,"compound_statement : LCUR  statements RCURL\n\n");}
-		   | LCURL RCURL {fprintf(output,"compound_statement : LCURL RCURL\n\n");}
-            ;
+Program 
+        : main_function
+	    | user_defined_functions
+        ;
+main_function
+        : INT MAIN LPAREN RPAREN compound_statement { 
+            fprintf(output,"program : INT MAIN LPAREN RPAREN compound_statement\n\n");
+        }
+user_defined_functions
+        : full_defination user_defined_functions 
+        | prototype user_defined_functions
+        | main_function
+        |
+        ;
+full_defination
+        : type_specifier ID LPAREN RPAREN compound_statement {
+            cout << "user defined" << endl;
+        } 
+        | type_specifier ID LPAREN RPAREN compound_statement {
+            cout << "user defined" << endl;
+        } 
+        ;
+prototype
+        : type_specifier ID LPAREN RPAREN SEMICOLON {   
+            cout << "prototyping" << endl;
+        }
+        ;
+arguments
+        : /* empty */ 
+        | type_specifier ID 
+        | type_specifier ID COMMA arguments 
+        | type_specifier ID LTHIRD RTHIRD 
+        | type_specifier ID LTHIRD RTHIRD COMMA arguments 
+        ;
+compound_statement 
+        : LCURL var_declaration statements RCURL {fprintf(output,"compound_statement : LCURL var_declaration statements RCURL\n\n");}
+		| LCURL statements RCURL {fprintf(output,"compound_statement : LCUR  statements RCURL\n\n");}
+		| LCURL RCURL {fprintf(output,"compound_statement : LCURL RCURL\n\n");}
+        ;
 
 			 
-var_declaration	: type_specifier declaration_list SEMICOLON { fprintf(output,"var_declaration	: type_specifier declaration_list SEMICOLON\n\n");}
-		|  var_declaration type_specifier declaration_list SEMICOLON { fprintf(output,"var_declaration	: var_declaration type_specifier declaration_list SEMICOLON\n\n");}
+var_declaration	
+        : /* empty */
+        | type_specifier declaration_list SEMICOLON { fprintf(output,"var_declaration	: type_specifier declaration_list SEMICOLON\n\n");}
+        | var_declaration type_specifier declaration_list SEMICOLON { fprintf(output,"var_declaration	: var_declaration type_specifier declaration_list SEMICOLON\n\n");}        
 		;
 
 type_specifier	: INT { fprintf(output,"type_specifier  : INT \n\n"); {cmp="int";}}
@@ -58,44 +89,41 @@ type_specifier	: INT { fprintf(output,"type_specifier  : INT \n\n"); {cmp="int";
 		| VOID 
 		;
 			
-declaration_list : declaration_list COMMA ID 
-    { 
-		fprintf(output,"declaration_list  : declaration_list COMMA ID\n%s\n\n",$3->name.c_str()); 
-		idcheck=table->lookOut($3->name);
-		if(idcheck==Null){
-				
+declaration_list 
+        : declaration_list COMMA ID { 
+    		fprintf(output,"declaration_list  : declaration_list COMMA ID\n%s\n\n",$3->name.c_str()); 
+	    	idcheck=table->lookOut($3->name);
+		    if(idcheck==Null){				
 					if(strcmp(cmp.c_str(),"int")==0)
 					{
-					$3->data=integer;
-					$3->val.i=-99999;
-					$3->position=0;
-					table->insertItem($3);
+    					$3->data=integer;
+	    				$3->val.i=-99999;
+		    			$3->position=0;
+			    		table->insertItem($3);
 					}
-					//Add code for float and character
-					
-					if(strcmp(cmp.c_str(),"float")==0)
+					//Add code for float and character					
+					else if(strcmp(cmp.c_str(),"float")==0)
 					{
-					$3->data=floating;
-					$3->val.i=-99999;
-					$3->position=0;
-					table->insertItem($3);
+    					$3->data=floating;
+	    				$3->val.i=-99999;
+		    			$3->position=0;
+			    		table->insertItem($3);
 					}
-					if(strcmp(cmp.c_str(),"char")==0)
+					else if(strcmp(cmp.c_str(),"char")==0)
 					{
-					$3->data=character;
-					$3->val.c='.';
-					$3->position=0;
-					table->insertItem($3);
+				    	$3->data=character;
+					    $3->val.c='.';
+    					$3->position=0;
+	    				table->insertItem($3);
 					}
 				}
-		else{
+		    else{
 				char errorarr[30]="Multiple Declaration";
 				strcat(errorarr,$3->name.c_str());							
 				yyerror(errorarr);
 		    } 
-    }
-		 | declaration_list COMMA ID LTHIRD CONST_INT RTHIRD 
-			{
+        }
+        | declaration_list COMMA ID LTHIRD CONST_INT RTHIRD {
                 fprintf(output,"declaration_list  : declaration_list COMMA ID LTHIRD CONST_INT RTHIRD\n %s\n\n", $3->name.c_str());
 	    	    idcheck=table->lookOut($3->name);
     	    	if(idcheck==Null){
@@ -137,42 +165,45 @@ declaration_list : declaration_list COMMA ID
         		strcat(errorarr,$3->name.c_str());							
     	        yyerror(errorarr);
         	}	
-		}
-		 | ID 
-            {
-                // fprintf(output,"declaration_list  : ID\n %s\n\n", $1->name.c_str());
-                bug;
+        }
+		| ID {
+// bug;
+                fprintf(output,"declaration_list  : ID\n %s\n\n", $1->name.c_str());
+// bug;
                 // cout << $1->name.c_str() << endl;
                 // debug($1->name.c_str());
-		        // idcheck=table->lookOut($1->name);
-                idcheck = Null;
-                bug;
+		        idcheck=table->lookOut($1->name);
+		        // table->lookOut($1->name) == Null ? cout << "h" << endl : cout << "m" << endl;                
+                // idcheck = Null;
+// bug;
                 // cout << "returned" << endl;
 		        if(idcheck==Null){
-bug;		        		
+// bug;		        		
 		        			if(strcmp(cmp.c_str(),"int")==0)
 		        			{
-bug;
-cout << $1->data << endl;                
+// bug;
+// $1->data = integer;
+// cout << typeid($1).name() <<  endl;
+// cout << $1->data << endl;                
                                 $1->data=integer;
-bug;
+// bug;
 	    	        			$1->val.i=-99999;
-bug;
+// bug;
 		            			$1->position=0;
-bug;
+// bug;
 		            			table->insertItem($1);
-bug;                    
+// bug;                    
 		        			}
 		        			//Add code for float and character
 		        			
-		        			if(strcmp(cmp.c_str(),"float")==0)
+		        			else if(strcmp(cmp.c_str(),"float")==0)
 		        			{
 		        			$1->data=floating;
 		        			$1->val.i=-99999;
 		        			$1->position=0;
 		        			table->insertItem($1);
 		        			}
-		        			if(strcmp(cmp.c_str(),"char")==0)
+		        			else if(strcmp(cmp.c_str(),"char")==0)
 		        			{
 		        			$1->data=character;
 		        			$1->val.c='.';
@@ -185,9 +216,8 @@ bug;
 		        		strcat(errorarr,$1->name.c_str());							
 		        		yyerror(errorarr);
 		            } 
-            }
- 		 | ID LTHIRD CONST_INT RTHIRD 
-            {
+        }
+ 		| ID LTHIRD CONST_INT RTHIRD {
                 // fprintf(output,"declaration_list : ID LTHIRD CONST_INT RTHIRD\n %s\n\n",$1);}
                 fprintf(output,"declaration_list  : declaration_list ID LTHIRD CONST_INT RTHIRD\n %s\n\n", $1->name.c_str());
 	    	    idcheck=table->lookOut($1->name);
@@ -230,11 +260,12 @@ bug;
         		    strcat(errorarr,$3->name.c_str());							
                 	yyerror(errorarr);
         	    }	
-            }
-            ;
-statements : statement 
-	   | statements statement 
-	   ;
+        }
+        ;
+statements : /* empty */ 
+        | statement 
+	    | statements statement     
+	    ;
 
 
 statement  : expression_statement 

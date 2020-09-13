@@ -1,0 +1,36 @@
+type_specifier  : INT 
+
+type_specifier  : FLOAT 
+
+unary_expression : factor
+
+compound_statement : LCUR  statements RCURL
+
+type_specifier  : INT 
+
+type_specifier  : INT 
+
+declaration_list  : ID
+ a
+
+var_declaration	: type_specifier declaration_list SEMICOLON
+
+statement  : PRINTLN LPAREN ID RPAREN SEMICOLON 
+
+unary_expression : factor
+
+compound_statement : LCURL var_declaration statements RCURL
+
+program : INT MAIN LPAREN RPAREN compound_statement
+
+
+Line   : 11
+
+
+Error   : 0
+
+
+
+Symbol Table
+
+4 -> <a , ID, -99999> 

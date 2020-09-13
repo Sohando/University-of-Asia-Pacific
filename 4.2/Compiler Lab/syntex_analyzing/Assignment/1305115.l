@@ -13,9 +13,11 @@
 #include "y.tab.h"
 // typedef symbolInfo* YYSTYPEl
 using namespace std;
-// #define YYSTYPE symbolInfo*
-
-
+//#ifdef YYSTYPE
+//    #define YYSTYPE symbolInfo*
+//#endif
+// 
+// 
 // extern YYSTYPE yylval;
 extern symbolTable* table;
 
@@ -177,8 +179,9 @@ return LOGICOP;
 			s= new symbolInfo(yytext, "ID",0);
 			// printf("%s\n",s->name.c_str());	
 		}
-        cout << typeid(yylval).name() << " " << typeid(s).name() << " " << typeid(YYSTYPE).name() << endl;
+        // cout << typeid(yylval).name() << " " << typeid(s).name() << " " << typeid(YYSTYPE).name() << endl;
 		yylval = (YYSTYPE)s;
+        // cout << "foo" << endl;
     return ID;
 }
 

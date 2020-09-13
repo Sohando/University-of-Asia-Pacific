@@ -62,18 +62,23 @@ public:
     }
     int getKey(string name)
     {
+        // cout << "getKey" << endl;
         int len=name.length();
         int sum=0;
         for(int i=0;i<len;i++)
         {
             sum=sum+name[i];
         }
+        // cout << __FILE__ << ", " << __LINE__ << ": " << sum %sz << endl;
         return sum%sz;
     }
     void insertItem(symbolInfo *newNode)
     {
+        // cout << "came here" << newNode->name << endl;
         int key=getKey(newNode->name);
+        // cout << "foo" << endl;
         symbolInfo* check=lookOut(newNode->name);
+        // cout << "lokk at" << endl;
         if(check==Null)
         {
             if(smbl[key]==Null){
@@ -96,8 +101,9 @@ public:
     }
     symbolInfo* lookOut(string name)
     {
-        cout << "(" << __FILE__ << "  " << __LINE__ << "): " << name << endl;
+        // cout << "(" << __FILE__ << "  " << __LINE__ << "): " << name << endl;
         int key=getKey(name);
+        // cout << key << endl;
         symbolInfo *temp=smbl[key];
         // cout << "_eikhane to ashi e nai_" << endl;
         if(temp==Null) {

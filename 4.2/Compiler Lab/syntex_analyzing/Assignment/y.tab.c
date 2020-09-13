@@ -66,14 +66,15 @@
 
 
 /* First part of user prologue.  */
-#line 1 "test_1.y"
+#line 1 "test.y"
 
 #include<iostream>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 #include "1305115_table.h"
-#define YYSTYPE symbolInfo*
+#define bug cout << __LINE__ << ": all is well" << endl
+#define debug(x) cerr << __LINE__ << ": " << #x << " = " << (x) << endl
 using namespace std;
 
 FILE *output;
@@ -94,7 +95,7 @@ void yyerror(const char *s){
 int yylex(void);
 
 
-#line 98 "y.tab.c"
+#line 99 "y.tab.c"
 
 # ifndef YY_CAST
 #  ifdef __cplusplus
@@ -181,7 +182,9 @@ extern int yydebug;
     SWITCH = 294,
     CONTINUE = 295,
     DEFAULT = 296,
-    LOWER_THAN_ELSE = 297
+    LOWER_THAN_ELSE = 297,
+    WITH_COMMA = 298,
+    WITHOUT_COMMA = 299
   };
 #endif
 /* Tokens.  */
@@ -225,6 +228,8 @@ extern int yydebug;
 #define CONTINUE 295
 #define DEFAULT 296
 #define LOWER_THAN_ELSE 297
+#define WITH_COMMA 298
+#define WITHOUT_COMMA 299
 
 /* Value type.  */
 #if ! defined YYSTYPE && ! defined YYSTYPE_IS_DECLARED
@@ -339,7 +344,7 @@ typedef int yytype_uint16;
 #define YYSIZEOF(X) YY_CAST (YYPTRDIFF_T, sizeof (X))
 
 /* Stored state numbers (used for stacks). */
-typedef yytype_int8 yy_state_t;
+typedef yytype_uint8 yy_state_t;
 
 /* State numbers in computations.  */
 typedef int yy_state_fast_t;
@@ -542,21 +547,21 @@ union yyalloc
 #endif /* !YYCOPY_NEEDED */
 
 /* YYFINAL -- State number of the termination state.  */
-#define YYFINAL  4
+#define YYFINAL  12
 /* YYLAST -- Last index in YYTABLE.  */
-#define YYLAST   292
+#define YYLAST   300
 
 /* YYNTOKENS -- Number of terminals.  */
-#define YYNTOKENS  43
+#define YYNTOKENS  45
 /* YYNNTS -- Number of nonterminals.  */
-#define YYNNTS  17
+#define YYNNTS  21
 /* YYNRULES -- Number of rules.  */
-#define YYNRULES  57
+#define YYNRULES  67
 /* YYNSTATES -- Number of states.  */
-#define YYNSTATES  128
+#define YYNSTATES  141
 
 #define YYUNDEFTOK  2
-#define YYMAXUTOK   297
+#define YYMAXUTOK   299
 
 
 /* YYTRANSLATE(TOKEN-NUM) -- Symbol number corresponding to TOKEN-NUM
@@ -597,19 +602,20 @@ static const yytype_int8 yytranslate[] =
        5,     6,     7,     8,     9,    10,    11,    12,    13,    14,
       15,    16,    17,    18,    19,    20,    21,    22,    23,    24,
       25,    26,    27,    28,    29,    30,    31,    32,    33,    34,
-      35,    36,    37,    38,    39,    40,    41,    42
+      35,    36,    37,    38,    39,    40,    41,    42,    43,    44
 };
 
 #if YYDEBUG
   /* YYRLINE[YYN] -- Source line where rule number YYN was defined.  */
 static const yytype_int16 yyrline[] =
 {
-       0,    36,    36,    40,    41,    42,    46,    47,    50,    51,
-      52,    53,    56,    76,   104,   105,   108,   109,   113,   114,
-     115,   116,   117,   118,   119,   120,   121,   123,   124,   125,
-     138,   142,   143,   144,   147,   148,   176,   189,   190,   191,
-     221,   222,   259,   260,   309,   310,   349,   350,   394,   413,
-     425,   454,   455,   456,   458,   459,   460,   481
+       0,    40,    40,    41,    44,    46,    47,    48,    49,    52,
+      55,    65,    66,    67,    72,    73,    74,    77,    78,    79,
+      80,    84,   117,   160,   211,   256,   257,   258,   262,   263,
+     264,   265,   266,   267,   268,   269,   270,   272,   273,   274,
+     297,   301,   305,   306,   309,   310,   364,   380,   381,   382,
+     413,   414,   491,   492,   677,   678,   758,   759,   850,   880,
+     896,   925,   926,   927,   930,   931,   932,   954
 };
 #endif
 
@@ -624,11 +630,12 @@ static const char *const yytname[] =
   "PRINTLN", "RETURN", "LOGICOP", "RELOP", "ASSIGNOP", "ADDOP", "NOT",
   "MULOP", "INCOP", "DECOP", "STRING", "ELSE", "DO", "BREAK", "DOUBLE",
   "VOID", "CASE", "SWITCH", "CONTINUE", "DEFAULT", "LOWER_THAN_ELSE",
-  "$accept", "Program", "compound_statement", "var_declaration",
-  "type_specifier", "declaration_list", "statements", "statement",
-  "expression_statement", "expression", "variable", "logic_expression",
-  "rel_expression", "simple_expression", "term", "unary_expression",
-  "factor", YY_NULLPTR
+  "WITH_COMMA", "WITHOUT_COMMA", "$accept", "Program", "main_function",
+  "user_defined_functions", "full_defination", "prototype",
+  "compound_statement", "var_declaration", "type_specifier",
+  "declaration_list", "statements", "statement", "expression_statement",
+  "expression", "variable", "logic_expression", "rel_expression",
+  "simple_expression", "term", "unary_expression", "factor", YY_NULLPTR
 };
 #endif
 
@@ -641,16 +648,16 @@ static const yytype_int16 yytoknum[] =
      265,   266,   267,   268,   269,   270,   271,   272,   273,   274,
      275,   276,   277,   278,   279,   280,   281,   282,   283,   284,
      285,   286,   287,   288,   289,   290,   291,   292,   293,   294,
-     295,   296,   297
+     295,   296,   297,   298,   299
 };
 # endif
 
-#define YYPACT_NINF (-46)
+#define YYPACT_NINF (-54)
 
 #define yypact_value_is_default(Yyn) \
   ((Yyn) == YYPACT_NINF)
 
-#define YYTABLE_NINF (-37)
+#define YYTABLE_NINF (-47)
 
 #define yytable_value_is_error(Yyn) \
   0
@@ -659,19 +666,21 @@ static const yytype_int16 yytoknum[] =
      STATE-NUM.  */
 static const yytype_int16 yypact[] =
 {
-      -1,    13,    10,    17,   -46,    24,    25,    90,   -46,    22,
-     -46,    44,   -46,   -46,   -46,   -46,    50,   -46,   -46,   -46,
-      28,     8,    31,    33,     7,    44,    44,   -46,   -46,   119,
-      26,   144,   -46,   -46,    38,    27,   -46,    30,    -6,    21,
-     -46,    -3,   -46,    46,    41,   222,   216,    53,   240,   246,
-      60,    57,    73,   -46,   -46,   -46,    26,   168,    69,     2,
-     -46,   -46,   -46,    44,    44,    44,    44,    44,   -46,   -46,
-     -46,    44,    70,    77,   216,    83,    88,    96,    98,    99,
-     108,   -46,   -46,     6,   -46,    80,   -46,   102,   -46,   -46,
-      89,    21,   -46,   104,   -46,   -46,   264,   115,   192,   192,
-     192,   192,   114,   -46,   110,   117,   -46,   127,   128,   192,
-     111,   121,   -46,   -46,   -46,   -46,   132,   192,   192,   -46,
-     192,   192,   135,   -46,   -46,   -46,   -46,   -46
+       7,    11,   -54,   -54,   -54,    33,   -54,   -54,     7,     7,
+      34,    47,   -54,   -54,   -54,   -54,    48,    49,    51,    53,
+      20,    90,   -54,   -54,   -54,    45,   -54,     3,   -54,   -54,
+      50,   -54,   -54,   -54,    56,     8,    57,    58,   224,     3,
+       3,   -54,   121,    59,   146,   -54,   -54,    62,    40,   -54,
+      60,    21,    44,   -54,    -7,   -54,    76,    71,   242,   218,
+      83,   248,   266,    79,    85,    87,   -54,   -54,   -54,    59,
+     170,    88,     2,   -54,   -54,   -54,     3,     3,     3,     3,
+       3,   -54,   -54,   -54,     3,    89,    99,   218,   104,   109,
+     110,   113,   114,   115,   -54,   -54,    13,   -54,   107,   -54,
+     112,   -54,   -54,   106,    44,   -54,   120,   -54,   -54,   272,
+     130,   194,   194,   194,   194,   136,   -54,   131,   138,   -54,
+     144,   150,   194,   124,   127,   -54,   -54,   -54,   -54,   145,
+     194,   194,   -54,   194,   194,   155,   -54,   -54,   -54,   -54,
+     -54
 };
 
   /* YYDEFACT[STATE-NUM] -- Default reduction number in state STATE-NUM.
@@ -679,141 +688,151 @@ static const yytype_int16 yypact[] =
      means the default is an error.  */
 static const yytype_int8 yydefact[] =
 {
-       0,     0,     0,     0,     1,     0,     0,     0,     2,     0,
-       8,     0,     5,    31,     9,    10,     0,    53,    54,    55,
-       0,     0,     0,     0,     0,     0,     0,    11,    19,     0,
-       0,     0,    16,    18,     0,    51,    34,    40,    42,    44,
-      46,    50,    33,     0,     0,     0,     0,     0,     0,     0,
-       0,     0,     0,    51,    48,    49,     0,     0,    14,     0,
-       4,    17,    32,     0,     0,     0,     0,     0,    56,    57,
-      52,     0,     0,     0,     0,     0,     0,     0,     0,     0,
-       0,    23,    30,     0,     3,     0,     6,     0,    35,    41,
-      43,    45,    47,     0,    37,    39,     0,     0,     0,     0,
-       0,     0,     0,     7,     0,    12,    38,     0,     0,     0,
-       0,    26,    22,    28,    29,    15,     0,     0,     0,    20,
-       0,     0,     0,    24,    25,    21,    27,    13
+       8,    17,    18,    19,    20,     0,     2,     3,     8,     8,
+       0,     0,     1,     7,     5,     6,     0,     0,     0,     0,
+       0,     0,     4,    10,     9,     0,    17,     0,    13,    41,
+       0,    63,    64,    65,     0,     0,     0,     0,     0,     0,
+       0,    29,     0,     0,     0,    26,    28,     0,    61,    44,
+      50,    52,    54,    56,    60,    43,     0,     0,     0,     0,
+       0,     0,     0,     0,     0,     0,    61,    58,    59,     0,
+       0,    23,     0,    12,    27,    42,     0,     0,     0,     0,
+       0,    66,    67,    62,     0,     0,     0,     0,     0,     0,
+       0,     0,     0,     0,    33,    40,     0,    11,     0,    15,
+       0,    45,    51,    53,    55,    57,     0,    47,    49,     0,
+       0,     0,     0,     0,     0,     0,    16,     0,    21,    48,
+       0,     0,     0,     0,    36,    32,    38,    39,    24,     0,
+       0,     0,    30,     0,     0,     0,    34,    35,    31,    37,
+      22
 };
 
   /* YYPGOTO[NTERM-NUM].  */
 static const yytype_int16 yypgoto[] =
 {
-     -46,   -46,   137,   -46,   126,   103,   129,   -31,   -45,    -8,
-     -21,   105,   106,   109,   112,   -19,   -46
+     -54,   -54,   172,    29,   -54,   -54,    30,   -54,   -14,   111,
+     134,   -44,   -53,   -26,   -37,   105,   108,   116,   103,   -35,
+     -54
 };
 
   /* YYDEFGOTO[NTERM-NUM].  */
 static const yytype_int8 yydefgoto[] =
 {
-      -1,     2,    28,    29,    30,    59,    31,    32,    33,    34,
-      35,    36,    37,    38,    39,    40,    41
+      -1,     5,    13,     7,     8,     9,    41,    42,    10,    72,
+      44,    45,    46,    47,    48,    49,    50,    51,    52,    53,
+      54
 };
 
   /* YYTABLE[YYPACT[STATE-NUM]] -- What to do in state STATE-NUM.  If
      positive, shift that token.  If negative, reduce the rule whose
      number is the opposite.  If YYTABLE_NINF, syntax error.  */
-static const yytype_int8 yytable[] =
+static const yytype_int16 yytable[] =
 {
-      61,    74,     1,    43,    53,    53,    54,    55,    51,    47,
-       4,    86,    11,    48,    87,   103,    52,     3,    87,    65,
-      16,    66,     5,    17,    18,    19,    61,    68,    69,    96,
-       6,    42,     7,    46,    25,    26,    49,    73,    50,    58,
-      77,    79,    53,    53,    53,    53,    53,    62,    92,    11,
-      67,    44,    70,    63,    64,    71,   -36,    16,    75,   -36,
-      17,    18,    19,    93,    45,   -36,    81,   110,   111,   112,
-     113,    25,    26,    80,   -36,   -36,   -36,   -36,   119,   -36,
-     -36,   -36,    82,    85,    97,    94,   123,   124,   108,   125,
-     126,     9,    95,    10,    98,    11,   104,     7,    12,    13,
-      14,    15,    99,    16,   100,   101,    17,    18,    19,    20,
-      21,    22,    23,    24,   102,   105,    66,    25,    26,   106,
-       9,   109,    10,   114,    11,   115,     7,    27,    13,    14,
-      15,   116,    16,   117,   118,    17,    18,    19,    20,    21,
-      22,    23,    24,     8,   120,     9,    25,    26,   122,    11,
-     127,     7,    60,    13,   121,    56,    27,    16,    57,    83,
-      17,    18,    19,    20,    21,    22,    23,    24,    88,     9,
-      89,    25,    26,    11,    90,     7,    84,    13,    91,     0,
-       0,    16,     0,     0,    17,    18,    19,    20,    21,    22,
-      23,    24,     0,     9,     0,    25,    26,    11,     0,     7,
-       0,    13,     0,     0,     0,    16,     0,     0,    17,    18,
-      19,    20,    21,    22,    23,    24,     0,     9,     0,    25,
-      26,    11,     0,    72,     0,    13,     0,    11,     0,    16,
-       0,     0,    17,    18,    19,    16,     0,     0,    17,    18,
-      19,    76,     0,    25,    26,    11,     0,    78,     0,    25,
-      26,    11,     0,    16,     0,     0,    17,    18,    19,    16,
-       0,     0,    17,    18,    19,   107,     0,    25,    26,    11,
-       0,     0,     0,    25,    26,     0,     0,    16,     0,     0,
-      17,    18,    19,     0,     0,     0,     0,     0,     0,     0,
-       0,    25,    26
+      74,    56,    66,    66,    67,    68,    87,    43,    27,    60,
+       1,    99,    65,    61,   100,    11,    30,     2,     3,    31,
+      32,    33,   116,    81,    82,   100,    74,    21,    69,    23,
+      39,    40,    86,    12,   109,    90,    92,    14,    15,    66,
+      66,    66,    66,    66,     4,   105,    78,    16,    79,    22,
+      24,    57,    17,    18,    55,    19,   -46,    20,   106,   -46,
+      21,    59,    62,    63,    58,   -46,    76,   123,   124,   125,
+     126,    75,    71,    80,   -46,   -46,   -46,   -46,   132,   -46,
+     -46,   -46,    83,   121,    77,    84,   136,   137,    88,   138,
+     139,    25,    93,    26,    94,    27,    95,    21,    28,    29,
+       2,     3,    98,    30,   107,   110,    31,    32,    33,    34,
+      35,    36,    37,    38,   108,   111,   112,    39,    40,   113,
+     114,   115,    25,   117,    26,   118,    27,     4,    21,   -25,
+      29,     2,     3,    79,    30,   119,   122,    31,    32,    33,
+      34,    35,    36,    37,    38,   127,   128,    25,    39,    40,
+     130,    27,   129,    21,    73,    29,   131,   133,     4,    30,
+     134,   135,    31,    32,    33,    34,    35,    36,    37,    38,
+     140,    25,     6,    39,    40,    27,    70,    21,    97,    29,
+      96,   101,   104,    30,     0,   102,    31,    32,    33,    34,
+      35,    36,    37,    38,   103,    25,     0,    39,    40,    27,
+       0,    21,     0,    29,     0,     0,     0,    30,     0,     0,
+      31,    32,    33,    34,    35,    36,    37,    38,     0,    25,
+       0,    39,    40,    27,     0,    64,     0,    29,     0,    27,
+       0,    30,     0,     0,    31,    32,    33,    30,     0,     0,
+      31,    32,    33,    85,     0,    39,    40,    27,     0,    89,
+       0,    39,    40,    27,     0,    30,     0,     0,    31,    32,
+      33,    30,     0,     0,    31,    32,    33,    91,     0,    39,
+      40,    27,     0,   120,     0,    39,    40,    27,     0,    30,
+       0,     0,    31,    32,    33,    30,     0,     0,    31,    32,
+      33,     0,     0,    39,    40,     0,     0,     0,     0,    39,
+      40
 };
 
-static const yytype_int8 yycheck[] =
+static const yytype_int16 yycheck[] =
 {
-      31,    46,     3,    11,    25,    26,    25,    26,     1,     1,
-       0,     9,     5,     5,    12,     9,    24,     4,    12,    25,
-      13,    27,     5,    16,    17,    18,    57,    30,    31,    74,
-       6,     9,     7,     5,    27,    28,     5,    45,     5,    13,
-      48,    49,    63,    64,    65,    66,    67,     9,    67,     5,
-      29,     1,     6,    26,    24,    14,     6,    13,     5,     9,
-      16,    17,    18,    71,    14,    15,     9,    98,    99,   100,
-     101,    27,    28,    13,    24,    25,    26,    27,   109,    29,
-      30,    31,     9,    14,     1,    15,   117,   118,    96,   120,
-     121,     1,    15,     3,     6,     5,    16,     7,     8,     9,
-      10,    11,     6,    13,     6,     6,    16,    17,    18,    19,
-      20,    21,    22,    23,     6,    13,    27,    27,    28,    15,
-       1,     6,     3,     9,     5,    15,     7,    37,     9,    10,
-      11,    14,    13,     6,     6,    16,    17,    18,    19,    20,
-      21,    22,    23,     6,    33,     1,    27,    28,    16,     5,
-      15,     7,     8,     9,    33,    29,    37,    13,    29,    56,
-      16,    17,    18,    19,    20,    21,    22,    23,    63,     1,
-      64,    27,    28,     5,    65,     7,     8,     9,    66,    -1,
-      -1,    13,    -1,    -1,    16,    17,    18,    19,    20,    21,
-      22,    23,    -1,     1,    -1,    27,    28,     5,    -1,     7,
-      -1,     9,    -1,    -1,    -1,    13,    -1,    -1,    16,    17,
-      18,    19,    20,    21,    22,    23,    -1,     1,    -1,    27,
-      28,     5,    -1,     1,    -1,     9,    -1,     5,    -1,    13,
+      44,    27,    39,    40,    39,    40,    59,    21,     5,     1,
+       3,     9,    38,     5,    12,     4,    13,    10,    11,    16,
+      17,    18,     9,    30,    31,    12,    70,     7,    42,     9,
+      27,    28,    58,     0,    87,    61,    62,     8,     9,    76,
+      77,    78,    79,    80,    37,    80,    25,    13,    27,    19,
+      20,     1,     5,     5,     9,     6,     6,     6,    84,     9,
+       7,     5,     5,     5,    14,    15,    26,   111,   112,   113,
+     114,     9,    13,    29,    24,    25,    26,    27,   122,    29,
+      30,    31,     6,   109,    24,    14,   130,   131,     5,   133,
+     134,     1,    13,     3,     9,     5,     9,     7,     8,     9,
+      10,    11,    14,    13,    15,     1,    16,    17,    18,    19,
+      20,    21,    22,    23,    15,     6,     6,    27,    28,     6,
+       6,     6,     1,    16,     3,    13,     5,    37,     7,     8,
+       9,    10,    11,    27,    13,    15,     6,    16,    17,    18,
+      19,    20,    21,    22,    23,     9,    15,     1,    27,    28,
+       6,     5,    14,     7,     8,     9,     6,    33,    37,    13,
+      33,    16,    16,    17,    18,    19,    20,    21,    22,    23,
+      15,     1,     0,    27,    28,     5,    42,     7,     8,     9,
+      69,    76,    79,    13,    -1,    77,    16,    17,    18,    19,
+      20,    21,    22,    23,    78,     1,    -1,    27,    28,     5,
+      -1,     7,    -1,     9,    -1,    -1,    -1,    13,    -1,    -1,
+      16,    17,    18,    19,    20,    21,    22,    23,    -1,     1,
+      -1,    27,    28,     5,    -1,     1,    -1,     9,    -1,     5,
+      -1,    13,    -1,    -1,    16,    17,    18,    13,    -1,    -1,
+      16,    17,    18,     1,    -1,    27,    28,     5,    -1,     1,
+      -1,    27,    28,     5,    -1,    13,    -1,    -1,    16,    17,
+      18,    13,    -1,    -1,    16,    17,    18,     1,    -1,    27,
+      28,     5,    -1,     1,    -1,    27,    28,     5,    -1,    13,
       -1,    -1,    16,    17,    18,    13,    -1,    -1,    16,    17,
-      18,     1,    -1,    27,    28,     5,    -1,     1,    -1,    27,
-      28,     5,    -1,    13,    -1,    -1,    16,    17,    18,    13,
-      -1,    -1,    16,    17,    18,     1,    -1,    27,    28,     5,
-      -1,    -1,    -1,    27,    28,    -1,    -1,    13,    -1,    -1,
-      16,    17,    18,    -1,    -1,    -1,    -1,    -1,    -1,    -1,
-      -1,    27,    28
+      18,    -1,    -1,    27,    28,    -1,    -1,    -1,    -1,    27,
+      28
 };
 
   /* YYSTOS[STATE-NUM] -- The (internal number of the) accessing
      symbol of state STATE-NUM.  */
 static const yytype_int8 yystos[] =
 {
-       0,     3,    44,     4,     0,     5,     6,     7,    45,     1,
-       3,     5,     8,     9,    10,    11,    13,    16,    17,    18,
-      19,    20,    21,    22,    23,    27,    28,    37,    45,    46,
-      47,    49,    50,    51,    52,    53,    54,    55,    56,    57,
-      58,    59,     9,    52,     1,    14,     5,     1,     5,     5,
-       5,     1,    52,    53,    58,    58,    47,    49,    13,    48,
-       8,    50,     9,    26,    24,    25,    27,    29,    30,    31,
-       6,    14,     1,    52,    51,     5,     1,    52,     1,    52,
-      13,     9,     9,    48,     8,    14,     9,    12,    54,    55,
-      56,    57,    58,    52,    15,    15,    51,     1,     6,     6,
-       6,     6,     6,     9,    16,    13,    15,     1,    52,     6,
-      50,    50,    50,    50,     9,    15,    14,     6,     6,    50,
-      33,    33,    16,    50,    50,    50,    50,    15
+       0,     3,    10,    11,    37,    46,    47,    48,    49,    50,
+      53,     4,     0,    47,    48,    48,    13,     5,     5,     6,
+       6,     7,    51,     9,    51,     1,     3,     5,     8,     9,
+      13,    16,    17,    18,    19,    20,    21,    22,    23,    27,
+      28,    51,    52,    53,    55,    56,    57,    58,    59,    60,
+      61,    62,    63,    64,    65,     9,    58,     1,    14,     5,
+       1,     5,     5,     5,     1,    58,    59,    64,    64,    53,
+      55,    13,    54,     8,    56,     9,    26,    24,    25,    27,
+      29,    30,    31,     6,    14,     1,    58,    57,     5,     1,
+      58,     1,    58,    13,     9,     9,    54,     8,    14,     9,
+      12,    60,    61,    62,    63,    64,    58,    15,    15,    57,
+       1,     6,     6,     6,     6,     6,     9,    16,    13,    15,
+       1,    58,     6,    56,    56,    56,    56,     9,    15,    14,
+       6,     6,    56,    33,    33,    16,    56,    56,    56,    56,
+      15
 };
 
   /* YYR1[YYN] -- Symbol number of symbol that rule YYN derives.  */
 static const yytype_int8 yyr1[] =
 {
-       0,    43,    44,    45,    45,    45,    46,    46,    47,    47,
-      47,    47,    48,    48,    48,    48,    49,    49,    50,    50,
-      50,    50,    50,    50,    50,    50,    50,    50,    50,    50,
-      50,    51,    51,    51,    52,    52,    53,    53,    53,    53,
-      54,    54,    55,    55,    56,    56,    57,    57,    58,    58,
-      58,    59,    59,    59,    59,    59,    59,    59
+       0,    45,    46,    46,    47,    48,    48,    48,    48,    49,
+      50,    51,    51,    51,    52,    52,    52,    53,    53,    53,
+      53,    54,    54,    54,    54,    55,    55,    55,    56,    56,
+      56,    56,    56,    56,    56,    56,    56,    56,    56,    56,
+      56,    57,    57,    57,    58,    58,    59,    59,    59,    59,
+      60,    60,    61,    61,    62,    62,    63,    63,    64,    64,
+      64,    65,    65,    65,    65,    65,    65,    65
 };
 
   /* YYR2[YYN] -- Number of symbols on the right hand side of rule YYN.  */
 static const yytype_int8 yyr2[] =
 {
-       0,     2,     5,     4,     3,     2,     3,     4,     1,     1,
-       1,     1,     3,     6,     1,     4,     1,     2,     1,     1,
+       0,     2,     1,     1,     5,     2,     2,     1,     0,     5,
+       5,     4,     3,     2,     0,     3,     4,     1,     1,     1,
+       1,     3,     6,     1,     4,     0,     1,     2,     1,     1,
        6,     7,     5,     3,     7,     7,     5,     7,     5,     5,
        3,     1,     2,     2,     1,     3,     1,     4,     5,     4,
        1,     3,     1,     3,     1,     3,     1,     3,     2,     2,
@@ -1512,126 +1531,313 @@ yyreduce:
   YY_REDUCE_PRINT (yyn);
   switch (yyn)
     {
-  case 2:
-#line 36 "test_1.y"
-                                                    { fprintf(output,"program : INT MAIN LPAREN RPAREN compound_statement\n\n");}
-#line 1519 "y.tab.c"
-    break;
-
-  case 3:
-#line 40 "test_1.y"
-                                                            {fprintf(output,"compound_statement : LCURL var_declaration statements RCURL\n\n");}
-#line 1525 "y.tab.c"
-    break;
-
   case 4:
-#line 41 "test_1.y"
-                                             {fprintf(output,"compound_statement : LCUR  statements RCURL\n\n");}
-#line 1531 "y.tab.c"
-    break;
-
-  case 5:
-#line 42 "test_1.y"
-                                  {fprintf(output,"compound_statement : LCURL RCURL\n\n");}
-#line 1537 "y.tab.c"
-    break;
-
-  case 8:
-#line 50 "test_1.y"
-                      { fprintf(output,"type_specifier  : INT \n\n"); {cmp="int";}}
-#line 1543 "y.tab.c"
+#line 44 "test.y"
+                                                    { fprintf(output,"program : INT MAIN LPAREN RPAREN compound_statement\n\n");}
+#line 1538 "y.tab.c"
     break;
 
   case 9:
-#line 51 "test_1.y"
-                        { fprintf(output,"type_specifier  : FLOAT \n\n"); {cmp="float";}}
-#line 1549 "y.tab.c"
+#line 52 "test.y"
+                                                             {cout << "user defined" << endl;}
+#line 1544 "y.tab.c"
+    break;
+
+  case 10:
+#line 55 "test.y"
+                                                    {cout << "prototyping" << endl;}
+#line 1550 "y.tab.c"
+    break;
+
+  case 11:
+#line 65 "test.y"
+                                                 {fprintf(output,"compound_statement : LCURL var_declaration statements RCURL\n\n");}
+#line 1556 "y.tab.c"
     break;
 
   case 12:
-#line 56 "test_1.y"
-                                             { 
-		fprintf(output,"declaration_list  : declaration_list COMMA ID\n%s\n\n",yyvsp[0]->name.c_str()); 
-		idcheck=table->lookOut(yyvsp[0]->name);
-		if(idcheck==Null){
-				
-					if(strcmp(cmp.c_str(),"int")==0)
-					{
-					yyvsp[0]->data=integer;
-					yyvsp[0]->val.i=-99999;
-					yyvsp[0]->position=0;
-					table->insertItem(yyvsp[0]);
-					}
-					//Add code for float and character
-					
-				}
-		else{
-				char errorarr[30]="Multiple Declaration";
-				strcat(errorarr,yyvsp[0]->name.c_str());							
-				yyerror(errorarr);
-		    } }
-#line 1574 "y.tab.c"
+#line 66 "test.y"
+                                         {fprintf(output,"compound_statement : LCUR  statements RCURL\n\n");}
+#line 1562 "y.tab.c"
     break;
 
   case 13:
-#line 77 "test_1.y"
-                        {fprintf(output,"declaration_list  : declaration_list COMMA ID LTHIRD CONST_INT RTHIRD\n %s\n\n",
-				yyvsp[-3]->name.c_str());
-		idcheck=table->lookOut(yyvsp[-3]->name);
-		if(idcheck==Null){
-				
-				if(strcmp(cmp.c_str(),"int")==0)
-				{
-				yyvsp[-3]->data=integer; 
-				//$3->arraysz=what will be added???
-				yyvsp[-3]->val.arrayi=(int*)malloc((yyvsp[-3]->arraysz)*sizeof(int));
-				for(int k=0;k<yyvsp[-3]->arraysz;k++){yyvsp[-3]->val.arrayi[k]=-1;}
+#line 67 "test.y"
+                              {fprintf(output,"compound_statement : LCURL RCURL\n\n");}
+#line 1568 "y.tab.c"
+    break;
+
+  case 15:
+#line 73 "test.y"
+                                                    { fprintf(output,"var_declaration	: type_specifier declaration_list SEMICOLON\n\n");}
+#line 1574 "y.tab.c"
+    break;
+
+  case 16:
+#line 74 "test.y"
+                                                                    { fprintf(output,"var_declaration	: var_declaration type_specifier declaration_list SEMICOLON\n\n");}
+#line 1580 "y.tab.c"
+    break;
+
+  case 17:
+#line 77 "test.y"
+                      { fprintf(output,"type_specifier  : INT \n\n"); {cmp="int";}}
+#line 1586 "y.tab.c"
+    break;
+
+  case 18:
+#line 78 "test.y"
+                        { fprintf(output,"type_specifier  : FLOAT \n\n"); {cmp="float";}}
+#line 1592 "y.tab.c"
+    break;
+
+  case 19:
+#line 79 "test.y"
+                        { fprintf(output,"type_specifier  : FLOAT \n\n"); {cmp="char";}}
+#line 1598 "y.tab.c"
+    break;
+
+  case 21:
+#line 84 "test.y"
+                                    { 
+    		fprintf(output,"declaration_list  : declaration_list COMMA ID\n%s\n\n",yyvsp[0]->name.c_str()); 
+	    	idcheck=table->lookOut(yyvsp[0]->name);
+		    if(idcheck==Null){				
+					if(strcmp(cmp.c_str(),"int")==0)
+					{
+    					yyvsp[0]->data=integer;
+	    				yyvsp[0]->val.i=-99999;
+		    			yyvsp[0]->position=0;
+			    		table->insertItem(yyvsp[0]);
+					}
+					//Add code for float and character					
+					else if(strcmp(cmp.c_str(),"float")==0)
+					{
+    					yyvsp[0]->data=floating;
+	    				yyvsp[0]->val.i=-99999;
+		    			yyvsp[0]->position=0;
+			    		table->insertItem(yyvsp[0]);
+					}
+					else if(strcmp(cmp.c_str(),"char")==0)
+					{
+				    	yyvsp[0]->data=character;
+					    yyvsp[0]->val.c='.';
+    					yyvsp[0]->position=0;
+	    				table->insertItem(yyvsp[0]);
+					}
 				}
-				else if(strcmp(cmp.c_str(),"float")==0)
-				{
-				//add codes
-				}
-				else if(strcmp(cmp.c_str(),"char")==0)
-				{	
-				//add codes
-				}
+		    else{
+				char errorarr[30]="Multiple Declaration";
+				strcat(errorarr,yyvsp[0]->name.c_str());							
+				yyerror(errorarr);
+		    } 
+        }
+#line 1636 "y.tab.c"
+    break;
+
+  case 22:
+#line 117 "test.y"
+                                                            {
+                fprintf(output,"declaration_list  : declaration_list COMMA ID LTHIRD CONST_INT RTHIRD\n %s\n\n", yyvsp[-3]->name.c_str());
+	    	    idcheck=table->lookOut(yyvsp[-3]->name);
+    	    	if(idcheck==Null){
+		    		if(strcmp(cmp.c_str(),"int")==0)
+		    		{
+		    		    yyvsp[-3]->data=integer; 
+		    		    yyvsp[-3]->arraysz=yyvsp[-1]->val.i;
+		    		    yyvsp[-3]->val.arrayi = (int*)malloc((yyvsp[-3]->arraysz)*sizeof(int));
+		    		    for(int k=0;k<yyvsp[-3]->arraysz;k++) {
+                            yyvsp[-3]->val.arrayi[k]=-1;
+                        }
+		    		}
+		    		else if(strcmp(cmp.c_str(),"float")==0)
+		    		{
+		    		    //add codes
+		    		    yyvsp[-3]->data=floating; 
+		    		    yyvsp[-3]->arraysz=yyvsp[-1]->val.i;
+		    		    yyvsp[-3]->val.arrayf = (float*)malloc((yyvsp[-3]->arraysz)*sizeof(float));
+		    		    for(int k=0;k<yyvsp[-3]->arraysz;k++) {
+                            yyvsp[-3]->val.arrayf[k]=-1;
+                        }
+		    		}
+		    		else if(strcmp(cmp.c_str(),"char")==0)
+		    		{	
+		    		    //add codes
+		    		    yyvsp[-3]->data=character; 
+		    		    yyvsp[-3]->arraysz=yyvsp[-1]->val.i;
+		    		    yyvsp[-3]->val.arrayc=(char*)malloc((yyvsp[-3]->arraysz)*sizeof(char));
+		    		    for(int k=0;k<yyvsp[-3]->arraysz;k++) {
+                            yyvsp[-3]->val.arrayc[k]=-1;
+                        }
+                        
+		    		}
 				table->insertItem(yyvsp[-3]);	
 			}
-	else{
-		// add error here
-		
-	}	
-		}
-#line 1606 "y.tab.c"
+	        else{
+    	    	// add error here	
+	    	    char errorarr[30]="Multiple Declaration";
+        		strcat(errorarr,yyvsp[-3]->name.c_str());							
+    	        yyerror(errorarr);
+        	}	
+        }
+#line 1684 "y.tab.c"
     break;
 
-  case 26:
-#line 121 "test_1.y"
+  case 23:
+#line 160 "test.y"
+                     {
+// bug;
+                fprintf(output,"declaration_list  : ID\n %s\n\n", yyvsp[0]->name.c_str());
+// bug;
+                // cout << $1->name.c_str() << endl;
+                // debug($1->name.c_str());
+		        idcheck=table->lookOut(yyvsp[0]->name);
+		        // table->lookOut($1->name) == Null ? cout << "h" << endl : cout << "m" << endl;                
+                // idcheck = Null;
+// bug;
+                // cout << "returned" << endl;
+		        if(idcheck==Null){
+// bug;		        		
+		        			if(strcmp(cmp.c_str(),"int")==0)
+		        			{
+// bug;
+// $1->data = integer;
+// cout << typeid($1).name() <<  endl;
+// cout << $1->data << endl;                
+                                yyvsp[0]->data=integer;
+// bug;
+	    	        			yyvsp[0]->val.i=-99999;
+// bug;
+		            			yyvsp[0]->position=0;
+// bug;
+		            			table->insertItem(yyvsp[0]);
+// bug;                    
+		        			}
+		        			//Add code for float and character
+		        			
+		        			else if(strcmp(cmp.c_str(),"float")==0)
+		        			{
+		        			yyvsp[0]->data=floating;
+		        			yyvsp[0]->val.i=-99999;
+		        			yyvsp[0]->position=0;
+		        			table->insertItem(yyvsp[0]);
+		        			}
+		        			else if(strcmp(cmp.c_str(),"char")==0)
+		        			{
+		        			yyvsp[0]->data=character;
+		        			yyvsp[0]->val.c='.';
+		        			yyvsp[0]->position=0;
+		        			table->insertItem(yyvsp[0]);
+		        			}
+		        		}
+		        else{
+		        		char errorarr[30]="Multiple Declaration";
+		        		strcat(errorarr,yyvsp[0]->name.c_str());							
+		        		yyerror(errorarr);
+		            } 
+        }
+#line 1740 "y.tab.c"
+    break;
+
+  case 24:
+#line 211 "test.y"
+                                             {
+                // fprintf(output,"declaration_list : ID LTHIRD CONST_INT RTHIRD\n %s\n\n",$1);}
+                fprintf(output,"declaration_list  : declaration_list ID LTHIRD CONST_INT RTHIRD\n %s\n\n", yyvsp[-3]->name.c_str());
+	    	    idcheck=table->lookOut(yyvsp[-3]->name);
+    	    	if(idcheck==Null){
+		    		if(strcmp(cmp.c_str(),"int")==0)
+		    		{
+		    		    yyvsp[-3]->data=integer; 
+		    		    yyvsp[-3]->arraysz=yyvsp[-1]->val.i;
+		    		    yyvsp[-3]->val.arrayi=(int*)malloc((yyvsp[-3]->arraysz)*sizeof(int));
+		    		    for(int k=0;k<yyvsp[-3]->arraysz;k++) {
+                            yyvsp[-3]->val.arrayi[k]=-1;
+                        }
+		    		}
+		    		else if(strcmp(cmp.c_str(),"float")==0)
+		    		{
+		    		    //add codes
+		    		    yyvsp[-3]->data=floating; 
+		    		    yyvsp[-3]->arraysz=yyvsp[-1]->val.i;
+		    		    yyvsp[-3]->val.arrayf=(float*)malloc((yyvsp[-3]->arraysz)*sizeof(float));
+		    		    for(int k=0;k<yyvsp[-3]->arraysz;k++) {
+                            yyvsp[-3]->val.arrayf[k]=-1;
+                        }
+		    		}
+		    		else if(strcmp(cmp.c_str(),"char")==0)
+		    		{	
+		    		    //add codes
+		    		    yyvsp[-3]->data=character; 
+		    		    yyvsp[-3]->arraysz=yyvsp[-1]->val.i;
+		    		    yyvsp[-3]->val.arrayc=(char*)malloc((yyvsp[-3]->arraysz)*sizeof(char));
+		    		    for(int k=0;k<yyvsp[-3]->arraysz;k++) {
+                            yyvsp[-3]->val.arrayc[k]=-1;
+                        }
+                        
+		    		}
+				    table->insertItem(yyvsp[-3]);	
+			    }
+	           else{
+    	    	    // add error here	
+    	    	    char errorarr[30]="Multiple Declaration";
+        		    strcat(errorarr,yyvsp[-1]->name.c_str());							
+                	yyerror(errorarr);
+        	    }	
+        }
+#line 1789 "y.tab.c"
+    break;
+
+  case 36:
+#line 270 "test.y"
                                                   { //add precedence at the end of action
 	     }
-#line 1613 "y.tab.c"
+#line 1796 "y.tab.c"
     break;
 
-  case 29:
-#line 125 "test_1.y"
-                                                { 
-		fprintf(output,"statement  : PRINTLN LPAREN ID RPAREN SEMICOLON \n\n");
-		idprint=table->lookOut(yyvsp[-2]->name);
-		if(idprint!=Null)
-		{	
-			if(idprint->data==integer)
-				printf("\n\n\nPRINTLN LPAREN ID RPAREN SEMICOLON  %d\n\n\n",idprint->val.i);
-			//can you add additional code here??
+  case 39:
+#line 275 "test.y"
+        { 
+		    fprintf(output,"statement  : PRINTLN LPAREN ID RPAREN SEMICOLON \n\n");
+    		idprint=table->lookOut(yyvsp[-2]->name);
+	    	if(idprint!=Null)
+		    {	
+			    if(idprint->data==integer) {
+				    printf("\n\n\nPRINTLN LPAREN ID RPAREN SEMICOLON  %d\n\n\n",idprint->val.i);
+                }
+    			//can you add additional code here??
+                else if (idprint->data == floating) {
+				    printf("\n\n\nPRINTLN LPAREN ID RPAREN SEMICOLON  %f\n\n\n",idprint->val.f);
+                } else {
+				    printf("\n\n\nPRINTLN LPAREN ID RPAREN SEMICOLON  %c\n\n\n",idprint->val.c);
+                }
+	    	}
+		    else {
+			    //add the error code! can you tell what would be the error here?? 
+    		    char errorarr[100]="ID WAS NOT DECLARED IN THIS SCOPE";
+        		strcat(errorarr,yyvsp[-2]->name.c_str());							
+            	yyerror(errorarr);
+    		}
 		}
-		else {
-			//add the error code! can you tell what would be the error here?? 
-		}
-		}
-#line 1631 "y.tab.c"
+#line 1823 "y.tab.c"
     break;
 
-  case 35:
-#line 148 "test_1.y"
+  case 41:
+#line 302 "test.y"
+                     {
+                        fprintf(output,"expression : SEMICOLON\n\n"); 
+            }
+#line 1831 "y.tab.c"
+    break;
+
+  case 42:
+#line 305 "test.y"
+                                               {fprintf(output,"expression : expression SEMICOLON\n\n"); }
+#line 1837 "y.tab.c"
+    break;
+
+  case 45:
+#line 310 "test.y"
                                                 { fprintf(output,"expression : variable ASSIGNOP logic_expression\n\n"); 
 		if(yyvsp[0]->data==invalid){}
 		else if((yyvsp[-2]->data==integer||yyvsp[-2]->data==character)&&yyvsp[0]->data==floating)
@@ -1642,16 +1848,42 @@ yyreduce:
 				if(yyvsp[0]->data==integer)
 				{
 					//$1->val.i=What will be here??
+                    yyvsp[-2]->val.i = yyvsp[0]->val.i;
+					yyvsp[-2]->data=yyvsp[0]->data;
+				}
+				else if(yyvsp[0]->data==floating)
+				{
+					//$1->val.i=What will be here??
+                    yyvsp[-2]->val.f = yyvsp[0]->val.f;
+					yyvsp[-2]->data=yyvsp[0]->data;
+				}
+				else if(yyvsp[0]->data==character)
+				{
+					//$1->val.i=What will be here??
+                    yyvsp[-2]->val.c = yyvsp[0]->val.c;
 					yyvsp[-2]->data=yyvsp[0]->data;
 				}
 				// add codes for others
 				table->print(output);
-					}
+			}
 			else if(yyvsp[-2]->arraysz>0)
 			{
 				if(yyvsp[0]->data==integer)
 				{
 					//$1->val.arrayi[ix->val.i]=what will be here?;
+                    yyvsp[-2]->val.arrayi[ix->val.i] = yyvsp[0]->val.i;
+					yyvsp[-2]->data=yyvsp[0]->data;
+				}
+				else if(yyvsp[0]->data==floating)
+				{
+					//$1->val.arrayi[ix->val.i]=what will be here?;
+                    yyvsp[-2]->val.arrayf[ix->val.i] = yyvsp[0]->val.f;
+					yyvsp[-2]->data=yyvsp[0]->data;
+				}
+				if(yyvsp[0]->data==character)
+				{
+					//$1->val.arrayi[ix->val.i]=what will be here?;
+                    yyvsp[-2]->val.arrayc[ix->val.c] = yyvsp[0]->val.c;
 					yyvsp[-2]->data=yyvsp[0]->data;
 				}
 				
@@ -1659,29 +1891,32 @@ yyreduce:
 			}
 		}
 		}
-#line 1663 "y.tab.c"
+#line 1895 "y.tab.c"
     break;
 
-  case 36:
-#line 176 "test_1.y"
+  case 46:
+#line 364 "test.y"
                 { fprintf(output,"variable  : ID \n\n"); 
 			notget=table->lookOut(yyvsp[0]->name);
 			if(notget!=Null)
 			{
-			//$$=notget;
-			yyval=yyvsp[0];
-			if(yyval->arraysz!=0){yyerror("Identifier to an array");}
-			}
+    			//$$=notget;
+    			yyval=yyvsp[0];
+	    		if(yyval->arraysz!=0) {
+                    yyerror("Identifier to an array");
+                }
+		    }
 			else
 			{
 			//add the error!
+                yyerror("NOT DECLARED IN THIS SCOPE");
 			}
 }
-#line 1681 "y.tab.c"
+#line 1916 "y.tab.c"
     break;
 
-  case 39:
-#line 192 "test_1.y"
+  case 49:
+#line 383 "test.y"
                 { fprintf(output,"variable  : ID LTHIRD expression RTHIRD\n\n");//printf("Arraytype: %d\n",$1->data); 
 			notget=table->lookOut(yyvsp[-3]->name);
 			
@@ -1707,13 +1942,14 @@ yyreduce:
 			else
 			{
 			//add code
+                yyerror("NOT DECLARED IN THIS SCOPE");
 			}
 		}
-#line 1713 "y.tab.c"
+#line 1949 "y.tab.c"
     break;
 
-  case 41:
-#line 223 "test_1.y"
+  case 51:
+#line 415 "test.y"
                         { fprintf(output,"logic_expression : rel_expression LOGICOP rel_expression\n\n");
 				if((strcmp(yyvsp[-1]->name.c_str(),"&&"))==0)
 				{
@@ -1721,24 +1957,32 @@ yyreduce:
 					{
 							printf("%d",yyvsp[-2]->val.i);
 							//hint: 1&&0=0 0&&0=0 1&&1=1 $$ value will be changed
+                            if (yyvsp[-2]->val.i == 1 && yyvsp[0]->val.i == 1) yyval->val.i = 1;
+                            else yyval->val.i = 0;
 							printf("&&%d=%d\n",yyvsp[0]->val.i,yyval->val.i);
 					}
 					else if (yyvsp[-2]->data==integer&&yyvsp[0]->data==floating)//int&&float
 					{
 						printf("%d",yyvsp[-2]->val.i);
 						//static_cast<float>($1->val.i) just convert the int to float type and then compare simply
+                        if (static_cast<float>(yyvsp[-2]->val.i) == 1 && yyvsp[0]->val.f == 1) yyval->val.i = 1;
+                        else yyval->val.i = 0;
 						printf("&&%f=%d\n",yyvsp[0]->val.f,yyval->val.i);
 					}
 					else if (yyvsp[-2]->data==floating&&yyvsp[0]->data==integer)//float&&int
 					{
 						printf("%f",yyvsp[-2]->val.f);
 						//same as int&&int
+                        if (static_cast<float>(yyvsp[0]->val.i) == 1 && yyvsp[-2]->val.f == 1) yyval->val.i = 1;
+                        else yyval->val.i = 0;
 						printf("&&%d=%d\n",yyvsp[0]->val.i,yyval->val.i);
 					}
 					else if (yyvsp[-2]->data==floating&&yyvsp[0]->data==floating)//float&&float
 					{
 						printf("%f",yyvsp[-2]->val.f);
-						//same as int && int
+						//same as int && intp
+                        if (yyvsp[-2]->val.f == 1 && yyvsp[0]->val.f == 1) yyval->val.i = 1;
+                        else yyval->val.i = 0;
 						printf("&&%f=%d\n",yyvsp[0]->val.f,yyval->val.i);
 					}
 						
@@ -1748,12 +1992,44 @@ yyreduce:
 					
 					//add codes for || take help from &&
 											
+					if (yyvsp[-2]->data==integer&&yyvsp[0]->data==integer)//int&&int
+					{
+							printf("%d",yyvsp[-2]->val.i);
+							//hint: 1&&0=0 0&&0=0 1&&1=1 $$ value will be changed
+                            if (yyvsp[-2]->val.i == 0 && yyvsp[0]->val.i == 0) yyval->val.i = 0;
+                            else yyval->val.i = 1;
+							printf("&&%d=%d\n",yyvsp[0]->val.i,yyval->val.i);
+					}
+					else if (yyvsp[-2]->data==integer&&yyvsp[0]->data==floating)//int&&float
+					{
+						printf("%d",yyvsp[-2]->val.i);
+						//static_cast<float>($1->val.i) just convert the int to float type and then compare simply
+                        if (static_cast<float>(yyvsp[-2]->val.i) == 0 && yyvsp[0]->val.f == 0) yyval->val.i = 0;
+                        else yyval->val.i = 1;
+						printf("&&%f=%d\n",yyvsp[0]->val.f,yyval->val.i);
+					}
+					else if (yyvsp[-2]->data==floating&&yyvsp[0]->data==integer)//float&&int
+					{
+						printf("%f",yyvsp[-2]->val.f);
+						//same as int&&int
+                        if (static_cast<float>(yyvsp[0]->val.i) == 0 && yyvsp[-2]->val.f == 0) yyval->val.i = 0;
+                        else yyval->val.i = 1;
+						printf("&&%d=%d\n",yyvsp[0]->val.i,yyval->val.i);
+					}
+					else if (yyvsp[-2]->data==floating&&yyvsp[0]->data==floating)//float&&float
+					{
+						printf("%f",yyvsp[-2]->val.f);
+						//same as int && intp
+                        if (yyvsp[-2]->val.f == 0 && yyvsp[0]->val.f == 0) yyval->val.i = 0;
+                        else yyval->val.i = 1;
+						printf("&&%f=%d\n",yyvsp[0]->val.f,yyval->val.i);
+					}
 				} }
-#line 1753 "y.tab.c"
+#line 2029 "y.tab.c"
     break;
 
-  case 43:
-#line 261 "test_1.y"
+  case 53:
+#line 493 "test.y"
                         { fprintf(output,"rel_expression : simple_expression RELOP simple_expression\n\n"); 
 				if((strcmp(yyvsp[-1]->name.c_str(),"<"))==0)
 				{					
@@ -1761,79 +2037,222 @@ yyreduce:
 					{
 						printf("%d",yyvsp[-2]->val.i);
 						//convert int to float using static_cast<float>
+                        if (static_cast<float>(yyvsp[-2]->val.i) < yyvsp[0]->val.f) yyval->val.i = 1;
+                        else yyval->val.i = 0;
 						printf("<%f=%d\n",yyvsp[0]->val.f,yyval->val.i);
 					}
 					else if (yyvsp[-2]->data==floating&&yyvsp[0]->data==integer)//float<int
 					{
 						printf("%f",yyvsp[-2]->val.f);
 						//convert int to float using static_cast<float>
+                        if (static_cast<float>(yyvsp[0]->val.i) < yyvsp[-2]->val.f) yyval->val.i = 1;
+                        else yyval->val.i = 0;
 						printf("<%d=%d\n",yyvsp[0]->val.i,yyval->val.i);
 					}
 					else if (yyvsp[-2]->data==integer&&yyvsp[0]->data==integer)//int<int
 					{
 						printf("%d",yyvsp[-2]->val.i);
-						//add code here
+						//add code herep
+                        if (yyvsp[-2]->val.i < yyvsp[0]->val.i) yyval->val.i = 1;
+                        else yyval->val.i = 0;
 						printf("<%d=%d\n",yyvsp[0]->val.i,yyval->val.i);
 					}
 					else if (yyvsp[-2]->data==floating&&yyvsp[0]->data==floating)//float<float
 					{
 						printf("%f",yyvsp[-2]->val.f);
 						//add code here
+                        if (yyvsp[-2]->val.f < yyvsp[0]->val.f) yyval->val.i = 1;
+                        else yyval->val.i = 0;
 						printf("<%f=%d\n",yyvsp[0]->val.f,yyval->val.i);
 					}				
 											
 				}
 				else if((strcmp(yyvsp[-1]->name.c_str(),">")==0))
 				{
-					//take help from <
+					//take help from <					
+					if (yyvsp[-2]->data==integer&&yyvsp[0]->data==floating)//int>float
+					{
+						printf("%d",yyvsp[-2]->val.i);
+						//convert int to float using static_cast<float>
+                        if (static_cast<float>(yyvsp[-2]->val.i) > yyvsp[0]->val.f) yyval->val.i = 1;
+                        else yyval->val.i = 0;
+						printf("<%f=%d\n",yyvsp[0]->val.f,yyval->val.i);
+					}
+					else if (yyvsp[-2]->data==floating&&yyvsp[0]->data==integer)//float<int
+					{
+						printf("%f",yyvsp[-2]->val.f);
+						//convert int to float using static_cast<float>
+                        if (static_cast<float>(yyvsp[0]->val.i) > yyvsp[-2]->val.f) yyval->val.i = 1;
+                        else yyval->val.i = 0;
+						printf("<%d=%d\n",yyvsp[0]->val.i,yyval->val.i);
+					}
+					else if (yyvsp[-2]->data==integer&&yyvsp[0]->data==integer)//int<int
+					{
+						printf("%d",yyvsp[-2]->val.i);
+						//add code herep
+                        if (yyvsp[-2]->val.i > yyvsp[0]->val.i) yyval->val.i = 1;
+                        else yyval->val.i = 0;
+						printf("<%d=%d\n",yyvsp[0]->val.i,yyval->val.i);
+					}
+					else if (yyvsp[-2]->data==floating&&yyvsp[0]->data==floating)//float<float
+					{
+						printf("%f",yyvsp[-2]->val.f);
+						//add code here
+                        if (yyvsp[-2]->val.f > yyvsp[0]->val.f) yyval->val.i = 1;
+                        else yyval->val.i = 0;
+						printf("<%f=%d\n",yyvsp[0]->val.f,yyval->val.i);
+					}				
 				}
 				else if((strcmp(yyvsp[-1]->name.c_str(),"<="))==0)
 				{
-					//take help from <
+					//take help from <					
+					if (yyvsp[-2]->data==integer&&yyvsp[0]->data==floating)//int<float
+					{
+						printf("%d",yyvsp[-2]->val.i);
+						//convert int to float using static_cast<float>
+                        if (static_cast<float>(yyvsp[-2]->val.i) <= yyvsp[0]->val.f) yyval->val.i = 1;
+                        else yyval->val.i = 0;
+						printf("<%f=%d\n",yyvsp[0]->val.f,yyval->val.i);
+					}
+					else if (yyvsp[-2]->data==floating&&yyvsp[0]->data==integer)//float<int
+					{
+						printf("%f",yyvsp[-2]->val.f);
+						//convert int to float using static_cast<float>
+                        if (static_cast<float>(yyvsp[0]->val.i) <= yyvsp[-2]->val.f) yyval->val.i = 1;
+                        else yyval->val.i = 0;
+						printf("<%d=%d\n",yyvsp[0]->val.i,yyval->val.i);
+					}
+					else if (yyvsp[-2]->data==integer&&yyvsp[0]->data==integer)//int<int
+					{
+						printf("%d",yyvsp[-2]->val.i);
+						//add code herep
+                        if (yyvsp[-2]->val.i <= yyvsp[0]->val.i) yyval->val.i = 1;
+                        else yyval->val.i = 0;
+						printf("<%d=%d\n",yyvsp[0]->val.i,yyval->val.i);
+					}
+					else if (yyvsp[-2]->data==floating&&yyvsp[0]->data==floating)//float<float
+					{
+						printf("%f",yyvsp[-2]->val.f);
+						//add code here
+                        if (yyvsp[-2]->val.f <= yyvsp[0]->val.f) yyval->val.i = 1;
+                        else yyval->val.i = 0;
+						printf("<%f=%d\n",yyvsp[0]->val.f,yyval->val.i);
+					}				
 				}
 				else if((strcmp(yyvsp[-1]->name.c_str(),">="))==0)
 				{
 					//take help from <
+					if (yyvsp[-2]->data==integer&&yyvsp[0]->data==floating)//int>float
+					{
+						printf("%d",yyvsp[-2]->val.i);
+						//convert int to float using static_cast<float>
+                        if (static_cast<float>(yyvsp[-2]->val.i) >= yyvsp[0]->val.f) yyval->val.i = 1;
+                        else yyval->val.i = 0;
+						printf("<%f=%d\n",yyvsp[0]->val.f,yyval->val.i);
+					}
+					else if (yyvsp[-2]->data==floating&&yyvsp[0]->data==integer)//float<int
+					{
+						printf("%f",yyvsp[-2]->val.f);
+						//convert int to float using static_cast<float>
+                        if (static_cast<float>(yyvsp[0]->val.i) >= yyvsp[-2]->val.f) yyval->val.i = 1;
+                        else yyval->val.i = 0;
+						printf("<%d=%d\n",yyvsp[0]->val.i,yyval->val.i);
+					}
+					else if (yyvsp[-2]->data==integer&&yyvsp[0]->data==integer)//int<int
+					{
+						printf("%d",yyvsp[-2]->val.i);
+						//add code herep
+                        if (yyvsp[-2]->val.i >= yyvsp[0]->val.i) yyval->val.i = 1;
+                        else yyval->val.i = 0;
+						printf("<%d=%d\n",yyvsp[0]->val.i,yyval->val.i);
+					}
+					else if (yyvsp[-2]->data==floating&&yyvsp[0]->data==floating)//float<float
+					{
+						printf("%f",yyvsp[-2]->val.f);
+						//add code here
+                        if (yyvsp[-2]->val.f >= yyvsp[0]->val.f) yyval->val.i = 1;
+                        else yyval->val.i = 0;
+						printf("<%f=%d\n",yyvsp[0]->val.f,yyval->val.i);
+					}				
 				}
 				else if((strcmp(yyvsp[-1]->name.c_str(),"!="))==0)
 				{
 					//take help from <
+					if (yyvsp[-2]->data==integer&&yyvsp[0]->data==floating)//int>float
+					{
+						printf("%d",yyvsp[-2]->val.i);
+						//convert int to float using static_cast<float>
+                        if (static_cast<float>(yyvsp[-2]->val.i) != yyvsp[0]->val.f) yyval->val.i = 1;
+                        else yyval->val.i = 0;
+						printf("<%f=%d\n",yyvsp[0]->val.f,yyval->val.i);
+					}
+					else if (yyvsp[-2]->data==floating&&yyvsp[0]->data==integer)//float<int
+					{
+						printf("%f",yyvsp[-2]->val.f);
+						//convert int to float using static_cast<float>
+                        if (static_cast<float>(yyvsp[0]->val.i) != yyvsp[-2]->val.f) yyval->val.i = 1;
+                        else yyval->val.i = 0;
+						printf("<%d=%d\n",yyvsp[0]->val.i,yyval->val.i);
+					}
+					else if (yyvsp[-2]->data==integer&&yyvsp[0]->data==integer)//int<int
+					{
+						printf("%d",yyvsp[-2]->val.i);
+						//add code herep
+                        if (yyvsp[-2]->val.i != yyvsp[0]->val.i) yyval->val.i = 1;
+                        else yyval->val.i = 0;
+						printf("<%d=%d\n",yyvsp[0]->val.i,yyval->val.i);
+					}
+					else if (yyvsp[-2]->data==floating&&yyvsp[0]->data==floating)//float<float
+					{
+						printf("%f",yyvsp[-2]->val.f);
+						//add code here
+                        if (yyvsp[-2]->val.f != yyvsp[0]->val.f) yyval->val.i = 1;
+                        else yyval->val.i = 0;
+						printf("<%f=%d\n",yyvsp[0]->val.f,yyval->val.i);
+					}				
 				
 				}}
-#line 1804 "y.tab.c"
+#line 2216 "y.tab.c"
     break;
 
-  case 45:
-#line 311 "test_1.y"
+  case 55:
+#line 679 "test.y"
         { fprintf(output,"simple_expression : simple_expression ADDOP term  \n\n"); 
 		if((strcmp(yyvsp[-1]->name.c_str(),"+"))==0)
 		{
 			if(yyvsp[-2]->data==integer&&yyvsp[0]->data==integer)//integer+integer
-			{printf("%d",yyvsp[-2]->val.i);
-			//add codes here
-			yyval->data==yyvsp[-2]->data;
-			printf("+%d:%d\n",yyvsp[0]->val.i,yyval->val.i);
+			{
+                printf("%d",yyvsp[-2]->val.i);
+			    //add codes here
+                yyval->val.i = yyvsp[-2]->val.i + yyvsp[0]->val.i;
+	    		yyval->data==yyvsp[-2]->data;
+		    	printf("+%d:%d\n",yyvsp[0]->val.i,yyval->val.i);
 			}
 			else if (yyvsp[-2]->data==floating&&yyvsp[0]->data==floating)//float+float
 			{
-			printf("%f",yyvsp[-2]->val.f);
-			//add codes here
-			yyval->data==yyvsp[-2]->data;
-			printf("+%f:%f\n",yyvsp[0]->val.f,yyval->val.f);
+    			printf("%f",yyvsp[-2]->val.f);
+	    		//add codes here
+                yyval->val.f = yyvsp[-2]->val.f + yyvsp[0]->val.f;
+		    	yyval->data==yyvsp[-2]->data;
+			    printf("+%f:%f\n",yyvsp[0]->val.f,yyval->val.f);
 			}
 			else if (yyvsp[-2]->data==integer&&yyvsp[0]->data==floating)//int+float=float
 			{
-			printf("%f",static_cast<float>(yyvsp[-2]->val.i));
-			//add after converting int to float
-			//$$->data==what data type?
-			printf("+%f:%f\n",yyvsp[0]->val.f,yyval->val.f);
+			    printf("%f",static_cast<float>(yyvsp[-2]->val.i));
+		    	//add after converting int to float
+	    		//$$->data==what data type?
+                yyval->val.f = yyvsp[-2]->val.i + yyvsp[0]->val.f;
+		        yyval->data==yyvsp[0]->data;
+    			printf("+%f:%f\n",yyvsp[0]->val.f,yyval->val.f);
 			}
-			else if (yyvsp[-2]->data==floating&&yyvsp[0]->data==integer)//int+float=float
+			else if (yyvsp[-2]->data==floating&&yyvsp[0]->data==integer)//float+int=float
 			{
-			printf("%f",yyvsp[-2]->val.f);
-			//add after converting int to float 
-			//$$->data==what data  type??
-			printf("+%f:%f\n",static_cast<float>(yyvsp[0]->val.i),yyval->val.f);
+    			printf("%f",yyvsp[-2]->val.f);
+	    		//add after converting int to float 
+		    	//$$->data==what data  type??
+                yyval->val.f = yyvsp[-2]->val.f + yyvsp[0]->val.i;
+		    	yyval->data==yyvsp[-2]->data;
+			    printf("+%f:%f\n",static_cast<float>(yyvsp[0]->val.i),yyval->val.f);
 			}
 				
 		} 
@@ -1841,15 +2260,50 @@ yyreduce:
 		{
 			//add codes for minus; similar to +
  
+			if(yyvsp[-2]->data==integer&&yyvsp[0]->data==integer)//integer+integer
+			{
+                printf("%d",yyvsp[-2]->val.i);
+			    //add codes here
+                yyval->val.i = yyvsp[-2]->val.i - yyvsp[0]->val.i;
+	    		yyval->data==yyvsp[-2]->data;
+		    	printf("+%d:%d\n",yyvsp[0]->val.i,yyval->val.i);
+			}
+			else if (yyvsp[-2]->data==floating&&yyvsp[0]->data==floating)//float+float
+			{
+    			printf("%f",yyvsp[-2]->val.f);
+	    		//add codes here
+                yyval->val.f = yyvsp[-2]->val.f - yyvsp[0]->val.f;
+		    	yyval->data==yyvsp[-2]->data;
+			    printf("+%f:%f\n",yyvsp[0]->val.f,yyval->val.f);
+			}
+			else if (yyvsp[-2]->data==integer&&yyvsp[0]->data==floating)//int+float=float
+			{
+			    printf("%f",static_cast<float>(yyvsp[-2]->val.i));
+		    	//add after converting int to float
+	    		//$$->data==what data type?
+                yyval->val.f = yyvsp[-2]->val.i - yyvsp[0]->val.f;
+		        yyval->data==yyvsp[0]->data;
+    			printf("+%f:%f\n",yyvsp[0]->val.f,yyval->val.f);
+			}
+			else if (yyvsp[-2]->data==floating&&yyvsp[0]->data==integer)//float+int=float
+			{
+    			printf("%f",yyvsp[-2]->val.f);
+	    		//add after converting int to float 
+		    	//$$->data==what data  type??
+                yyval->val.f = yyvsp[-2]->val.f - yyvsp[0]->val.i;
+		    	yyval->data==yyvsp[-2]->data;
+			    printf("+%f:%f\n",static_cast<float>(yyvsp[0]->val.i),yyval->val.f);
+			}
 		} }
-#line 1846 "y.tab.c"
+#line 2299 "y.tab.c"
     break;
 
-  case 47:
-#line 350 "test_1.y"
-                                    { fprintf(output,"term : term MULOP unary_expression\n\n");
+  case 57:
+#line 761 "test.y"
+{ 
+        fprintf(output,"term : term MULOP unary_expression\n\n");
 		if((strcmp(yyvsp[-1]->name.c_str(),"*")==0))
-			{
+		{
 				if(yyvsp[-2]->data==integer&&yyvsp[0]->data==integer)//integer is multipllied by integer
 				{
 				printf("%d",yyvsp[-2]->val.i);
@@ -1860,80 +2314,140 @@ yyreduce:
 				{
 				printf("%f",yyvsp[-2]->val.f);
 				//add code
+				yyval->val.f=yyvsp[-2]->val.f*yyvsp[0]->val.f;
+                yyval->data=yyvsp[-2]->data;
 				printf("*%f=%f\n",yyvsp[0]->val.f,yyval->val.f);
 				}
 				else if(yyvsp[-2]->data==integer&&yyvsp[0]->data==floating)//integer is multiplied by float
 				{
 				printf("%d",yyvsp[-2]->val.i);
 				//add code
-				printf("*%f=%f\n",yyvsp[0]->val.f,yyval->val.i);
+				yyval->val.f=static_cast<float>(yyvsp[-2]->val.i) * yyvsp[0]->val.f;
+                yyval->data=yyvsp[0]->data;
+				printf("*%f=%f\n",yyvsp[0]->val.f,yyval->val.f);
 				}
-				else if(yyvsp[-2]->data==floating&&yyvsp[0]->data==integer)//float*float
+				else if(yyvsp[-2]->data==floating&&yyvsp[0]->data==integer)//float*int
 				{
 				printf("%f",yyvsp[-2]->val.f);
 				//add code
+				yyval->val.i=yyvsp[-2]->val.f * (static_cast<float>(yyvsp[0]->val.i));
+                yyval->data=yyvsp[-2]->data;
 				printf("*%d=%f\n",yyvsp[0]->val.i,yyval->val.f);
 				}
 				
 					
-			} 
+		} 
 		else if (strcmp(yyvsp[-1]->name.c_str(),"%")==0)
-			{
+		{
 				if (yyvsp[-2]->data!=integer||yyvsp[0]->data!=integer){yyval->data=invalid;yyerror("invalid operands for modulo");}
 				else if (yyvsp[-2]->data==integer&&yyvsp[0]->data==integer)//other cases are not acceptable
 				{
 				printf("%d",yyvsp[-2]->val.i);
 				//add code
+                yyval->val.i = yyvsp[-2]->val.i % yyvsp[0]->val.i;
 				printf(" %d=%d\n",yyvsp[0]->val.i,yyval->val.i);
 				};
-			}
+		}
 		else {
 				//consider cases like multiplication *
-		      }	}
-#line 1894 "y.tab.c"
+                // Division by 0 -_- 
+                if (yyvsp[0]->val.i == 0) {
+                    yyerror("exception: divide by 0");
+                }
+                else {                
+				    if(yyvsp[-2]->data==integer&&yyvsp[0]->data==integer)//integer is multipllied by integer
+				    {
+				        printf("%d",yyvsp[-2]->val.i);
+				        yyval->val.i=yyvsp[-2]->val.i / yyvsp[0]->val.i;
+                        yyval->data=yyvsp[-2]->data;
+				        printf("*%d=%d\n",yyvsp[0]->val.i,yyval->val.i);
+				    }
+				    else if(yyvsp[-2]->data==floating&&yyvsp[0]->data==floating)//float is multipllied by float
+				    {
+				        printf("%f",yyvsp[-2]->val.f);
+				        //add code
+				        yyval->val.f=yyvsp[-2]->val.f / yyvsp[0]->val.f;
+                        yyval->data=yyvsp[-2]->data;
+				        printf("*%f=%f\n",yyvsp[0]->val.f,yyval->val.f);
+				    }
+				    else if(yyvsp[-2]->data==integer&&yyvsp[0]->data==floating)//integer is multiplied by float
+				    {
+				        printf("%d",yyvsp[-2]->val.i);
+				        //add code
+				        yyval->val.f=static_cast<float>(yyvsp[-2]->val.i) / yyvsp[0]->val.f;
+                        yyval->data=yyvsp[0]->data;
+				        printf("*%f=%f\n",yyvsp[0]->val.f,yyval->val.f);
+				    }
+				    else if(yyvsp[-2]->data==floating&&yyvsp[0]->data==integer)//float*int
+				    {
+				        printf("%f",yyvsp[-2]->val.f);
+				        //add code
+				        yyval->val.i=yyvsp[-2]->val.f / static_cast<float>(yyvsp[0]->val.i);
+                        yyval->data=yyvsp[-2]->data;
+				        printf("*%d=%f\n",yyvsp[0]->val.i,yyval->val.f);
+				    }
+                }   
+            }
+}
+#line 2393 "y.tab.c"
     break;
 
-  case 48:
-#line 395 "test_1.y"
+  case 58:
+#line 851 "test.y"
                 { fprintf(output,"unary_expression : ADDOP unary_expression \n\n"); 
 		if((strcmp(yyvsp[-1]->name.c_str(),"+")==0))
 			{
 				if(yyvsp[0]->data==integer)
 				{
-				//add code
+				    //add code
+                    yyval->val.i = yyvsp[0]->val.i;
 				}
 				else if (yyvsp[0]->data==floating)
 				{
-				//add code
+    				//add code
+                    yyval->val.f = yyvsp[0]->val.f;
 				}
 				
 			} 
 		else {
-				//for - sign add code like +
-				
+				//for - sign add code like +	
+				if(yyvsp[0]->data==integer)
+				{
+				    //add code
+                    yyval->val.i = yyvsp[0]->val.i * (-1);
+				}
+				else if (yyvsp[0]->data==floating)
+				{
+    				//add code
+                    yyval->val.f = yyvsp[0]->val.f * (-1);
+				}
 		     }
 		}
-#line 1917 "y.tab.c"
+#line 2427 "y.tab.c"
     break;
 
-  case 49:
-#line 414 "test_1.y"
+  case 59:
+#line 881 "test.y"
                         { fprintf(output,"unary_expression : NOT unary_expression \n\n");
 				yyval->data==yyvsp[0]->data;
 				if(yyvsp[0]->data==integer)//!5=0 !0=1
 				{
 					//add code
+                    if (yyvsp[0]->val.i == 0) yyval->val.i = 1;
+                    else yyval->val.i = 1;
 				}
 				else if (yyvsp[0]->data==floating)
 				{
 					//add code
+                    if (yyvsp[0]->val.f == 0) yyval->val.f = 1;
+                    else yyval->val.f = 1;
 				}
 			}
-#line 1933 "y.tab.c"
+#line 2447 "y.tab.c"
     break;
 
-  case 50:
-#line 425 "test_1.y"
+  case 60:
+#line 896 "test.y"
                           { fprintf(output,"unary_expression : factor\n\n");
 				yyval=new symbolInfo(yyvsp[0]->name,yyvsp[0]->type,yyvsp[0]->position);
 				yyval->data=yyvsp[0]->data;
@@ -1951,62 +2465,96 @@ yyreduce:
 				{
 					if(yyvsp[0]->data==integer)
 					{
-					yyval->val.i=yyvsp[0]->val.arrayi[ix->val.i];
+    					yyval->val.i=yyvsp[0]->val.arrayi[ix->val.i];
 					}
-					else if(yyvsp[0]->data==floating)
+					else if(yyvsp[0]->data == floating)
 					{
-					//add code
+					     yyval->val.f=yyvsp[0]->val.arrayf[ix->val.i];
 					}
 					else if(yyvsp[0]->data==character)
 					{
-					//add code
+    					yyval->val.c=yyvsp[0]->val.arrayc[ix->val.i];
 					}
 			} }
-#line 1966 "y.tab.c"
+#line 2480 "y.tab.c"
     break;
 
-  case 53:
-#line 456 "test_1.y"
+  case 63:
+#line 927 "test.y"
                     {//what will be added here??!!
-	}
-#line 1973 "y.tab.c"
+        yyval = yyvsp[0];
+	  }
+#line 2488 "y.tab.c"
     break;
 
-  case 56:
-#line 460 "test_1.y"
-                       { fprintf(output,"factor : factor INCOP\n\n\n"); 
-	if(yyvsp[-1]->arraysz==0){
-		if(yyvsp[-1]->data==integer)
-			{
-			yyvsp[-1]->val.i++;
-			yyval=yyvsp[-1];
-			printf("\nfartor++ %d\n",yyval->val.i);
-			}
-	}
-
-	else
-		{
-				if(yyvsp[-1]->data==integer)
-					{
-					yyvsp[-1]->val.arrayi[ix->val.i]++;
-					yyval=yyvsp[-1];
-					printf("\nfactor-- %d\n",yyval->val.i);
-					}
-				
-		}			
- 			}
-#line 1999 "y.tab.c"
+  case 64:
+#line 930 "test.y"
+                      {yyval = yyvsp[0];}
+#line 2494 "y.tab.c"
     break;
 
-  case 57:
-#line 481 "test_1.y"
-                       {//add codes like incop
+  case 65:
+#line 931 "test.y"
+                     {yyval = yyvsp[0];}
+#line 2500 "y.tab.c"
+    break;
+
+  case 66:
+#line 932 "test.y"
+                       { 
+        fprintf(output,"factor : factor INCOP\n\n\n"); 
+	    if(yyvsp[-1]->arraysz==0)
+        {
+	    	if(yyvsp[-1]->data==integer)
+	    	{
+	    		yyvsp[-1]->val.i++;
+	    		yyval=yyvsp[-1];
+	    		printf("\nfartor++ %d\n",yyval->val.i);
+	    	}
+	    }
+	    else
+	    {
+	    			if(yyvsp[-1]->data==integer)
+	    				{
+	    				yyvsp[-1]->val.arrayi[ix->val.i]++;
+	    				yyval=yyvsp[-1];
+	    				printf("\nfactor-- %d\n",yyval->val.i);
+	    				}
+	    			
+	    }			
+ 	}
+#line 2527 "y.tab.c"
+    break;
+
+  case 67:
+#line 954 "test.y"
+                       {//add codes like incop  
+        fprintf(output,"factor : factor DECOP\n\n\n"); 
+	    if(yyvsp[-1]->arraysz==0)
+        {
+	    	if(yyvsp[-1]->data==integer)
+	    	{
+	    		yyvsp[-1]->val.i--;
+	    		yyval=yyvsp[-1];
+	    		printf("\nfartor++ %d\n",yyval->val.i);
+	    	}
+	    }
+	    else
+	    {
+	    	if(yyvsp[-1]->data==integer)
+	    	{
+	    	    yyvsp[-1]->val.arrayi[ix->val.i]--;
+	    		yyval=yyvsp[-1];
+	    		printf("\nfactor-- %d\n",yyval->val.i);
+	    	}
+	    			
+	    }			
 	}
-#line 2006 "y.tab.c"
+#line 2554 "y.tab.c"
     break;
 
 
-#line 2010 "y.tab.c"
+#line 2558 "y.tab.c"
 
       default: break;
     }
@@ -2238,26 +2786,38 @@ yyreturn:
 #endif
   return yyresult;
 }
-#line 485 "test_1.y"
+#line 978 "test.y"
 
 
 int main(int argc,char *argv[])
 {
+	extern FILE* yyin, *input;	
+    argc--; ++argv;
+    if (argc > 0) {        
+        // FILE *input = fopen(argv[0], "r");
+        yyin  = fopen(argv[0], "r");
 
-	extern FILE* yyin;	
-	if(argc!=2)
-		{
-		printf("Please provide input file name and try again\n");
-		return 0;
-		}
-	FILE *input=fopen(argv[1],"r");
-	if(input==NULL){
-		printf("cannot open the file\n");
-		return 0;
-		}
+	    if(yyin==Null){
+	    	printf("cannot open the file\n");
+	    	return 0;
+	    }
+    } else {
+        yyin = stdin;
+    }
+
+	// if(argc!=2)
+	// 	{
+	// 	printf("Please provide input file name and try again\n");
+	// 	return 0;
+	// 	}
+	// FILE *input=fopen(argv[1],"r");
+	// if(input==NULL){
+	// 	printf("cannot open the file\n");
+	// 	return 0;
+	// 	}
 	output= fopen("1305115_output.txt","w");
-	yyin= input;
-    	yyparse();
+	// yyin= input;
+    yyparse();
 	printf("\nline   %d\n",line);
 	fprintf(output,"\nLine   : %d\n\n",line);
 	fprintf(output,"\nError   : %d\n\n",error);

@@ -1,3 +1,10 @@
+int x();
+char ch() {
+    return 90;
+}
+int y();
 int main() {
-   int a;
+    int a;
+    println(a);
+    return 0;
 }

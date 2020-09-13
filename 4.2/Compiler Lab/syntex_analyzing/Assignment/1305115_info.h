@@ -33,15 +33,14 @@ class symbolInfo
     int position;
     value val; 
     symbolInfo *next;
-symbolInfo(string n,string t,int p)
-{
-    data=-111; //data type for int float and char let int=115 char=105 float=119
-    name=n;
-    type=t;
-    position=p;
-    next=Null;
-}
+    symbolInfo(string n,string t,int p)
+    {
+        data=-111; //data type for int float and char let int=115 char=105 float=119
+        name=n;
+        type=t;
+        position=p;
+        next=Null;
+    }
 };
-
-
-
+#define YYSTYPE symbolInfo*
+extern YYSTYPE yylval;
