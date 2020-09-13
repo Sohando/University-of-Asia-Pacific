@@ -42,6 +42,7 @@ alphanum({digit}|{letter})
 %%
 {newline} {//printf("newline is found\n"); 
 //printf("new line is found\n");
+    cout << line << "____________________" << endl;
 line++;}
 
 "println"	{return PRINTLN; //newly added

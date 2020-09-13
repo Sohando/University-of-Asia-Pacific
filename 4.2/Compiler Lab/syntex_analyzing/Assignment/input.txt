@@ -1,5 +1,5 @@
-int x();
-char ch() {
+int x(int x, char c[], int sz);
+char ch(float name) {
     return 90;
 }
 int y();
@@ -7,4 +7,7 @@ int main() {
     int a;
     println(a);
     return 0;
+}
+char ch(float name) {
+    return 90;
 }

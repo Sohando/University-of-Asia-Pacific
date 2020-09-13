@@ -88,9 +88,7 @@ extern int yydebug;
     SWITCH = 294,
     CONTINUE = 295,
     DEFAULT = 296,
-    LOWER_THAN_ELSE = 297,
-    WITH_COMMA = 298,
-    WITHOUT_COMMA = 299
+    LOWER_THAN_ELSE = 297
   };
 #endif
 /* Tokens.  */
@@ -134,8 +132,6 @@ extern int yydebug;
 #define CONTINUE 295
 #define DEFAULT 296
 #define LOWER_THAN_ELSE 297
-#define WITH_COMMA 298
-#define WITHOUT_COMMA 299
 
 /* Value type.  */
 #if ! defined YYSTYPE && ! defined YYSTYPE_IS_DECLARED

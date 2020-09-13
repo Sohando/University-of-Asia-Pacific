@@ -1,5 +1,13 @@
 type_specifier  : INT 
 
+type_specifier  : INT 
+
+type_specifier  : FLOAT 
+
+type_specifier  : INT 
+
+type_specifier  : FLOAT 
+
 type_specifier  : FLOAT 
 
 unary_expression : factor
@@ -23,8 +31,16 @@ compound_statement : LCURL var_declaration statements RCURL
 
 program : INT MAIN LPAREN RPAREN compound_statement
 
+type_specifier  : FLOAT 
 
-Line   : 11
+type_specifier  : FLOAT 
+
+unary_expression : factor
+
+compound_statement : LCUR  statements RCURL
+
+
+Line   : 14
 
 
 Error   : 0

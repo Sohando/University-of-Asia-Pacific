@@ -30,8 +30,6 @@ int yylex(void);
 %token  INT MAIN LPAREN RPAREN LCURL RCURL SEMICOLON FLOAT CHAR COMMA ID LTHIRD RTHIRD CONST_INT CONST_FLOAT CONST_CHAR FOR IF WHILE PRINTLN RETURN LOGICOP RELOP ASSIGNOP ADDOP NOT MULOP INCOP DECOP STRING ELSE DO BREAK DOUBLE VOID CASE SWITCH CONTINUE DEFAULT
 %nonassoc LOWER_THAN_ELSE
 %nonassoc ELSE
-%nonassoc WITH_COMMA
-%nonassoc WITHOUT_COMMA
 
 
 %%
@@ -39,14 +37,26 @@ int yylex(void);
 Program 
         : main_function
 	    | user_defined_functions
+        | globals
         ;
 main_function
         : INT MAIN LPAREN RPAREN compound_statement { 
             fprintf(output,"program : INT MAIN LPAREN RPAREN compound_statement\n\n");
         }
+        ;
 user_defined_functions
         : full_defination user_defined_functions 
         | prototype user_defined_functions
+        | main_function user_defined_functions
+        | globals user_defined_functions 
+        |
+        ;
+/*   onek kaj baki                       */
+globals
+        : var_declaration globals {
+            cout << "declaring globals" << endl;
+        }
+        | user_defined_functions globals
         | main_function
         |
         ;
@@ -54,21 +64,24 @@ full_defination
         : type_specifier ID LPAREN RPAREN compound_statement {
             cout << "user defined" << endl;
         } 
-        | type_specifier ID LPAREN RPAREN compound_statement {
-            cout << "user defined" << endl;
+        | type_specifier ID LPAREN arguments RPAREN compound_statement {
+            cout << "user defined having arguments" << endl;
         } 
         ;
 prototype
         : type_specifier ID LPAREN RPAREN SEMICOLON {   
             cout << "prototyping" << endl;
         }
+        | type_specifier ID LPAREN arguments RPAREN SEMICOLON {
+            cout << "prototype having arguments" << endl;
+        } 
         ;
 arguments
         : /* empty */ 
-        | type_specifier ID 
-        | type_specifier ID COMMA arguments 
+        | type_specifier ID arguments
+        | COMMA type_specifier ID arguments 
         | type_specifier ID LTHIRD RTHIRD 
-        | type_specifier ID LTHIRD RTHIRD COMMA arguments 
+        | COMMA type_specifier ID LTHIRD RTHIRD arguments 
         ;
 compound_statement 
         : LCURL var_declaration statements RCURL {fprintf(output,"compound_statement : LCURL var_declaration statements RCURL\n\n");}
