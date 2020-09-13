@@ -1,12 +1,16 @@
-
 %{
 #include<iostream>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 #include "1305115_table.h"
-#define YYSTYPE symbolInfo*
+#define bug cout << __LINE__ << ": all is well" << endl
+#define debug(x) cerr << __LINE__ << ": " << #x << " = " << (x) << endl
 using namespace std;
+
+#define YYSTYPE symbolInfo*
+// typedef symbolInfo* YYSTYPE;
+extern YYSTYPE yylval;
 
 FILE *output;
 string cmp;
@@ -44,8 +48,8 @@ compound_statement : LCURL var_declaration statements RCURL {fprintf(output,"com
             ;
 
 			 
-var_declaration	: type_specifier declaration_list SEMICOLON 
-		|  var_declaration type_specifier declaration_list SEMICOLON 
+var_declaration	: type_specifier declaration_list SEMICOLON { fprintf(output,"var_declaration	: type_specifier declaration_list SEMICOLON\n\n");}
+		|  var_declaration type_specifier declaration_list SEMICOLON { fprintf(output,"var_declaration	: var_declaration type_specifier declaration_list SEMICOLON\n\n");}
 		;
 
 type_specifier	: INT { fprintf(output,"type_specifier  : INT \n\n"); {cmp="int";}}
@@ -54,7 +58,8 @@ type_specifier	: INT { fprintf(output,"type_specifier  : INT \n\n"); {cmp="int";
 		| VOID 
 		;
 			
-declaration_list : declaration_list COMMA ID { 
+declaration_list : declaration_list COMMA ID 
+    { 
 		fprintf(output,"declaration_list  : declaration_list COMMA ID\n%s\n\n",$3->name.c_str()); 
 		idcheck=table->lookOut($3->name);
 		if(idcheck==Null){
@@ -68,12 +73,27 @@ declaration_list : declaration_list COMMA ID {
 					}
 					//Add code for float and character
 					
+					if(strcmp(cmp.c_str(),"float")==0)
+					{
+					$3->data=floating;
+					$3->val.i=-99999;
+					$3->position=0;
+					table->insertItem($3);
+					}
+					if(strcmp(cmp.c_str(),"char")==0)
+					{
+					$3->data=character;
+					$3->val.c='.';
+					$3->position=0;
+					table->insertItem($3);
+					}
 				}
 		else{
 				char errorarr[30]="Multiple Declaration";
 				strcat(errorarr,$3->name.c_str());							
 				yyerror(errorarr);
-		    } }
+		    } 
+    }
 		 | declaration_list COMMA ID LTHIRD CONST_INT RTHIRD 
 			{
                 fprintf(output,"declaration_list  : declaration_list COMMA ID LTHIRD CONST_INT RTHIRD\n %s\n\n", $3->name.c_str());
@@ -111,14 +131,61 @@ declaration_list : declaration_list COMMA ID {
 		    		}
 				table->insertItem($3);	
 			}
-	else{
-		// add error here	
-		char errorarr[30]="Multiple Declaration";
-		strcat(errorarr,$3->name.c_str());							
-    	yyerror(errorarr);
-	}	
+	        else{
+    	    	// add error here	
+	    	    char errorarr[30]="Multiple Declaration";
+        		strcat(errorarr,$3->name.c_str());							
+    	        yyerror(errorarr);
+        	}	
 		}
-		 | ID {fprintf(output,"declaration_list  : ID\n %s\n\n", $1->name.c_str());}
+		 | ID 
+            {
+                // fprintf(output,"declaration_list  : ID\n %s\n\n", $1->name.c_str());
+                bug;
+                // cout << $1->name.c_str() << endl;
+                // debug($1->name.c_str());
+		        // idcheck=table->lookOut($1->name);
+                idcheck = Null;
+                bug;
+                // cout << "returned" << endl;
+		        if(idcheck==Null){
+bug;		        		
+		        			if(strcmp(cmp.c_str(),"int")==0)
+		        			{
+bug;
+cout << $1->data << endl;                
+                                $1->data=integer;
+bug;
+	    	        			$1->val.i=-99999;
+bug;
+		            			$1->position=0;
+bug;
+		            			table->insertItem($1);
+bug;                    
+		        			}
+		        			//Add code for float and character
+		        			
+		        			if(strcmp(cmp.c_str(),"float")==0)
+		        			{
+		        			$1->data=floating;
+		        			$1->val.i=-99999;
+		        			$1->position=0;
+		        			table->insertItem($1);
+		        			}
+		        			if(strcmp(cmp.c_str(),"char")==0)
+		        			{
+		        			$1->data=character;
+		        			$1->val.c='.';
+		        			$1->position=0;
+		        			table->insertItem($1);
+		        			}
+		        		}
+		        else{
+		        		char errorarr[30]="Multiple Declaration";
+		        		strcat(errorarr,$1->name.c_str());							
+		        		yyerror(errorarr);
+		            } 
+            }
  		 | ID LTHIRD CONST_INT RTHIRD 
             {
                 // fprintf(output,"declaration_list : ID LTHIRD CONST_INT RTHIRD\n %s\n\n",$1);}
@@ -155,15 +222,16 @@ declaration_list : declaration_list COMMA ID {
                         }
                         
 		    		}
-				table->insertItem($1);	
-			}
-	else{
-		// add error here	
-		char errorarr[30]="Multiple Declaration";
-		strcat(errorarr,$3->name.c_str());							
-    	yyerror(errorarr);
-	}	
-};
+				    table->insertItem($1);	
+			    }
+	           else{
+    	    	    // add error here	
+    	    	    char errorarr[30]="Multiple Declaration";
+        		    strcat(errorarr,$3->name.c_str());							
+                	yyerror(errorarr);
+        	    }	
+            }
+            ;
 statements : statement 
 	   | statements statement 
 	   ;
@@ -915,7 +983,7 @@ int main(int argc,char *argv[])
 	// 	}
 	output= fopen("1305115_output.txt","w");
 	// yyin= input;
-    	yyparse();
+    yyparse();
 	printf("\nline   %d\n",line);
 	fprintf(output,"\nLine   : %d\n\n",line);
 	fprintf(output,"\nError   : %d\n\n",error);

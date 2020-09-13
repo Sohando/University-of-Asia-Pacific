@@ -321,6 +321,8 @@ void yyfree ( void *  );
 	}
 #define YY_AT_BOL() (YY_CURRENT_BUFFER_LVALUE->yy_at_bol)
 
+/* Begin user sect3 */
+
 #define yywrap() (/*CONSTCOND*/1)
 #define YY_SKIP_YYWRAP
 typedef flex_uint8_t YY_CHAR;
@@ -752,11 +754,12 @@ char *yytext;
 #include<string.h>
 #include "1305115_table.h"
 #include "y.tab.h"
-
+// typedef symbolInfo* YYSTYPEl
 using namespace std;
+// #define YYSTYPE symbolInfo*
 
 
-extern YYSTYPE yylval;
+// extern YYSTYPE yylval;
 extern symbolTable* table;
 
 void yyerror(const char *);
@@ -769,8 +772,8 @@ int i=0;
 int j=0;
 int check;
 
-#line 773 "lex.yy.c"
-#line 774 "lex.yy.c"
+#line 776 "lex.yy.c"
+#line 777 "lex.yy.c"
 
 #define INITIAL 0
 #define COMMENT 1
@@ -990,9 +993,9 @@ YY_DECL
 		}
 
 	{
-#line 39 "1305115.l"
+#line 40 "1305115.l"
 
-#line 996 "lex.yy.c"
+#line 999 "lex.yy.c"
 
 	while ( /*CONSTCOND*/1 )		/* loops until end-of-file is reached */
 		{
@@ -1052,123 +1055,123 @@ do_action:	/* This label is used only to access EOF actions. */
 case 1:
 /* rule 1 can match eol */
 YY_RULE_SETUP
-#line 40 "1305115.l"
+#line 41 "1305115.l"
 {//printf("newline is found\n"); 
 //printf("new line is found\n");
 line++;}
 	YY_BREAK
 case 2:
 YY_RULE_SETUP
-#line 44 "1305115.l"
+#line 45 "1305115.l"
 {return PRINTLN; //newly added
 }
 	YY_BREAK
 case 3:
 YY_RULE_SETUP
-#line 47 "1305115.l"
+#line 48 "1305115.l"
 {return IF;}
 	YY_BREAK
 case 4:
 YY_RULE_SETUP
-#line 49 "1305115.l"
+#line 50 "1305115.l"
 {return ELSE;}
 	YY_BREAK
 case 5:
 YY_RULE_SETUP
-#line 51 "1305115.l"
+#line 52 "1305115.l"
 {return FOR;}
 	YY_BREAK
 case 6:
 YY_RULE_SETUP
-#line 53 "1305115.l"
+#line 54 "1305115.l"
 {return 	DO;}
 	YY_BREAK
 case 7:
 YY_RULE_SETUP
-#line 55 "1305115.l"
+#line 56 "1305115.l"
 {return WHILE;}
 	YY_BREAK
 case 8:
 YY_RULE_SETUP
-#line 57 "1305115.l"
+#line 58 "1305115.l"
 {return BREAK;}
 	YY_BREAK
 case 9:
 YY_RULE_SETUP
-#line 59 "1305115.l"
+#line 60 "1305115.l"
 {return INT;}
 	YY_BREAK
 case 10:
 YY_RULE_SETUP
-#line 61 "1305115.l"
+#line 62 "1305115.l"
 {return CHAR;}
 	YY_BREAK
 case 11:
 YY_RULE_SETUP
-#line 63 "1305115.l"
+#line 64 "1305115.l"
 {return DOUBLE;}
 	YY_BREAK
 case 12:
 YY_RULE_SETUP
-#line 65 "1305115.l"
+#line 66 "1305115.l"
 {return FLOAT;}
 	YY_BREAK
 case 13:
 YY_RULE_SETUP
-#line 67 "1305115.l"
+#line 68 "1305115.l"
 {return VOID;}
 	YY_BREAK
 case 14:
 YY_RULE_SETUP
-#line 69 "1305115.l"
+#line 70 "1305115.l"
 {return RETURN;}
 	YY_BREAK
 case 15:
 YY_RULE_SETUP
-#line 71 "1305115.l"
+#line 72 "1305115.l"
 {return CASE;}
 	YY_BREAK
 case 16:
 YY_RULE_SETUP
-#line 73 "1305115.l"
+#line 74 "1305115.l"
 {return SWITCH;}
 	YY_BREAK
 case 17:
 YY_RULE_SETUP
-#line 75 "1305115.l"
+#line 76 "1305115.l"
 {return DEFAULT;}
 	YY_BREAK
 case 18:
 YY_RULE_SETUP
-#line 77 "1305115.l"
+#line 78 "1305115.l"
 {return CONTINUE;}
 	YY_BREAK
 case 19:
 YY_RULE_SETUP
-#line 79 "1305115.l"
+#line 80 "1305115.l"
 {return MAIN; //NEWLY ADDED
 }
 	YY_BREAK
 case 20:
 YY_RULE_SETUP
-#line 82 "1305115.l"
+#line 83 "1305115.l"
 {return NOT; //NEWLY ADDED
 }
 	YY_BREAK
 case 21:
 YY_RULE_SETUP
-#line 85 "1305115.l"
+#line 86 "1305115.l"
 {//insertion
-symbolInfo *s= new  symbolInfo(yytext, "CONST_INT",0);
-s->val.i=atoi(yytext);
-s->data=integer;
-yylval = (YYSTYPE)s;
-return CONST_INT;
+    symbolInfo *s= new  symbolInfo(yytext, "CONST_INT",0);
+    s->val.i=atoi(yytext);
+    s->data=integer;
+    yylval = (YYSTYPE)s;
+    return CONST_INT;
 }
 	YY_BREAK
 case 22:
 YY_RULE_SETUP
-#line 93 "1305115.l"
+#line 94 "1305115.l"
 {// .90875 is not taken as a float but 0.90875 is taken??
 symbolInfo *s= new  symbolInfo(yytext, "CONST_FLOAT",0);
 s->val.f=atof(yytext);
@@ -1179,7 +1182,7 @@ return CONST_FLOAT;
 	YY_BREAK
 case 23:
 YY_RULE_SETUP
-#line 101 "1305115.l"
+#line 102 "1305115.l"
 {
 symbolInfo *s= new  symbolInfo(yytext, "CONST_CHAR",0);//problem as it is multi character for having quotation
 yylval = (YYSTYPE)s;
@@ -1191,7 +1194,7 @@ return CONST_CHAR;
 	YY_BREAK
 case 24:
 YY_RULE_SETUP
-#line 110 "1305115.l"
+#line 111 "1305115.l"
 {
 symbolInfo *s= new  symbolInfo(yytext,"CONST_CHAR",0);
 yylval = (YYSTYPE)s;
@@ -1201,7 +1204,7 @@ return CONST_CHAR;
 	YY_BREAK
 case 25:
 YY_RULE_SETUP
-#line 117 "1305115.l"
+#line 118 "1305115.l"
 {
 symbolInfo *s= new  symbolInfo(yytext, "ADDOP",0);
 yylval = (YYSTYPE)s;
@@ -1210,7 +1213,7 @@ return ADDOP;
 	YY_BREAK
 case 26:
 YY_RULE_SETUP
-#line 123 "1305115.l"
+#line 124 "1305115.l"
 {
 symbolInfo *s= new  symbolInfo(yytext, "MULOP",0);
 yylval = (YYSTYPE)s;
@@ -1219,7 +1222,7 @@ return MULOP;
 	YY_BREAK
 case 27:
 YY_RULE_SETUP
-#line 129 "1305115.l"
+#line 130 "1305115.l"
 {//WHY NOT (++|--)
 symbolInfo *s= new  symbolInfo(yytext, "INCOP",0);
 yylval = (YYSTYPE)s;
@@ -1228,7 +1231,7 @@ return INCOP;
 	YY_BREAK
 case 28:
 YY_RULE_SETUP
-#line 135 "1305115.l"
+#line 136 "1305115.l"
 {//WHY NOT (++|--) //NEWLY ADDED
 symbolInfo *s= new  symbolInfo(yytext, "DECOP",0);
 yylval = (YYSTYPE)s;
@@ -1237,7 +1240,7 @@ return DECOP;
 	YY_BREAK
 case 29:
 YY_RULE_SETUP
-#line 141 "1305115.l"
+#line 142 "1305115.l"
 {
 symbolInfo *s= new  symbolInfo(yytext, "RELOP",0);
 yylval = (YYSTYPE)s;
@@ -1246,12 +1249,12 @@ return RELOP;
 	YY_BREAK
 case 30:
 YY_RULE_SETUP
-#line 147 "1305115.l"
+#line 148 "1305115.l"
 {return ASSIGNOP;}
 	YY_BREAK
 case 31:
 YY_RULE_SETUP
-#line 149 "1305115.l"
+#line 150 "1305115.l"
 { // CHANGED // PREVIOUS "&&"|"||"|"!" 
 symbolInfo *s= new  symbolInfo(yytext, "LOGICOP",0);
 yylval = (YYSTYPE)s;
@@ -1260,59 +1263,58 @@ return LOGICOP;
 	YY_BREAK
 case 32:
 YY_RULE_SETUP
-#line 155 "1305115.l"
+#line 156 "1305115.l"
 {return LPAREN;}
 	YY_BREAK
 case 33:
 YY_RULE_SETUP
-#line 157 "1305115.l"
+#line 158 "1305115.l"
 {return RPAREN;}
 	YY_BREAK
 case 34:
 YY_RULE_SETUP
-#line 159 "1305115.l"
+#line 160 "1305115.l"
 {return LCURL;}
 	YY_BREAK
 case 35:
 YY_RULE_SETUP
-#line 161 "1305115.l"
+#line 162 "1305115.l"
 {return RCURL;}
 	YY_BREAK
 case 36:
 YY_RULE_SETUP
-#line 163 "1305115.l"
+#line 164 "1305115.l"
 {return LTHIRD;}
 	YY_BREAK
 case 37:
 YY_RULE_SETUP
-#line 165 "1305115.l"
+#line 166 "1305115.l"
 {return RTHIRD;}
 	YY_BREAK
 case 38:
 YY_RULE_SETUP
-#line 167 "1305115.l"
+#line 168 "1305115.l"
 {return COMMA;}
 	YY_BREAK
 case 39:
 YY_RULE_SETUP
-#line 169 "1305115.l"
+#line 170 "1305115.l"
 {return SEMICOLON;}
 	YY_BREAK
 case 40:
 YY_RULE_SETUP
-#line 171 "1305115.l"
+#line 172 "1305115.l"
 {//whether _A_b_c is a variable or not
 	symbolInfo *s;
 	s= table->lookOut(yytext);
 		if(s==Null)
-			{				
+		{				
 			s= new symbolInfo(yytext, "ID",0);
-			printf("%s\n",s->name.c_str());	
-			}
+			// printf("%s\n",s->name.c_str());	
+		}
+        cout << typeid(yylval).name() << " " << typeid(s).name() << " " << typeid(YYSTYPE).name() << endl;
 		yylval = (YYSTYPE)s;
-
-
-return ID;
+    return ID;
 }
 	YY_BREAK
 case 41:
@@ -1584,10 +1586,10 @@ error++;
 	YY_BREAK
 case 63:
 YY_RULE_SETUP
-#line 371 "1305115.l"
+#line 366 "1305115.l"
 ECHO;
 	YY_BREAK
-#line 1591 "lex.yy.c"
+#line 1593 "lex.yy.c"
 case YY_STATE_EOF(INITIAL):
 case YY_STATE_EOF(SCOMMENT):
 case YY_STATE_EOF(MULTISTRING):
@@ -2594,4 +2596,11 @@ void yyfree (void * ptr )
 
 #define YYTABLES_NAME "yytables"
 
-#line 371 "1305115.l"
+#line 366 "1305115.l"
+
+
+
+
+
+
+

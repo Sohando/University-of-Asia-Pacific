@@ -11,11 +11,12 @@
 #include<string.h>
 #include "1305115_table.h"
 #include "y.tab.h"
-
+// typedef symbolInfo* YYSTYPEl
 using namespace std;
+// #define YYSTYPE symbolInfo*
 
 
-extern YYSTYPE yylval;
+// extern YYSTYPE yylval;
 extern symbolTable* table;
 
 void yyerror(const char *);
@@ -83,11 +84,11 @@ line++;}
 }
 
 {digits} {//insertion
-symbolInfo *s= new  symbolInfo(yytext, "CONST_INT",0);
-s->val.i=atoi(yytext);
-s->data=integer;
-yylval = (YYSTYPE)s;
-return CONST_INT;
+    symbolInfo *s= new  symbolInfo(yytext, "CONST_INT",0);
+    s->val.i=atoi(yytext);
+    s->data=integer;
+    yylval = (YYSTYPE)s;
+    return CONST_INT;
 }
 
 {digits}(\.{digits})?(E[+-]?{digits})? {// .90875 is not taken as a float but 0.90875 is taken??
@@ -172,14 +173,13 @@ return LOGICOP;
 	symbolInfo *s;
 	s= table->lookOut(yytext);
 		if(s==Null)
-			{				
+		{				
 			s= new symbolInfo(yytext, "ID",0);
-			printf("%s\n",s->name.c_str());	
-			}
+			// printf("%s\n",s->name.c_str());	
+		}
+        cout << typeid(yylval).name() << " " << typeid(s).name() << " " << typeid(YYSTYPE).name() << endl;
 		yylval = (YYSTYPE)s;
-
-
-return ID;
+    return ID;
 }
 
 {whitespace} {
@@ -363,6 +363,7 @@ error++;
 
 error++;
 }
+%%
 
 
 

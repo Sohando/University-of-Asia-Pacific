@@ -66,7 +66,7 @@
 
 
 /* First part of user prologue.  */
-#line 2 "test_1.y"
+#line 1 "test_1.y"
 
 #include<iostream>
 #include <stdio.h>
@@ -125,7 +125,10 @@ int yylex(void);
 # define YYERROR_VERBOSE 1
 #endif
 
-
+/* Use api.header.include to #include this header
+   instead of duplicating it here.  */
+#ifndef YY_YY_Y_TAB_H_INCLUDED
+# define YY_YY_Y_TAB_H_INCLUDED
 /* Debug traces.  */
 #ifndef YYDEBUG
 # define YYDEBUG 0
@@ -235,7 +238,7 @@ extern YYSTYPE yylval;
 
 int yyparse (void);
 
-
+#endif /* !YY_YY_Y_TAB_H_INCLUDED  */
 
 
 
@@ -601,12 +604,12 @@ static const yytype_int8 yytranslate[] =
   /* YYRLINE[YYN] -- Source line where rule number YYN was defined.  */
 static const yytype_int16 yyrline[] =
 {
-       0,    37,    37,    41,    42,    43,    47,    48,    51,    52,
-      53,    54,    57,    77,   105,   106,   109,   110,   114,   115,
-     116,   117,   118,   119,   120,   121,   122,   124,   125,   126,
-     139,   143,   144,   145,   148,   149,   177,   190,   191,   192,
-     222,   223,   260,   261,   310,   311,   350,   351,   395,   414,
-     426,   455,   456,   457,   459,   460,   461,   482
+       0,    36,    36,    40,    41,    42,    46,    47,    50,    51,
+      52,    53,    56,    76,   104,   105,   108,   109,   113,   114,
+     115,   116,   117,   118,   119,   120,   121,   123,   124,   125,
+     138,   142,   143,   144,   147,   148,   176,   189,   190,   191,
+     221,   222,   259,   260,   309,   310,   349,   350,   394,   413,
+     425,   454,   455,   456,   458,   459,   460,   481
 };
 #endif
 
@@ -1510,31 +1513,43 @@ yyreduce:
   switch (yyn)
     {
   case 2:
-#line 37 "test_1.y"
+#line 36 "test_1.y"
                                                     { fprintf(output,"program : INT MAIN LPAREN RPAREN compound_statement\n\n");}
-#line 1516 "y.tab.c"
+#line 1519 "y.tab.c"
     break;
 
   case 3:
-#line 41 "test_1.y"
+#line 40 "test_1.y"
                                                             {fprintf(output,"compound_statement : LCURL var_declaration statements RCURL\n\n");}
-#line 1522 "y.tab.c"
+#line 1525 "y.tab.c"
+    break;
+
+  case 4:
+#line 41 "test_1.y"
+                                             {fprintf(output,"compound_statement : LCUR  statements RCURL\n\n");}
+#line 1531 "y.tab.c"
+    break;
+
+  case 5:
+#line 42 "test_1.y"
+                                  {fprintf(output,"compound_statement : LCURL RCURL\n\n");}
+#line 1537 "y.tab.c"
     break;
 
   case 8:
-#line 51 "test_1.y"
+#line 50 "test_1.y"
                       { fprintf(output,"type_specifier  : INT \n\n"); {cmp="int";}}
-#line 1528 "y.tab.c"
+#line 1543 "y.tab.c"
     break;
 
   case 9:
-#line 52 "test_1.y"
+#line 51 "test_1.y"
                         { fprintf(output,"type_specifier  : FLOAT \n\n"); {cmp="float";}}
-#line 1534 "y.tab.c"
+#line 1549 "y.tab.c"
     break;
 
   case 12:
-#line 57 "test_1.y"
+#line 56 "test_1.y"
                                              { 
 		fprintf(output,"declaration_list  : declaration_list COMMA ID\n%s\n\n",yyvsp[0]->name.c_str()); 
 		idcheck=table->lookOut(yyvsp[0]->name);
@@ -1555,11 +1570,11 @@ yyreduce:
 				strcat(errorarr,yyvsp[0]->name.c_str());							
 				yyerror(errorarr);
 		    } }
-#line 1559 "y.tab.c"
+#line 1574 "y.tab.c"
     break;
 
   case 13:
-#line 78 "test_1.y"
+#line 77 "test_1.y"
                         {fprintf(output,"declaration_list  : declaration_list COMMA ID LTHIRD CONST_INT RTHIRD\n %s\n\n",
 				yyvsp[-3]->name.c_str());
 		idcheck=table->lookOut(yyvsp[-3]->name);
@@ -1587,18 +1602,18 @@ yyreduce:
 		
 	}	
 		}
-#line 1591 "y.tab.c"
+#line 1606 "y.tab.c"
     break;
 
   case 26:
-#line 122 "test_1.y"
+#line 121 "test_1.y"
                                                   { //add precedence at the end of action
 	     }
-#line 1598 "y.tab.c"
+#line 1613 "y.tab.c"
     break;
 
   case 29:
-#line 126 "test_1.y"
+#line 125 "test_1.y"
                                                 { 
 		fprintf(output,"statement  : PRINTLN LPAREN ID RPAREN SEMICOLON \n\n");
 		idprint=table->lookOut(yyvsp[-2]->name);
@@ -1612,11 +1627,11 @@ yyreduce:
 			//add the error code! can you tell what would be the error here?? 
 		}
 		}
-#line 1616 "y.tab.c"
+#line 1631 "y.tab.c"
     break;
 
   case 35:
-#line 149 "test_1.y"
+#line 148 "test_1.y"
                                                 { fprintf(output,"expression : variable ASSIGNOP logic_expression\n\n"); 
 		if(yyvsp[0]->data==invalid){}
 		else if((yyvsp[-2]->data==integer||yyvsp[-2]->data==character)&&yyvsp[0]->data==floating)
@@ -1644,11 +1659,11 @@ yyreduce:
 			}
 		}
 		}
-#line 1648 "y.tab.c"
+#line 1663 "y.tab.c"
     break;
 
   case 36:
-#line 177 "test_1.y"
+#line 176 "test_1.y"
                 { fprintf(output,"variable  : ID \n\n"); 
 			notget=table->lookOut(yyvsp[0]->name);
 			if(notget!=Null)
@@ -1662,11 +1677,11 @@ yyreduce:
 			//add the error!
 			}
 }
-#line 1666 "y.tab.c"
+#line 1681 "y.tab.c"
     break;
 
   case 39:
-#line 193 "test_1.y"
+#line 192 "test_1.y"
                 { fprintf(output,"variable  : ID LTHIRD expression RTHIRD\n\n");//printf("Arraytype: %d\n",$1->data); 
 			notget=table->lookOut(yyvsp[-3]->name);
 			
@@ -1694,11 +1709,11 @@ yyreduce:
 			//add code
 			}
 		}
-#line 1698 "y.tab.c"
+#line 1713 "y.tab.c"
     break;
 
   case 41:
-#line 224 "test_1.y"
+#line 223 "test_1.y"
                         { fprintf(output,"logic_expression : rel_expression LOGICOP rel_expression\n\n");
 				if((strcmp(yyvsp[-1]->name.c_str(),"&&"))==0)
 				{
@@ -1734,11 +1749,11 @@ yyreduce:
 					//add codes for || take help from &&
 											
 				} }
-#line 1738 "y.tab.c"
+#line 1753 "y.tab.c"
     break;
 
   case 43:
-#line 262 "test_1.y"
+#line 261 "test_1.y"
                         { fprintf(output,"rel_expression : simple_expression RELOP simple_expression\n\n"); 
 				if((strcmp(yyvsp[-1]->name.c_str(),"<"))==0)
 				{					
@@ -1785,11 +1800,11 @@ yyreduce:
 					//take help from <
 				
 				}}
-#line 1789 "y.tab.c"
+#line 1804 "y.tab.c"
     break;
 
   case 45:
-#line 312 "test_1.y"
+#line 311 "test_1.y"
         { fprintf(output,"simple_expression : simple_expression ADDOP term  \n\n"); 
 		if((strcmp(yyvsp[-1]->name.c_str(),"+"))==0)
 		{
@@ -1827,11 +1842,11 @@ yyreduce:
 			//add codes for minus; similar to +
  
 		} }
-#line 1831 "y.tab.c"
+#line 1846 "y.tab.c"
     break;
 
   case 47:
-#line 351 "test_1.y"
+#line 350 "test_1.y"
                                     { fprintf(output,"term : term MULOP unary_expression\n\n");
 		if((strcmp(yyvsp[-1]->name.c_str(),"*")==0))
 			{
@@ -1875,11 +1890,11 @@ yyreduce:
 		else {
 				//consider cases like multiplication *
 		      }	}
-#line 1879 "y.tab.c"
+#line 1894 "y.tab.c"
     break;
 
   case 48:
-#line 396 "test_1.y"
+#line 395 "test_1.y"
                 { fprintf(output,"unary_expression : ADDOP unary_expression \n\n"); 
 		if((strcmp(yyvsp[-1]->name.c_str(),"+")==0))
 			{
@@ -1898,11 +1913,11 @@ yyreduce:
 				
 		     }
 		}
-#line 1902 "y.tab.c"
+#line 1917 "y.tab.c"
     break;
 
   case 49:
-#line 415 "test_1.y"
+#line 414 "test_1.y"
                         { fprintf(output,"unary_expression : NOT unary_expression \n\n");
 				yyval->data==yyvsp[0]->data;
 				if(yyvsp[0]->data==integer)//!5=0 !0=1
@@ -1914,11 +1929,11 @@ yyreduce:
 					//add code
 				}
 			}
-#line 1918 "y.tab.c"
+#line 1933 "y.tab.c"
     break;
 
   case 50:
-#line 426 "test_1.y"
+#line 425 "test_1.y"
                           { fprintf(output,"unary_expression : factor\n\n");
 				yyval=new symbolInfo(yyvsp[0]->name,yyvsp[0]->type,yyvsp[0]->position);
 				yyval->data=yyvsp[0]->data;
@@ -1947,18 +1962,18 @@ yyreduce:
 					//add code
 					}
 			} }
-#line 1951 "y.tab.c"
+#line 1966 "y.tab.c"
     break;
 
   case 53:
-#line 457 "test_1.y"
+#line 456 "test_1.y"
                     {//what will be added here??!!
 	}
-#line 1958 "y.tab.c"
+#line 1973 "y.tab.c"
     break;
 
   case 56:
-#line 461 "test_1.y"
+#line 460 "test_1.y"
                        { fprintf(output,"factor : factor INCOP\n\n\n"); 
 	if(yyvsp[-1]->arraysz==0){
 		if(yyvsp[-1]->data==integer)
@@ -1980,18 +1995,18 @@ yyreduce:
 				
 		}			
  			}
-#line 1984 "y.tab.c"
+#line 1999 "y.tab.c"
     break;
 
   case 57:
-#line 482 "test_1.y"
+#line 481 "test_1.y"
                        {//add codes like incop
 	}
-#line 1991 "y.tab.c"
+#line 2006 "y.tab.c"
     break;
 
 
-#line 1995 "y.tab.c"
+#line 2010 "y.tab.c"
 
       default: break;
     }
@@ -2223,7 +2238,7 @@ yyreturn:
 #endif
   return yyresult;
 }
-#line 486 "test_1.y"
+#line 485 "test_1.y"
 
 
 int main(int argc,char *argv[])

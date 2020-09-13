@@ -21,66 +21,66 @@ class symbolTable
     int sz;
 public:
     symbolTable(int sz)
-{
-    //smbl=new symbolInfo*[SIZE];
-    this->sz=sz;
-    smbl=new symbolInfo*[sz];
-    for(int i=0;i<sz;i++)
-        smbl[i]=Null;
-
-}
-    symbolTable()
-{
-    this->sz=0;
-    
-}
-    ~symbolTable()
-{
-    for(int i=0;i<sz;i++)
     {
-        symbolInfo *start=smbl[i],*prev;
-        while(start!=Null)
+        //smbl=new symbolInfo*[SIZE];
+        this->sz=sz;
+        smbl=new symbolInfo*[sz];
+        for(int i=0;i<sz;i++)
+            smbl[i]=Null;
+
+    }
+    symbolTable()
+    {
+        this->sz=0;
+    
+    }
+    ~symbolTable()
+    {
+        for(int i=0;i<sz;i++)
         {
-            prev=start;
-            start=start->next;
-            delete prev;
+            symbolInfo *start=smbl[i],*prev;
+            while(start!=Null)
+            {
+                prev=start;
+                start=start->next;
+                delete prev;
+            }
+        }
+        // delete *smbl;
+    }
+    string getType(string name)
+    {
+        int key=getKey(name);
+        symbolInfo *temp=smbl[key];
+        while(temp!=Null)
+        {
+            if(temp->name==name)
+                return temp->type;
+            else
+                temp=temp->next;
         }
     }
-    // delete *smbl;
-}
-    string getType(string name)
-{
-    int key=getKey(name);
-    symbolInfo *temp=smbl[key];
-    while(temp!=Null)
-    {
-        if(temp->name==name)
-            return temp->type;
-        else
-            temp=temp->next;
-    }
-}
     int getKey(string name)
-{
-    int len=name.length();
-    int sum=0;
-    for(int i=0;i<len;i++)
     {
-        sum=sum+name[i];
+        int len=name.length();
+        int sum=0;
+        for(int i=0;i<len;i++)
+        {
+            sum=sum+name[i];
+        }
+        return sum%sz;
     }
-    return sum%sz;
-}
     void insertItem(symbolInfo *newNode)
-{
-    int key=getKey(newNode->name);
-    symbolInfo* check=lookOut(newNode->name);
-    if(check==Null)
     {
-        if(smbl[key]==Null){
+        int key=getKey(newNode->name);
+        symbolInfo* check=lookOut(newNode->name);
+        if(check==Null)
+        {
+            if(smbl[key]==Null){
                 smbl[key]=newNode;
 		
-}
-        else
+            }
+            else
             {
                 symbolInfo *temp=smbl[key];
                 symbolInfo *prev;
@@ -92,27 +92,31 @@ public:
                 prev->next=newNode;
                 newNode->position=prev->position+1;
             }
-    }
-}
-    symbolInfo* lookOut(string name)
-{
-    int key=getKey(name);
-    symbolInfo *temp=smbl[key];
-    if(temp==Null)
-         return Null;
-
-
-    while(temp!=Null)
-    {
-        if(temp->name==name){
-            return temp;
-            break;
         }
-        else
-            temp=temp->next;
     }
-    return Null;
-}
+    symbolInfo* lookOut(string name)
+    {
+        cout << "(" << __FILE__ << "  " << __LINE__ << "): " << name << endl;
+        int key=getKey(name);
+        symbolInfo *temp=smbl[key];
+        // cout << "_eikhane to ashi e nai_" << endl;
+        if(temp==Null) {
+            // cout << "returned Null" << endl;    
+            return Null;
+        }
+
+        while(temp!=Null)
+        {
+            if(temp->name==name){            
+                return temp;
+                break;
+            }
+            else
+                temp=temp->next;
+        }
+        // cout << __FILE__ << " is returning Null" << endl;
+        return Null;
+    }
     /*void deleteItem(string name)
 {
     cout<<"D"<<endl;
