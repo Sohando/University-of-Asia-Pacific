@@ -1,52 +1,20 @@
 type_specifier  : INT 
 
-type_specifier  : INT 
+variable  : ID 
 
-type_specifier  : FLOAT 
-
-type_specifier  : INT 
-
-type_specifier  : FLOAT 
-
-type_specifier  : FLOAT 
-
+Error at line 1 : NOT DECLARED IN THIS SCOPE 
 unary_expression : factor
 
-compound_statement : LCUR  statements RCURL
+expression : variable ASSIGNOP logic_expression
 
-type_specifier  : INT 
+Error at line 1 : syntax error, unexpected CONST_INT, expecting SEMICOLON 
 
-type_specifier  : INT 
-
-declaration_list  : ID
- a
-
-var_declaration	: type_specifier declaration_list SEMICOLON
-
-statement  : PRINTLN LPAREN ID RPAREN SEMICOLON 
-
-unary_expression : factor
-
-compound_statement : LCURL var_declaration statements RCURL
-
-program : INT MAIN LPAREN RPAREN compound_statement
-
-type_specifier  : FLOAT 
-
-type_specifier  : FLOAT 
-
-unary_expression : factor
-
-compound_statement : LCUR  statements RCURL
+Line   : 1
 
 
-Line   : 14
-
-
-Error   : 0
+Error   : 3
 
 
 
 Symbol Table
 
-4 -> <a , ID, -99999> 

@@ -30,35 +30,25 @@ int yylex(void);
 %token  INT MAIN LPAREN RPAREN LCURL RCURL SEMICOLON FLOAT CHAR COMMA ID LTHIRD RTHIRD CONST_INT CONST_FLOAT CONST_CHAR FOR IF WHILE PRINTLN RETURN LOGICOP RELOP ASSIGNOP ADDOP NOT MULOP INCOP DECOP STRING ELSE DO BREAK DOUBLE VOID CASE SWITCH CONTINUE DEFAULT
 %nonassoc LOWER_THAN_ELSE
 %nonassoc ELSE
-
-
 %%
-
-Program 
-        : main_function
-	    | user_defined_functions
-        | globals
+start
+        : global_var_declaration start
+        | functions 
+        ;
+functions
+        :  user_defined_functions functions
+        |  main_function user_defined_functions 
+        |  global_var_declaration functions
+        |
         ;
 main_function
         : INT MAIN LPAREN RPAREN compound_statement { 
             fprintf(output,"program : INT MAIN LPAREN RPAREN compound_statement\n\n");
-        }
+        }    
         ;
 user_defined_functions
-        : full_defination user_defined_functions 
-        | prototype user_defined_functions
-        | main_function user_defined_functions
-        | globals user_defined_functions 
-        |
-        ;
-/*   onek kaj baki                       */
-globals
-        : var_declaration globals {
-            cout << "declaring globals" << endl;
-        }
-        | user_defined_functions globals
-        | main_function
-        |
+        : full_defination 
+        | prototype
         ;
 full_defination
         : type_specifier ID LPAREN RPAREN compound_statement {
@@ -66,7 +56,8 @@ full_defination
         } 
         | type_specifier ID LPAREN arguments RPAREN compound_statement {
             cout << "user defined having arguments" << endl;
-        } 
+        }
+        | 
         ;
 prototype
         : type_specifier ID LPAREN RPAREN SEMICOLON {   
@@ -83,22 +74,37 @@ arguments
         | type_specifier ID LTHIRD RTHIRD 
         | COMMA type_specifier ID LTHIRD RTHIRD arguments 
         ;
-compound_statement 
-        : LCURL var_declaration statements RCURL {fprintf(output,"compound_statement : LCURL var_declaration statements RCURL\n\n");}
-		| LCURL statements RCURL {fprintf(output,"compound_statement : LCUR  statements RCURL\n\n");}
-		| LCURL RCURL {fprintf(output,"compound_statement : LCURL RCURL\n\n");}
-        ;
-
-			 
-var_declaration	
-        : /* empty */
-        | type_specifier declaration_list SEMICOLON { fprintf(output,"var_declaration	: type_specifier declaration_list SEMICOLON\n\n");}
-        | var_declaration type_specifier declaration_list SEMICOLON { fprintf(output,"var_declaration	: var_declaration type_specifier declaration_list SEMICOLON\n\n");}        
+global_var_declaration
+        : type_specifier expression SEMICOLON {
+            // if ($3->data != $1->data) cout << "mismatch" << endl;
+        }
+        | type_specifier declaration_list SEMICOLON { 
+            fprintf(output,"var_declaration	: type_specifier declaration_list SEMICOLON\n\n");
+            // cout << "var declaration" << endl;
+        }
+        | var_declaration type_specifier declaration_list SEMICOLON { 
+            fprintf(output,"var_declaration	: var_declaration type_specifier declaration_list SEMICOLON\n\n");
+        }        
+		;
+var_declaration 
+        : type_specifier declaration_list SEMICOLON { 
+            fprintf(output,"var_declaration	: type_specifier declaration_list SEMICOLON\n\n");
+            // cout << "var declaration" << endl;
+        }
+        | var_declaration type_specifier declaration_list SEMICOLON { 
+            fprintf(output,"var_declaration	: var_declaration type_specifier declaration_list SEMICOLON\n\n");
+        }        
 		;
 
-type_specifier	: INT { fprintf(output,"type_specifier  : INT \n\n"); {cmp="int";}}
-		| FLOAT { fprintf(output,"type_specifier  : FLOAT \n\n"); {cmp="float";}}
-		| CHAR  { fprintf(output,"type_specifier  : FLOAT \n\n"); {cmp="char";}} 
+type_specifier	: INT { 
+            fprintf(output,"type_specifier  : INT \n\n"); {cmp="int";}
+        }
+		| FLOAT { 
+            fprintf(output,"type_specifier  : FLOAT \n\n"); {cmp="float";}
+        }
+		| CHAR  { 
+            fprintf(output,"type_specifier  : FLOAT \n\n"); {cmp="char";}
+        } 
 		| VOID 
 		;
 			
@@ -275,6 +281,11 @@ declaration_list
         	    }	
         }
         ;
+compound_statement 
+        : LCURL var_declaration statements RCURL {fprintf(output,"compound_statement : LCURL var_declaration statements RCURL\n\n");}
+		| LCURL statements RCURL {fprintf(output,"compound_statement : LCUR  statements RCURL\n\n");}
+		| LCURL RCURL {fprintf(output,"compound_statement : LCURL RCURL\n\n");}
+        ; 
 statements : /* empty */ 
         | statement 
 	    | statements statement     
@@ -332,7 +343,9 @@ expression : logic_expression
 	   | variable ASSIGNOP logic_expression { fprintf(output,"expression : variable ASSIGNOP logic_expression\n\n"); 
 		if($3->data==invalid){}
 		else if(($1->data==integer||$1->data==character)&&$3->data==floating)
- 		{yyerror("Type mismatch");}
+ 		{
+            yyerror("Type mismatch");
+        }
 		else{
 			if($1->arraysz==0){
 
@@ -915,13 +928,15 @@ unary_expression : ADDOP unary_expression
                     else $$->val.f = 1;
 				}
 			}
-		 | factor { fprintf(output,"unary_expression : factor\n\n");
+		 | factor { 
+                fprintf(output,"unary_expression : factor\n\n");
 				$$=new symbolInfo($1->name,$1->type,$1->position);
 				$$->data=$1->data;
 				$$->arraysz=$1->arraysz;
 				if($$->arraysz==0)
 				{
 					printf("normal factor\n ");
+                    cout << $$->name << endl;
 					if($1->data==integer)
 					{
 					$$->val.i=$1->val.i;
@@ -1025,7 +1040,7 @@ int main(int argc,char *argv[])
 	// 	printf("cannot open the file\n");
 	// 	return 0;
 	// 	}
-	output= fopen("1305115_output.txt","w");
+	output= fopen("16201134_output.txt","w");
 	// yyin= input;
     yyparse();
 	printf("\nline   %d\n",line);

@@ -283,12 +283,12 @@ y3 = y1 + (y2 - y1) * ((x_min - x1) / (x2 - x1));
             } else if (region9(x, y)) {
                 reg1 = 9;
                 x3 = x_max;
-                y3 = y1 + (y2 - y1) * ((x_max - x1) / (x2 - x1));
+y3 = y1 + (y2 - y1) * ((x_max - x1) / (x2 - x1));
                 if(inside(x3, y3)) {
                     printf("\n%f %f", x3, y3);
                     return {x3, y3};
                 }
-                 x4 = x1 + (x2 - x1) * ((y_min - y1) / (y2 - y1));
+ x4 = x1 + (x2 - x1) * ((y_min - y1) / (y2 - y1));
                 y4 = y_min;
                 if(inside(x4, y4)) {
                     printf("\n%f %f", x4, y4);
@@ -297,7 +297,7 @@ y3 = y1 + (y2 - y1) * ((x_min - x1) / (x2 - x1));
                 // cout << "Point inside region 9" << endl;
             } else if (region2(x, y)) {
                 reg1 = 2;
-                x3 = x1 + (x2 - x1) * ((y_max - y1) / (y2 - y1));
+x3 = x1 + (x2 - x1) * ((y_max - y1) / (y2 - y1));
                 y3 = y_max;
                 if(inside(x3, y3)) {
                     printf("\n%f %f", x3, y3);
@@ -307,7 +307,7 @@ y3 = y1 + (y2 - y1) * ((x_min - x1) / (x2 - x1));
             } else if (region3(x, y)) {
                 reg1 = 3;
                 x3 = x_min;
-                y3 = y1 + (y2 - y1) * ((x_min - x1) / (x2 - x1));
+y3 = y1 + (y2 - y1) * ((x_min - x1) / (x2 - x1));
                 if(inside(x3, y3)) {
                     printf("\n%f %f", x3, y3);
                     return {x3, y3};
@@ -316,7 +316,7 @@ y3 = y1 + (y2 - y1) * ((x_min - x1) / (x2 - x1));
             } else if (region4(x, y)) {
                 reg1 = 4;
                 x3 = x_max;
-                y3 = y1 + (y2 - y1) * ((x_max - x1) / (x2 - x1));
+y3 = y1 + (y2 - y1) * ((x_max - x1) / (x2 - x1));
                 if(inside(x3, y3)) {
                     printf("\n%f %f", x3, y3);
                     return {x3, y3};
@@ -362,8 +362,7 @@ class Display {
              */
         }
         static void showText2(string String, float pos1, float pos2, float pos3) {
-            glColor3f(Gb.genColor(), Gb.genColor(), Gb.genColor());
-            // glColor3f(.78, .23, .74);
+            glColor3f(0, 0, 0);
             glRasterPos3f(pos1, pos2, pos3);            
             for (int i = 0; i < (int)String.size(); ++i) {
                 glutBitmapCharacter(GLUT_BITMAP_TIMES_ROMAN_24, String[i]);  // Updates the position
@@ -423,7 +422,7 @@ class Display {
                 dmp = makeString(lnClip.vertex[i][0], lnClip.vertex[i][1], 0);
                 showText(dmp, lnClip.vertex[i][0], lnClip.vertex[i][1], 0);
             }
-            showText2("cohen sutherland line clipping algorithm", -.4, -.9, 0);
+            showText2("Cohen Sotherland Line Clipping Algorithm", -.7, -.7, 0);
             glFlush();
         }
 } display;

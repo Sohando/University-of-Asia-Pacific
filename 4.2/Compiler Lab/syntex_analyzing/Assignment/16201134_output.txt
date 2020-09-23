@@ -1,0 +1,78 @@
+type_specifier  : INT 
+
+declaration_list  : ID
+ a
+
+var_declaration	: type_specifier declaration_list SEMICOLON
+
+type_specifier  : INT 
+
+declaration_list  : ID
+ b
+
+declaration_list  : declaration_list COMMA ID
+c
+
+declaration_list  : declaration_list COMMA ID
+d
+
+var_declaration	: type_specifier declaration_list SEMICOLON
+
+type_specifier  : FLOAT 
+
+type_specifier  : FLOAT 
+
+type_specifier  : INT 
+
+type_specifier  : INT 
+
+type_specifier  : INT 
+
+declaration_list  : ID
+ a
+
+Error at line 5 : Multiple Declarationa 
+var_declaration	: type_specifier declaration_list SEMICOLON
+
+type_specifier  : INT 
+
+declaration_list  : ID
+ p
+
+var_declaration	: type_specifier declaration_list SEMICOLON
+
+unary_expression : factor
+
+compound_statement : LCURL var_declaration statements RCURL
+
+program : INT MAIN LPAREN RPAREN compound_statement
+
+type_specifier  : INT 
+
+type_specifier  : INT 
+
+declaration_list  : ID
+ h
+
+var_declaration	: type_specifier declaration_list SEMICOLON
+
+unary_expression : factor
+
+compound_statement : LCURL var_declaration statements RCURL
+
+
+Line   : 14
+
+
+Error   : 1
+
+
+
+Symbol Table
+
+4 -> <a , ID, -99999> 
+5 -> <b , ID, -99999> 
+6 -> <c , ID, -99999> 
+7 -> <d , ID, -99999> 
+11 -> <h , ID, -99999> 
+19 -> <p , ID, -99999> 
