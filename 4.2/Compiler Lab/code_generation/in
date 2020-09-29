@@ -1,0 +1,11 @@
+int main() {
+    int a;
+    int b, c, d;
+    float x[10], y;
+    char ch;
+    char ar[10];
+    if (10 > 1) {
+        println(a);
+    }
+    return 0;
+}

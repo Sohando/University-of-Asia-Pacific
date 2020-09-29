@@ -1,0 +1,121 @@
+type_specifier  : INT 
+
+declaration_list  : ID 
+a
+
+var_declaration : type_specifier declaration_list SEMICOLON
+
+type_specifier  : INT 
+
+declaration_list  : ID 
+b
+
+declaration_list  : declaration_list COMMA ID
+c
+
+declaration_list  : declaration_list COMMA ID
+d
+
+var_declaration : var_declaration type_specifier declaration_list SEMICOLON  
+
+type_specifier  : FLOAT
+
+declaration_list  : ID LTHIRD CONST_INT RTHIRD 
+x
+
+declaration_list  : declaration_list COMMA ID
+y
+
+var_declaration : var_declaration type_specifier declaration_list SEMICOLON  
+
+type_specifier : CHAR 
+
+declaration_list  : ID 
+ch
+
+var_declaration : var_declaration type_specifier declaration_list SEMICOLON  
+
+type_specifier : CHAR 
+
+declaration_list  : ID LTHIRD CONST_INT RTHIRD 
+ar
+
+var_declaration : var_declaration type_specifier declaration_list SEMICOLON  
+
+factor : CONST_INT
+10
+
+unary_expression : factor
+
+term : unary_expression
+
+simple_expression : term
+
+factor : CONST_INT
+1
+
+unary_expression : factor
+
+term : unary_expression
+
+simple_expression : term
+
+rel_expression : simple_expression RELOP simple_expression
+
+logic_expression : rel_expression
+
+expression : logic_expression
+
+statement  : PRINTLN LPAREN ID RPAREN SEMICOLON 
+
+statements  : statement
+
+compound_statement : LCURL statements RCURL
+
+statement  : compound_statement 
+
+statement  : IF LPAREN expression RPAREN statement 
+
+statements  : statement
+
+factor : CONST_INT
+0
+
+unary_expression : factor
+
+term : unary_expression
+
+simple_expression : term
+
+rel_expression : simple_expression
+
+logic_expression : rel_expression
+
+expression : logic_expression
+
+statement  : RETURN expression SEMICOLON 
+
+statements  : statements statement
+
+compound_statement : LCURL var_declaration statements RCURL
+
+program : INT MAIN LPAREN RPAREN compound_statement
+
+
+Line   : 12
+
+
+Error   : 0
+
+
+
+Symbol Table
+
+4 -> <a , ID, -99999> 
+5 -> <b , ID, -99999> 
+6 -> <c , ID, -99999> 
+7 -> <d , ID, -99999> 
+17 -> <ch , ID, .> 
+25 -> <ar , ID, { .,.,.,.,.,.,.,.,.,.}> 
+27 -> <x , ID, { -1.000000,-1.000000,-1.000000,-1.000000,-1.000000,-1.000000,-1.000000,-1.000000,-1.000000,-1.000000}> 
+28 -> <y , ID, -99999.000000> 
