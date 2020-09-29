@@ -5,45 +5,99 @@ a
 
 var_declaration : type_specifier declaration_list SEMICOLON
 
-type_specifier  : INT 
+variable  : ID 
 
-declaration_list  : ID 
-b
+variable  : ID 
 
-declaration_list  : declaration_list COMMA ID
-c
+factor : variable
 
-declaration_list  : declaration_list COMMA ID
-d
+unary_expression : factor
 
-var_declaration : var_declaration type_specifier declaration_list SEMICOLON  
-
-type_specifier  : FLOAT
-
-declaration_list  : ID LTHIRD CONST_INT RTHIRD 
-x
-
-declaration_list  : declaration_list COMMA ID
-y
-
-var_declaration : var_declaration type_specifier declaration_list SEMICOLON  
-
-type_specifier : CHAR 
-
-declaration_list  : ID 
-ch
-
-var_declaration : var_declaration type_specifier declaration_list SEMICOLON  
-
-type_specifier : CHAR 
-
-declaration_list  : ID LTHIRD CONST_INT RTHIRD 
-ar
-
-var_declaration : var_declaration type_specifier declaration_list SEMICOLON  
+term : unary_expression
 
 factor : CONST_INT
-10
+1
+
+unary_expression : factor
+
+term : term MULOP unary_expression
+
+simple_expression : term
+
+rel_expression : simple_expression
+
+logic_expression : rel_expression
+
+expression : variable ASSIGNOP logic_expression
+
+4 -> <a , ID, -99999> 
+expression_statement  : expression SEMICOLON 
+
+statement  : expression_statement
+
+statements  : statement
+
+variable  : ID 
+
+variable  : ID 
+
+factor : variable
+
+unary_expression : factor
+
+term : unary_expression
+
+factor : CONST_INT
+1
+
+unary_expression : factor
+
+term : term MULOP unary_expression
+
+simple_expression : term
+
+rel_expression : simple_expression
+
+logic_expression : rel_expression
+
+expression : variable ASSIGNOP logic_expression
+
+4 -> <a , ID, -99999> 
+expression_statement  : expression SEMICOLON 
+
+statement  : expression_statement
+
+statements  : statements statement
+
+variable  : ID 
+
+factor : CONST_INT
+1
+
+unary_expression : factor
+
+term : unary_expression
+
+simple_expression : term
+
+rel_expression : simple_expression
+
+logic_expression : rel_expression
+
+expression : variable ASSIGNOP logic_expression
+
+4 -> <a , ID, -99999> 
+expression_statement  : expression SEMICOLON 
+
+statement  : expression_statement
+
+statements  : statements statement
+
+variable  : ID 
+
+variable  : ID 
+
+factor : variable
 
 unary_expression : factor
 
@@ -58,25 +112,20 @@ unary_expression : factor
 
 term : unary_expression
 
-simple_expression : term
+simple_expression : simple_expression ADDOP term  
 
-rel_expression : simple_expression RELOP simple_expression
+rel_expression : simple_expression
 
 logic_expression : rel_expression
 
-expression : logic_expression
+expression : variable ASSIGNOP logic_expression
 
-statement  : PRINTLN LPAREN ID RPAREN SEMICOLON 
+4 -> <a , ID, -99999> 
+expression_statement  : expression SEMICOLON 
 
-statements  : statement
+statement  : expression_statement
 
-compound_statement : LCURL statements RCURL
-
-statement  : compound_statement 
-
-statement  : IF LPAREN expression RPAREN statement 
-
-statements  : statement
+statements  : statements statement
 
 factor : CONST_INT
 0
@@ -102,7 +151,7 @@ compound_statement : LCURL var_declaration statements RCURL
 program : INT MAIN LPAREN RPAREN compound_statement
 
 
-Line   : 12
+Line   : 9
 
 
 Error   : 0
@@ -112,10 +161,3 @@ Error   : 0
 Symbol Table
 
 4 -> <a , ID, -99999> 
-5 -> <b , ID, -99999> 
-6 -> <c , ID, -99999> 
-7 -> <d , ID, -99999> 
-17 -> <ch , ID, .> 
-25 -> <ar , ID, { .,.,.,.,.,.,.,.,.,.}> 
-27 -> <x , ID, { -1.000000,-1.000000,-1.000000,-1.000000,-1.000000,-1.000000,-1.000000,-1.000000,-1.000000,-1.000000}> 
-28 -> <y , ID, -99999.000000> 

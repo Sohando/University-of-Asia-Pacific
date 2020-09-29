@@ -66,71 +66,66 @@
 
 
 /* First part of user prologue.  */
-#line 2 "test_code_generation.y"
+#line 1 "test_code_generation.y"
 
-#include<iostream>
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
-#include <sstream>
-#include<bits/stdc++.h>
-#include "1305115_table.h"
-#include "test_optimzation.cpp"
-#define YYSTYPE symbolInfo*
-using namespace std;
+    #include<iostream>
+    #include <stdio.h>
+    #include <stdlib.h>
+    #include <string.h>
+    #include <sstream>
+    #include<bits/stdc++.h>
+    #include "1305115_table.h"
+    #include "test_optimzation.cpp"
+    #define YYSTYPE symbolInfo*
+    using namespace std;
+    
+    FILE *output;
+    //FILE *out;
+    string cmp;
+    
+    string n="";
+    symbolInfo* notget;
+    symbolInfo* idcheck;
+    symbolInfo* ix;
+    symbolInfo* idprint;
+    symbolTable* table=new symbolTable(31);
+    
+    extern int line;
+    extern int error;
+    ofstream fout;
+    void yyerror(const char *s){
+    	printf("%s\n",s);
+    	fprintf(output,"Error at line %d : %s \n",line,s);
+    	error++;
+    }
+    
+    
+    int labelCount=0;
+    int tempCount=0;
+    
+    
+    char *newLabel() {
+    	// add your code like newTemp
+        char *l= new char[4];       
+        strcpy(l,"l");
+        char b[3];
+        sprintf(b,"%d", labelCount);
+        labelCount++;
+        strcat(l,b);
+        return l;  
+    }
+    char *newTemp() {
+    	char *t= new char[4];
+    	strcpy(t,"t");
+    	char b[3];
+    	sprintf(b,"%d", tempCount);
+    	tempCount++;
+    	strcat(t,b);
+    	return t;
+    }
+    int yylex(void);
 
-FILE *output;
-//FILE *out;
-string cmp;
-
-string n="";
-symbolInfo* notget;
-symbolInfo* idcheck;
-symbolInfo* ix;
-symbolInfo* idprint;
-symbolTable* table=new symbolTable(31);
-
-extern int line;
-extern int error;
-ofstream fout;
-void yyerror(const char *s){
-	printf("%s\n",s);
-	fprintf(output,"Error at line %d : %s \n",line,s);
-	error++;
-}
-
-
-int labelCount=0;
-int tempCount=0;
-
-
-char *newLabel()
-{
-	// add your code like newTemp
-    char *l= new char[4];       
-    strcpy(l,"l");
-    char b[3];
-    sprintf(b,"%d", labelCount);
-    labelCount++;
-    strcat(l,b);
-    return l;  
-}
-
-char *newTemp()
-{
-	char *t= new char[4];
-	strcpy(t,"t");
-	char b[3];
-	sprintf(b,"%d", tempCount);
-	tempCount++;
-	strcat(t,b);
-	return t;
-}
-
-int yylex(void);
-
-
-#line 134 "y.tab.c"
+#line 129 "y.tab.c"
 
 # ifndef YY_CAST
 #  ifdef __cplusplus
@@ -640,12 +635,12 @@ static const yytype_int8 yytranslate[] =
   /* YYRLINE[YYN] -- Source line where rule number YYN was defined.  */
 static const yytype_int16 yyrline[] =
 {
-       0,    73,    73,    94,   104,   105,   109,   114,   120,   121,
-     122,   123,   126,   171,   230,   268,   324,   325,   331,   332,
-     333,   334,   335,   336,   337,   338,   355,   368,   381,   394,
-     425,   433,   434,   435,   438,   453,   454,   455,   485,   488,
-     533,   536,   643,   645,   748,   752,   806,   809,   862,   900,
-     932,   970,   992,   996,  1001,  1005,  1009,  1070
+       0,    67,    67,    86,    91,    95,   100,   104,   111,   112,
+     113,   114,   117,   156,   216,   251,   306,   310,   316,   317,
+     318,   319,   320,   321,   322,   323,   339,   347,   360,   372,
+     403,   411,   412,   413,   416,   430,   431,   432,   458,   462,
+     505,   509,   600,   603,   683,   687,   737,   741,   794,   825,
+     851,   883,   904,   908,   913,   917,   921,   973
 };
 #endif
 
@@ -1549,892 +1544,836 @@ yyreduce:
   switch (yyn)
     {
   case 2:
-#line 73 "test_code_generation.y"
+#line 67 "test_code_generation.y"
                                                     { fprintf(output,"program : INT MAIN LPAREN RPAREN compound_statement\n\n");
 			fout.open("16201134_code.asm"); //Change as per your ID
 			fout<<"TITLE: Code Generation\n";
 			fout<<".MODEL SMALL\n";
 			fout<<".STACK 100H\n";
 			fout<<".DATA\n";
-			for(int i=0;i<tempCount;i++)
-			{
-				//add codes here for generation
+			for(int i=0; i<tempCount; i++) {
                 fout << "t" << i << " DW ?\n";
 			}
 			yyval=yyvsp[0];
             yyval-> code = yyvsp[0]->code;
 			yyval->code +="MAIN ENDP\n";
-yyval->code+="\n\nOUTDEC PROC\nPUSH AX\nPUSH BX\nPUSH CX\nPUSH DX\nOR AX,AX\nJGE @END_IF1\nPUSH AX\nMOV DL,'-'\nMOV AH,2\nINT 21H\nPOP AX\nNEG AX\n\n@END_IF1:\nXOR CX,CX\nMOV BX,10D\n\n@REPEAT1:\nXOR DX,DX\nDIV BX\nPUSH DX\nINC CX\nOR AX,AX\nJNE @REPEAT1\n\nMOV AH,2\n\n@PRINT_LOOP:\n\nPOP DX\nOR DL,30H\nINT 21H\nLOOP @PRINT_LOOP\n\nPOP DX\nPOP CX\nPOP BX\nPOP AX\nRET\nOUTDEC ENDP\n\n";
+            yyval->code+="\n\nOUTDEC PROC\nPUSH AX\nPUSH BX\nPUSH CX\nPUSH DX\nOR AX, AX\nJGE @END_IF1\nPUSH AX\nMOV DL, '-'\nMOV AH, 2\nINT 21H\nPOP AX\nNEG AX\n\n@END_IF1:\nXOR CX, CX\nMOV BX, 10D\n\n@REPEAT1:\nXOR DX, DX\nDIV BX\nPUSH DX\nINC CX\nOR AX, AX\nJNE @REPEAT1\n\nMOV AH, 2\n\n@PRINT_LOOP:\n\nPOP DX\nOR DL, 30H\nINT 21H\nLOOP @PRINT_LOOP\n\nPOP DX\nPOP CX\nPOP BX\nPOP AX\nRET\nTDEC ENDP\n\n";
 			yyval->code+="END MAIN\n";
 			fout << yyval->code;
 			
-	}
-#line 1573 "y.tab.c"
+        }
+#line 1566 "y.tab.c"
     break;
 
   case 3:
-#line 95 "test_code_generation.y"
-                   { fprintf(output,"compound_statement : LCURL var_declaration statements RCURL\n\n");
-							//add your code generation
-							yyval=yyvsp[-1];
-                            yyval->code = yyvsp[-2]->code;
-// cout << "I'm " << $$->code << endl;                        
-                            yyval->code += "\n.CODE\n";
-                            yyval->code += "MAIN PROC\nMOV AX, @DATA\nMOV DS, AX\n";
-                            yyval->code += yyvsp[-1]->code; 
-			}
-#line 1587 "y.tab.c"
+#line 86 "test_code_generation.y"
+                                                 { 
+            fprintf(output,"compound_statement : LCURL var_declaration statements RCURL\n\n");
+            yyval=yyvsp[-1];
+            yyval->code = yyvsp[-2]->code + "\n.CODE\n" + "MAIN PROC\nMOV AX, @DATA\nMOV DS, AX\n" +  yyvsp[-1]->code;
+        }
+#line 1576 "y.tab.c"
     break;
 
   case 4:
-#line 104 "test_code_generation.y"
-                                            { fprintf(output,"compound_statement : LCURL statements RCURL\n\n");yyval=yyvsp[-1];}
-#line 1593 "y.tab.c"
+#line 91 "test_code_generation.y"
+                                 { 
+            yyval=yyvsp[-1];
+            fprintf(output,"compound_statement : LCURL statements RCURL\n\n");yyval=yyvsp[-1];
+        }
+#line 1585 "y.tab.c"
     break;
 
   case 5:
-#line 105 "test_code_generation.y"
-                                 { fprintf(output,"compound_statement : LCURL RCURL \n\n");}
-#line 1599 "y.tab.c"
+#line 95 "test_code_generation.y"
+                      { 
+                fprintf(output,"compound_statement : LCURL RCURL \n\n");
+        }
+#line 1593 "y.tab.c"
     break;
 
   case 6:
-#line 110 "test_code_generation.y"
-                { fprintf(output,"var_declaration : type_specifier declaration_list SEMICOLON\n\n"); 
-			yyval=yyvsp[-1];
-						yyval->code=yyvsp[-1]->code;
+#line 100 "test_code_generation.y"
+                                                    { 
+            fprintf(output,"var_declaration : type_specifier declaration_list SEMICOLON\n\n"); 
+		    yyval=yyvsp[-1];
 		}
-#line 1608 "y.tab.c"
+#line 1602 "y.tab.c"
     break;
 
   case 7:
-#line 115 "test_code_generation.y"
-                { fprintf(output,"var_declaration : var_declaration type_specifier declaration_list SEMICOLON  \n\n"); 
-						yyval=yyvsp[-3];
-						yyval->code =yyvsp[-1]->code;
+#line 104 "test_code_generation.y"
+                                                                            { 
+            fprintf(output,"var_declaration : var_declaration type_specifier declaration_list SEMICOLON  \n\n"); 
+			yyval=yyvsp[-3];
+			yyval->code += yyvsp[-1]->code;        
 		}
-#line 1617 "y.tab.c"
+#line 1612 "y.tab.c"
     break;
 
   case 8:
-#line 120 "test_code_generation.y"
-                      { fprintf(output,"type_specifier  : INT \n\n"); {cmp="int";}}
-#line 1623 "y.tab.c"
+#line 111 "test_code_generation.y"
+              { fprintf(output,"type_specifier  : INT \n\n"); {cmp="int";}}
+#line 1618 "y.tab.c"
     break;
 
   case 9:
-#line 121 "test_code_generation.y"
+#line 112 "test_code_generation.y"
                         { fprintf(output,"type_specifier  : FLOAT\n\n");   {cmp="float";}}
-#line 1629 "y.tab.c"
+#line 1624 "y.tab.c"
     break;
 
   case 10:
-#line 122 "test_code_generation.y"
+#line 113 "test_code_generation.y"
                        { fprintf(output,"type_specifier : CHAR \n\n"); {cmp="char";}}
-#line 1635 "y.tab.c"
+#line 1630 "y.tab.c"
     break;
 
   case 11:
-#line 123 "test_code_generation.y"
+#line 114 "test_code_generation.y"
                        { fprintf(output,"type_specifier : VOID \n\n"); }
-#line 1641 "y.tab.c"
+#line 1636 "y.tab.c"
     break;
 
   case 12:
-#line 126 "test_code_generation.y"
-                                             { 
-		fprintf(output,"declaration_list  : declaration_list COMMA ID\n%s\n\n",yyvsp[0]->name.c_str()); 
-		
-		idcheck=table->lookOut(yyvsp[0]->name);
-	if(idcheck==Null){
-					yyval=yyvsp[-2];
-					
-				
-					if(strcmp(cmp.c_str(),"int")==0)
-					{
-					//add code for generation part
-					    yyvsp[0]->data=integer;
-					    yyvsp[0]->val.i=-99999;
-					    yyvsp[0]->position=0;
-					    table->insertItem(yyvsp[0]);
+#line 117 "test_code_generation.y"
+                                    { 
+		    fprintf(output,"declaration_list  : declaration_list COMMA ID\n%s\n\n",yyvsp[0]->name.c_str());   		
+        	idcheck=table->lookOut(yyvsp[0]->name);
+	        if(idcheck==Null) {
+				yyval=yyvsp[-2];									
+			    if(strcmp(cmp.c_str(),"int")==0) {
+			        //add code for generation part
+                    yyval->code += yyvsp[0]->getName() + " DW ?\n";
+			    	yyvsp[0]->data=integer;
+				    yyvsp[0]->val.i=-99999;
+				    yyvsp[0]->position=0;
+					table->insertItem(yyvsp[0]);
                     // Code Generation
-                        yyval->code = yyvsp[0]->getName() + " DW ?\n";
-					}				
-					if(strcmp(cmp.c_str(),"float")==0)
-					{
-					//add code for generation part
-					    yyvsp[0]->data=floating;
-					    yyvsp[0]->val.f=-99999;
-					    yyvsp[0]->position=0;
-					    table->insertItem(yyvsp[0]);
+			    }				
+			    else if(strcmp(cmp.c_str(),"float")==0) {
+			    	//add code for generation part
+				    yyvsp[0]->data=floating;
+					yyvsp[0]->val.f=-99999;
+				   	yyvsp[0]->position=0;
+				   	table->insertItem(yyvsp[0]);
                     // Code Generation
-                        yyval->code = yyvsp[0]->getName() + " DW ?\n";
-					}
-					if(strcmp(cmp.c_str(),"char")==0)
-					{
-					//add code for generation part
-					    yyvsp[0]->data=character;
-					    yyvsp[0]->val.c='.';
-					    yyvsp[0]->position=0;
-					    table->insertItem(yyvsp[0]);
-                    // Code Generation
-                        yyval->code = yyvsp[0]->getName() + " DW ? '$'\n";
-					}
+                    yyval->code += yyvsp[0]->getName() + " DW ?\n";
+				}
+				else if(strcmp(cmp.c_str(),"char")==0) {
+				    //add code for generation part
+					yyvsp[0]->data=character;
+			    	yyvsp[0]->val.c='.';
+			    	yyvsp[0]->position=0;
+			    	table->insertItem(yyvsp[0]);
+                    // Code Generation  
+                    yyval->code += yyvsp[0]->getName() + " DW ? '$'\n";
+				}
 			}
-			else{
-				char errorarr[30]="Multiple Declaration";
-				strcat(errorarr,yyvsp[0]->name.c_str());							
-				yyerror(errorarr);}
-					
-					}
-#line 1691 "y.tab.c"
+		    else{
+	    		char errorarr[30]="Multiple Declaration";
+    			strcat(errorarr,yyvsp[0]->name.c_str());							
+				yyerror(errorarr);
+            }					
+		}
+#line 1680 "y.tab.c"
     break;
 
   case 13:
-#line 172 "test_code_generation.y"
-                        {fprintf(output,"declaration_list  : declaration_list COMMA ID LTHIRD CONST_INT RTHIRD\n %s\n\n",
-				yyvsp[-3]->name.c_str());
-				
-		idcheck=table->lookOut(yyvsp[-3]->name);
-		if(idcheck==Null){
-				yyval=yyvsp[-5];
-				int length=yyvsp[-1]->val.i;
-				
-				if(strcmp(cmp.c_str(),"int")==0)
-				{
-				//add code for generation part			
-				    yyvsp[-3]->data=integer; 
-    				yyvsp[-3]->arraysz=yyvsp[-1]->val.i;
-	    			yyvsp[-3]->val.arrayi=(int*)malloc((yyvsp[-3]->arraysz)*sizeof(int));
-		    		for(int k=0;k<yyvsp[-3]->arraysz;k++){yyvsp[-3]->val.arrayi[k]=-1;}
-                // Code Generation
-                    yyval->code = yyvsp[-3]->getName() + " DW ?";
+#line 156 "test_code_generation.y"
+                                                            {
+            fprintf(output,"declaration_list  : declaration_list COMMA ID LTHIRD CONST_INT RTHIRD\n %s\n\n",
+			yyvsp[-3]->name.c_str());			
+	        idcheck=table->lookOut(yyvsp[-3]->name);
+	        if(idcheck==Null){
+	        	yyval=yyvsp[-5];
+	        	int length=yyvsp[-1]->val.i;	        		
+	        	if(strcmp(cmp.c_str(),"int")==0) {
+	        		//add code for generation part			
+                    yyval->code += yyvsp[-3]->getName() + " DW ?";
                     for(int k=1; k < length; k++) {                        
-                         yyval->code += ", ?";
+                        yyval->code += ", ?";
                     }
                     yyval->code += "\n";
-				}				
-				if(strcmp(cmp.c_str(),"float")==0)
-				{
-				//add code for generation part			
-				    yyvsp[-3]->data=floating; 
-    				yyvsp[-3]->arraysz=yyvsp[-1]->val.i;
-	    			yyvsp[-3]->val.arrayf=(float*)malloc((yyvsp[-3]->arraysz)*sizeof(float));
-		    		for(int k=0;k<yyvsp[-3]->arraysz;k++){yyvsp[-3]->val.arrayf[k]=-1;}
-                // Code Generation
-                    yyval->code = yyvsp[-3]->getName() + " DW ?";
-                    for(int k=1; k < length; k++) {                        
-                         yyval->code += ", ?";
+	        		yyvsp[-3]->data=integer; 
+            		yyvsp[-3]->arraysz=yyvsp[-1]->val.i;
+	            	yyvsp[-3]->val.arrayi=(int*)malloc((yyvsp[-3]->arraysz)*sizeof(int));
+	        	    for(int k=0;k<yyvsp[-3]->arraysz;k++) { 
+                        yyvsp[-3]->val.arrayi[k]=-1;
                     }
-                    yyval->code += "\n";
-				}				
-				if(strcmp(cmp.c_str(),"char")==0)
-				{
-				//add code for generation part			
-				    yyvsp[-3]->data=character; 
-    				yyvsp[-3]->arraysz=yyvsp[-1]->val.i;
-	    			yyvsp[-3]->val.arrayc=(char*)malloc((yyvsp[-3]->arraysz)*sizeof(char));
-		    		for(int k=0;k<yyvsp[-3]->arraysz;k++){yyvsp[-3]->val.arrayc[k]='.';}
-                // Code Generation
-                    yyval->code = yyvsp[-3]->getName() + " DW ?";
-                    for(int k=1; k < length; k++) {                        
-                         yyval->code += ", ?";
-                    }
-                    yyval->code += " '$'\n";
-				}				
-				table->insertItem(yyvsp[-3]);	
-			}
-	else{
-		char errorarr[30]="Multiple Declaration : ";
-		strcat(errorarr,yyvsp[-3]->name.c_str());							
-		yyerror(errorarr);	
-	}	
-		}
-#line 1754 "y.tab.c"
+                        // Code Generation
+	        	}				
+	        	else if(strcmp(cmp.c_str(),"float")==0) {
+	        		//add code for generation part			
+	        			yyvsp[-3]->data=floating; 
+            			yyvsp[-3]->arraysz=yyvsp[-1]->val.i;
+	            		yyvsp[-3]->val.arrayf=(float*)malloc((yyvsp[-3]->arraysz)*sizeof(float));
+	        	    	for(int k=0;k<yyvsp[-3]->arraysz;k++) {
+                            yyvsp[-3]->val.arrayf[k]=-1;
+                        }
+                        // Code Generation
+                        yyval->code += yyvsp[-3]->getName() + " DW ?";
+                        for(int k=1; k < length; k++) {                        
+                            yyval->code += ", ?";
+                        }
+                        yyval->code += "\n";
+	        		}				
+	        		else if(strcmp(cmp.c_str(),"char")==0) {
+	        			//add code for generation part			
+	        			yyvsp[-3]->data=character; 
+            			yyvsp[-3]->arraysz=yyvsp[-1]->val.i;
+	            		yyvsp[-3]->val.arrayc=(char*)malloc((yyvsp[-3]->arraysz)*sizeof(char));
+	        	    	for(int k=0;k<yyvsp[-3]->arraysz;k++) {
+                            yyvsp[-3]->val.arrayc[k]='.';
+                        }
+                        // Code Generation
+                        yyval->code += yyvsp[-3]->getName() + " DW ?";
+                        for(int k=1; k < length; k++) {                        
+                            yyval->code += ", ?";
+                        }
+                        yyval->code += " '$'\n";
+	        		}				
+	        		table->insertItem(yyvsp[-3]);	
+	        	}
+	            else{
+	        	    char errorarr[30]="Multiple Declaration : ";
+    	        	strcat(errorarr,yyvsp[-3]->name.c_str());							
+	            	yyerror(errorarr);	
+	            }	
+		    }
+#line 1745 "y.tab.c"
     break;
 
   case 14:
-#line 230 "test_code_generation.y"
-                      { 
-			fprintf(output,"declaration_list  : ID \n%s\n\n",yyvsp[0]->name.c_str());
+#line 216 "test_code_generation.y"
+                         { 
+			    fprintf(output,"declaration_list  : ID \n%s\n\n",yyvsp[0]->name.c_str());
 	
-	idcheck=table->lookOut(yyvsp[0]->name);
-	if(idcheck==Null){ 
-				yyval=new symbolInfo();
-				if(strcmp(cmp.c_str(),"int")==0)
-				{
-				// add codes for generation part
-    				yyvsp[0]->data=integer; 
-    				yyvsp[0]->val.i=-99999;
-    				table->insertItem(yyvsp[0]);
-                // Code Generation
-                    yyval->code = yyvsp[0]->getName() + " DW ?\n";
-				}
-				else if(strcmp(cmp.c_str(),"float")==0)
-				{
-				
-				yyvsp[0]->data=floating; 
-				yyvsp[0]->val.f=-99999.000;
-				table->insertItem(yyvsp[0]);
-                    yyval->code = yyvsp[0]->getName() + " DW ?\n";
-				}
-				else if(strcmp(cmp.c_str(),"char")==0)
-				{
-				
-				yyvsp[0]->data=character; 
-				yyvsp[0]->val.c='.';
-				table->insertItem(yyvsp[0]);
-                    yyval->code = yyvsp[0]->getName() + " DW ? '$'\n";
-				}
-			}
-		else{
-			char errorarr[30]="Multiple Declaration : ";
-			strcat(errorarr,yyvsp[0]->name.c_str());							
-			yyerror(errorarr);			
-			}
-		      }
-#line 1797 "y.tab.c"
+	            idcheck=table->lookOut(yyvsp[0]->name);
+            	if(idcheck==Null){ 
+    				yyval=new symbolInfo();
+    				if(strcmp(cmp.c_str(),"int")==0) {
+    				// add codes for generation part
+                        yyval->code += yyvsp[0]->getName() + " DW ?\n";
+        				yyvsp[0]->data=integer; 
+        				yyvsp[0]->val.i=-99999;
+        				table->insertItem(yyvsp[0]);
+                    // Code Generation
+                        // cout << "$ " << $$->code << endl;
+                        // cout << "$ " << $$->code << endl;
+    				}
+    				else if(strcmp(cmp.c_str(),"float")==0) {    				
+    				    yyvsp[0]->data=floating; 
+        				yyvsp[0]->val.f=-99999.000;
+        				table->insertItem(yyvsp[0]);
+                        yyval->code += yyvsp[0]->getName() + " DW ?\n";
+    				}
+    				else if(strcmp(cmp.c_str(),"char")==0) {    				
+        				yyvsp[0]->data=character; 
+        				yyvsp[0]->val.c='.';
+    	    			table->insertItem(yyvsp[0]);
+                        yyval->code += yyvsp[0]->getName() + " DW ? '$'\n";
+    				}
+    			}
+    		    else{
+    			    char errorarr[30]="Multiple Declaration : ";
+        			strcat(errorarr,yyvsp[0]->name.c_str());							
+        			yyerror(errorarr);			
+    			}
+    		}
+#line 1785 "y.tab.c"
     break;
 
   case 15:
-#line 268 "test_code_generation.y"
-                                              { 
-			fprintf(output,"declaration_list  : ID LTHIRD CONST_INT RTHIRD \n%s\n\n",yyvsp[-3]->name.c_str()); 
-			printf("%s\n",yyvsp[-3]->name.c_str());
-	
-	idcheck=table->lookOut(yyvsp[-3]->name);
-	if(idcheck==Null){
-			yyval=new symbolInfo();
-			int length=yyvsp[-1]->val.i;
-				
-			//add codes for generation part
-			if(strcmp(cmp.c_str(),"int")==0)  {
-			    yyvsp[-3]->data=integer; 
-    			yyvsp[-3]->arraysz=yyvsp[-1]->val.i;
-	    		yyvsp[-3]->val.arrayi=(int*)malloc((yyvsp[-3]->arraysz)*sizeof(int));
-		    	for(int k=0;k<yyvsp[-3]->arraysz;k++){yyvsp[-3]->val.arrayi[k]=-1;}
-                // Code Generation
-                yyval->code = yyvsp[-3]->getName() + " DW ?";
-                for(int k=1; k < length; k++) {                        
-                     yyval->code += ", ?";
-                }
-                yyval->code += "\n";                                                       
-            } else if (strcmp(cmp.c_str(),"float")==0) {
-                
-			    yyvsp[-3]->data=floating; 
-    			yyvsp[-3]->arraysz=yyvsp[-1]->val.i;
-	    		yyvsp[-3]->val.arrayf=(float*)malloc((yyvsp[-3]->arraysz)*sizeof(float));
-		    	for(int k=0;k<yyvsp[-3]->arraysz;k++){yyvsp[-3]->val.arrayf[k]=-1;}
-                // Code Generation
-                yyval->code = yyvsp[-3]->getName() + " DW ?";
-                for(int k=1; k < length; k++) {                        
-                     yyval->code += ", ?";
-                }
-                yyval->code += "\n";                                                       
-            } else {                     
-			    yyvsp[-3]->data=character; 
-    			yyvsp[-3]->arraysz=yyvsp[-1]->val.i;
-	    		yyvsp[-3]->val.arrayc=(char*)malloc((yyvsp[-3]->arraysz)*sizeof(char));
-		    	for(int k=0;k<yyvsp[-3]->arraysz;k++){yyvsp[-3]->val.arrayc[k]='.';}
-                // Code Generation
-                yyval->code = yyvsp[-3]->getName() + " DW ?";
-                for(int k=1; k < length; k++) {                        
-                     yyval->code += ", ?";
-                }
-                yyval->code += " '$'\n";                                                       
-            }
+#line 251 "test_code_generation.y"
+                                                 { 
+			    fprintf(output,"declaration_list  : ID LTHIRD CONST_INT RTHIRD \n%s\n\n",yyvsp[-3]->name.c_str()); 
+    			printf("%s\n",yyvsp[-3]->name.c_str());
+            	idcheck=table->lookOut(yyvsp[-3]->name);   
+            	if(idcheck==Null){
+			        yyval=new symbolInfo();
+			        int length=yyvsp[-1]->val.i;
+			        	
+			        //add codes for generation part
+			        if(strcmp(cmp.c_str(),"int")==0)  {
+			            yyvsp[-3]->data=integer; 
+    		        	yyvsp[-3]->arraysz=yyvsp[-1]->val.i;
+	    	        	yyvsp[-3]->val.arrayi=(int*)malloc((yyvsp[-3]->arraysz)*sizeof(int));
+		            	for(int k=0;k<yyvsp[-3]->arraysz;k++){yyvsp[-3]->val.arrayi[k]=-1;}
+                        // Code Generation
+                        yyval->code += yyvsp[-3]->getName() + " DW ?";
+                        for(int k=1; k < length; k++) {                        
+                             yyval->code += ", ?";
+                        }
+                        yyval->code += "\n";                                                       
+                    } else if (strcmp(cmp.c_str(),"float")==0) {
+                        
+			            yyvsp[-3]->data=floating; 
+    		        	yyvsp[-3]->arraysz=yyvsp[-1]->val.i;
+	    	        	yyvsp[-3]->val.arrayf=(float*)malloc((yyvsp[-3]->arraysz)*sizeof(float));
+		            	for(int k=0;k<yyvsp[-3]->arraysz;k++){yyvsp[-3]->val.arrayf[k]=-1;}
+                        // Code Generation
+                        yyval->code += yyvsp[-3]->getName() + " DW ?";
+                        for(int k=1; k < length; k++) {                        
+                             yyval->code += ", ?";
+                        }
+                        yyval->code += "\n";                                                       
+                    } else {                     
+			            yyvsp[-3]->data=character; 
+    		        	yyvsp[-3]->arraysz=yyvsp[-1]->val.i;
+	    	        	yyvsp[-3]->val.arrayc=(char*)malloc((yyvsp[-3]->arraysz)*sizeof(char));
+		            	for(int k=0;k<yyvsp[-3]->arraysz;k++){yyvsp[-3]->val.arrayc[k]='.';}
+                        // Code Generation
+                        yyval->code += yyvsp[-3]->getName() + " DW ?";
+                        for(int k=1; k < length; k++) {                        
+                             yyval->code += ", ?";
+                        }
+                        yyval->code += " '$'\n";                                                       
+                    }
 			
-		table->insertItem(yyvsp[-3]);
-		}
-else{
-
-	char errorarr[30]="Multiple Declaration : ";
-	strcat(errorarr,yyvsp[-3]->name.c_str());							
-	yyerror(errorarr);
-	}
-}
-#line 1857 "y.tab.c"
+            		table->insertItem(yyvsp[-3]);
+		        }
+                else {
+                	char errorarr[30]="Multiple Declaration : ";
+                	strcat(errorarr,yyvsp[-3]->name.c_str());							
+                	yyerror(errorarr);
+	            }
+            }
+#line 1843 "y.tab.c"
     break;
 
   case 16:
-#line 324 "test_code_generation.y"
-                       { fprintf(output,"statements  : statement\n\n");yyval=yyvsp[0]; }
-#line 1863 "y.tab.c"
+#line 306 "test_code_generation.y"
+                        { 
+                fprintf(output,"statements  : statement\n\n");yyval=yyvsp[0]; 
+                yyval=yyvsp[0];           
+            }
+#line 1852 "y.tab.c"
     break;
 
   case 17:
-#line 325 "test_code_generation.y"
-                                  { fprintf(output,"statements  : statements statement\n\n"); 
+#line 310 "test_code_generation.y"
+                                       { fprintf(output,"statements  : statements statement\n\n"); 
 				yyval=yyvsp[-1];
-				yyval->code = yyvsp[0]->code;
-		}
-#line 1872 "y.tab.c"
+                yyval->code += yyvsp[0]->code;
+		    }
+#line 1861 "y.tab.c"
     break;
 
   case 18:
-#line 331 "test_code_generation.y"
-                                  { fprintf(output,"statement  : expression_statement\n\n"); yyval=yyvsp[0];}
-#line 1878 "y.tab.c"
+#line 316 "test_code_generation.y"
+                                   { fprintf(output,"statement  : expression_statement\n\n"); yyval=yyvsp[0];}
+#line 1867 "y.tab.c"
     break;
 
   case 19:
-#line 332 "test_code_generation.y"
-                                { fprintf(output,"statement  : compound_statement \n\n");yyval=yyvsp[0]; }
-#line 1884 "y.tab.c"
+#line 317 "test_code_generation.y"
+                                 { fprintf(output,"statement  : compound_statement \n\n");yyval=yyvsp[0]; }
+#line 1873 "y.tab.c"
     break;
 
   case 25:
-#line 339 "test_code_generation.y"
-                { 
-            fprintf(output,"statement  : FOR LPAREN expression_statement expression_statement expression RPAREN statement \n\n");
-			yyval=yyvsp[-4];
-			char *label=newLabel();
-			char *label1=newLabel();
-			yyval->code=string(label)+": \n";
-			yyval->code+=yyvsp[-3]->code;
-			yyval->code+="MOV AX,"+yyvsp[-3]->name+"\n";
-			yyval->code+="CMP AX, 1 \n";
-			yyval->code+="JNE "+string(label1)+"\n";
-			yyval->code+=yyvsp[0]->code;
-			yyval->code+=yyvsp[-2]->code;
-			yyval->code+="JMP "+string(label)+"\n";
-			yyval->code+=string(label1)+": \n";
-        }
-#line 1904 "y.tab.c"
+#line 323 "test_code_generation.y"
+                                                                                                   { 
+                fprintf(output,"statement  : FOR LPAREN expression_statement expression_statement expression RPAREN statement \n\n");
+	    		yyval=yyvsp[-4];
+		    	char *label=newLabel();
+			    char *label1=newLabel();
+    			yyval->code +=string(label)+": \n";
+	    		yyval->code +=yyvsp[-3]->code;
+		    	yyval->code +="MOV AX,"+yyvsp[-3]->name+"\n";
+			    yyval->code +="CMP AX, 1 \n";
+    			yyval->code +="JNE "+string(label1)+"\n";
+	    		yyval->code +=yyvsp[0]->code;
+		    	yyval->code +=yyvsp[-2]->code;
+			    yyval->code +="JMP "+string(label)+"\n";
+    			yyval->code +=string(label1)+": \n";
+            }
+#line 1893 "y.tab.c"
     break;
 
   case 26:
-#line 356 "test_code_generation.y"
-                { 
-            fprintf(output,"statement  : IF LPAREN expression RPAREN statement \n\n"); 
-			yyval=yyvsp[-2];
-			//add codes here
-            char *label = newLabel();
-            yyval->code = "MOV AX, " + yyvsp[-2]->getName() + "\n";
-            yyval->code += "CMP AX, 1\n";
-            yyval->code += "JNE " + string(label) + "\n";
-
-            yyval->code += yyvsp[0]->code;
-            yyval->code += string(label) + ":\n";
-		}
-#line 1921 "y.tab.c"
+#line 339 "test_code_generation.y"
+                                                        { 
+                fprintf(output,"statement  : IF LPAREN expression RPAREN statement \n\n"); 
+	    		yyval=yyvsp[-2];
+		    	//add codes here
+                char *label = newLabel();
+                yyval->code += "MOV AX, " + yyvsp[-2]->getName() + "\n" + "CMP AX, 1\n" + "JNE " + string(label) + "\n" + yyvsp[0]->code;
+                yyval->code += string(label) + ":\n";
+    	    }
+#line 1906 "y.tab.c"
     break;
 
   case 27:
-#line 369 "test_code_generation.y"
-                { fprintf(output,"statement  : IF LPAREN expression RPAREN statement ELSE statement \n\n"); 
-					//fout<<"in if-else\n";
-					// add codes for generation part
+#line 347 "test_code_generation.y"
+                                                                        { 
+                fprintf(output,"statement  : IF LPAREN expression RPAREN statement ELSE statement \n\n"); 
+				//fout<<"in if-else\n";
+				// add codes for generation part
             
-            char *label = newLabel();
-            yyval->code = "MOV AX, " + yyvsp[-4]->getName() + "\n";
-            yyval->code += "CMP AX, 1\n";
-            yyval->code += "JNE " + string(label) + "\n";
-            yyval->code += yyvsp[-2]->code;
-            yyval->code += string(label) + ":\n";
-            yyval->code += yyvsp[-1]->code;
-		}
-#line 1938 "y.tab.c"
+                char *label = newLabel();
+                yyval->code += "MOV AX, " + yyvsp[-4]->getName() + "\n";
+                yyval->code += "CMP AX, 1\n";
+                yyval->code += "JNE " + string(label) + "\n";
+                yyval->code += yyvsp[-2]->code;
+                yyval->code += string(label) + ":\n";
+                yyval->code += yyvsp[-1]->code;
+		    }
+#line 1924 "y.tab.c"
     break;
 
   case 28:
-#line 381 "test_code_generation.y"
-                                                      { fprintf(output,"statement  : WHILE LPAREN expression RPAREN statement \n\n"); 
-		yyval=new symbolInfo();
-		// add codes for generation part        
-			char *label=newLabel();
-			char *label1=newLabel();
-			yyval->code=string(label)+": \n";		
-			yyval->code+="MOV AX,"+yyvsp[-2]->name+"\n";
-			yyval->code+="CMP AX, 1 \n";
-			yyval->code+="JNE "+string(label1)+"\n";	
-			yyval->code+=yyvsp[0]->code;
-			yyval->code+="JMP "+string(label)+"\n";
-			yyval->code+=string(label1)+": \n";
-		}
-#line 1956 "y.tab.c"
+#line 360 "test_code_generation.y"
+                                                           { fprintf(output,"statement  : WHILE LPAREN expression RPAREN statement \n\n"); 
+		        yyval=new symbolInfo();
+			    char *label=newLabel();
+			    char *label1=newLabel();
+			    yyval->code +=string(label)+": \n";		
+			    yyval->code +="MOV AX,"+yyvsp[-2]->name+"\n";
+			    yyval->code +="CMP AX, 1 \n";
+			    yyval->code +="JNE "+string(label1)+"\n";	
+			    yyval->code +=yyvsp[0]->code;
+			    yyval->code +="JMP "+string(label)+"\n";
+			    yyval->code +=string(label1)+": \n";
+		    }
+#line 1941 "y.tab.c"
     break;
 
   case 29:
-#line 394 "test_code_generation.y"
-                                                { 
-		fprintf(output,"statement  : PRINTLN LPAREN ID RPAREN SEMICOLON \n\n");
-		idprint=table->lookOut(yyvsp[-2]->name);
-		if(idprint!=Null)
-		{	
-			if(idprint->data==integer){
-				printf("\n\n\nPRINTLN LPAREN ID RPAREN SEMICOLON  %d\n\n\n",idprint->val.i);
-				yyval=yyvsp[-2];
-				printf("data type:%d\n",yyval->data);
-				yyval->code ="MOV AX, "+string(yyvsp[-2]->getName())+ "\n";
-				//add codes for generation part
-                // :D 
-                yyval->code += "CALL OUTDEC\n";
-			}
-			else if(idprint->data==floating)
-				printf("\n\n\nPRINTLN LPAREN ID RPAREN SEMICOLON  %f\n\n\n",idprint->val.f); 
-			else if(idprint->data==character){
-				printf("\n\n\nPRINTLN LPAREN ID RPAREN SEMICOLON  %c\n\n\n",idprint->val.c);
-					    yyval=yyvsp[-2];
-					    //add codes for generation part
-                        yyval->code = "MOV DX, "+ yyvsp[-2]->getName() + "\n";
+#line 372 "test_code_generation.y"
+                                                 { 
+        		fprintf(output,"statement  : PRINTLN LPAREN ID RPAREN SEMICOLON \n\n");
+		        idprint=table->lookOut(yyvsp[-2]->name);
+        		if(idprint!=Null) {	
+        			if(idprint->data==integer) {
+    	    			printf("\n\n\nPRINTLN LPAREN ID RPAREN SEMICOLON  %d\n\n\n",idprint->val.i);
+	    	    		yyval=yyvsp[-2];
+				        printf("data type:%d\n",yyval->data);
+        				yyval->code +="MOV AX, "+string(yyvsp[-2]->getName())+ "\n";
+		        		//add codes for generation part
+                        // :D 
+                        yyval->code += "CALL OUTDEC\n";
+			        }
+			        else if(idprint->data==floating) {
+    	    			printf("\n\n\nPRINTLN LPAREN ID RPAREN SEMICOLON  %f\n\n\n",idprint->val.f); 
+                    }
+    			    else if(idprint->data==character){
+				        printf("\n\n\nPRINTLN LPAREN ID RPAREN SEMICOLON  %c\n\n\n",idprint->val.c);
+			    		yyval=yyvsp[-2];
+		    			//add codes for generation part
+                        yyval->code += "MOV DX, "+ yyvsp[-2]->getName() + "\n";
                         yyval->code += "MOV AH, 09\n";
                         yyval->code += "INT 21H\n";
-					}
-		}
-		else {
-			char errorarr[30]="Undeclared ID: ";
-			strcat(errorarr,yyvsp[-2]->name.c_str());							
-			yyerror(errorarr);
-		}
-		}
-#line 1992 "y.tab.c"
+				    }
+		        }
+		        else {
+	    		    char errorarr[30]="Undeclared ID: ";
+        			strcat(errorarr,yyvsp[-2]->name.c_str());							
+	    		    yyerror(errorarr);
+		        }
+		    }
+#line 1977 "y.tab.c"
     break;
 
   case 30:
-#line 425 "test_code_generation.y"
-                                          { fprintf(output,"statement  : RETURN expression SEMICOLON \n\n");
-		yyval=yyvsp[-1];
-		//add codes for generatin part
-	    yyval->code = "MOV AH, 4CH\n";
-        yyval->code += "INT 21H\n";    
- 	}
-#line 2003 "y.tab.c"
+#line 403 "test_code_generation.y"
+                                               { 
+                fprintf(output,"statement  : RETURN expression SEMICOLON \n\n");
+        		yyval=yyvsp[-1];
+	            yyval->code += "MOV AH, 4CH\n";
+                yyval->code += "INT 21H\n";   
+ 	        }
+#line 1988 "y.tab.c"
     break;
 
   case 31:
-#line 433 "test_code_generation.y"
-                                    { fprintf(output,"expression_statement  : SEMICOLON \n\n"); yyval->code="";}
-#line 2009 "y.tab.c"
+#line 411 "test_code_generation.y"
+                        { fprintf(output,"expression_statement  : SEMICOLON \n\n"); }
+#line 1994 "y.tab.c"
     break;
 
   case 32:
-#line 434 "test_code_generation.y"
+#line 412 "test_code_generation.y"
                                                { fprintf(output,"expression_statement  : expression SEMICOLON \n\n"); yyval=yyvsp[-1];}
-#line 2015 "y.tab.c"
+#line 2000 "y.tab.c"
     break;
 
   case 34:
-#line 438 "test_code_generation.y"
-                { fprintf(output,"variable  : ID \n\n"); 
-			notget=table->lookOut(yyvsp[0]->name);
-			if(notget!=Null)
-			{
-				yyval=new symbolInfo(notget);
-				if(yyval->arraysz!=0){yyerror("Identifier to an array");}
+#line 416 "test_code_generation.y"
+                        { 
+                fprintf(output,"variable  : ID \n\n"); 
+			    notget=table->lookOut(yyvsp[0]->name);
+			    if(notget!=Null) {
+			    	yyval=new symbolInfo(notget);
+			    	if(yyval->arraysz!=0){yyerror("Identifier to an array");}
 
-			}
-			else
-			{
-			char errorarr[30]="Undeclared ID: ";
-			strcat(errorarr,yyvsp[0]->name.c_str());							
-			yyerror(errorarr);
-			}
-		}
-#line 2035 "y.tab.c"
+			    }
+			    else {
+    			    char errorarr[30]="Undeclared ID: ";
+    			    strcat(errorarr,yyvsp[0]->name.c_str());							
+    			    yyerror(errorarr);
+			    }
+		    }
+#line 2019 "y.tab.c"
     break;
 
   case 37:
-#line 456 "test_code_generation.y"
-                { fprintf(output,"variable  : ID LTHIRD expression RTHIRD\n\n"); 
-			notget=table->lookOut(yyvsp[-3]->name);
-			if(notget!=Null)
-			{
-				
-				if(notget->arraysz>0) 
-				{
-					ix=yyvsp[-1];
-					n=yyvsp[-1]->name;
-					yyval=new symbolInfo(notget);
-					yyval->code=yyvsp[-1]->code;
-					if(yyvsp[-1]->data==floating){yyerror("invalid index");}
-					else if(yyvsp[-1]->val.i>=yyval->arraysz || yyvsp[-1]->val.i<0){yyerror("Array Index out of bound");}
-				}
-				else if(notget->arraysz==0)
-					{
-					char errorarr[30]="Not an array : ";
-					strcat(errorarr,yyvsp[-3]->name.c_str());							
-					yyerror(errorarr);
-					}
-			}
-			else
-			{
-			char errorarr[30]="Undeclared ID: ";
-			strcat(errorarr,yyvsp[-3]->name.c_str());							
-			yyerror(errorarr);
-			}
-		}
-#line 2068 "y.tab.c"
+#line 432 "test_code_generation.y"
+                                          { 
+                fprintf(output,"variable  : ID LTHIRD expression RTHIRD\n\n"); 
+			    notget=table->lookOut(yyvsp[-3]->name);
+			    if(notget!=Null) {			    	
+			    	if(notget->arraysz>0) {
+			    		ix=yyvsp[-1];
+			    		n=yyvsp[-1]->name;
+			    		yyval=new symbolInfo(notget);
+			    		yyval->code += yyvsp[-1]->code;
+			    		if(yyvsp[-1]->data==floating){yyerror("invalid index");}
+			    		else if(yyvsp[-1]->val.i>=yyval->arraysz || yyvsp[-1]->val.i<0){yyerror("Array Index out of bound");}
+			    	}
+			    	else if(notget->arraysz==0) {
+			    		char errorarr[30]="Not an array : ";
+			    		strcat(errorarr,yyvsp[-3]->name.c_str());							
+			    		yyerror(errorarr);
+			    	}
+			    }
+			    else {
+    			    char errorarr[30]="Undeclared ID: ";
+	    		    strcat(errorarr,yyvsp[-3]->name.c_str());							
+		    	    yyerror(errorarr);
+			    }
+		    }
+#line 2048 "y.tab.c"
     break;
 
   case 38:
-#line 485 "test_code_generation.y"
-                              { fprintf(output,"expression : logic_expression\n\n");
-	 	yyval=yyvsp[0];
-		}
-#line 2076 "y.tab.c"
+#line 458 "test_code_generation.y"
+                               { 
+                fprintf(output,"expression : logic_expression\n\n");
+	 	        yyval=yyvsp[0];
+		    }
+#line 2057 "y.tab.c"
     break;
 
   case 39:
-#line 489 "test_code_generation.y"
-                { fprintf(output,"expression : variable ASSIGNOP logic_expression\n\n"); 
-		if(yyvsp[0]->data==invalid){}
-		else if((yyvsp[-2]->data==integer||yyvsp[-2]->data==character)&&yyvsp[0]->data==floating)
- 		{yyerror("Type mismatch");}
-		//fprintf(output,"Warning::Casting float to integer/character\n\n");}
-		else{
-		yyval=yyvsp[-2];
-		yyval->code=yyvsp[0]->code+yyvsp[-2]->code;
-			if(yyvsp[-2]->arraysz==0){
-				// add codes for generation part
-			    yyval->code += "MOV AX, " + yyvsp[0]->getName()+ "\n";	
-                yyval->code += "MOV " + yyvsp[-2]->getName() + ", AX\n";
-				if(yyvsp[0]->data==integer)
-				{
-					
-					yyvsp[-2]->val.i=yyvsp[0]->val.i;
-					yyvsp[-2]->data=yyvsp[0]->data;
-				}
-				
-				table->print(output);
-					}
-			else if(yyvsp[-2]->arraysz>0)
-			{
-				string len = to_string(ix->val.i);
-                // stringstream ss;
-                // ss << ix->val.i;
-                // ss >> len;
-                // sprintf(len, "%d", ix->val.i);
-			    yyval->code += "LEA DI, " + yyvsp[-2]->getName() + "\n";
-                yyval->code += "ADD DI, " + len + "\n";
-                yyval->code += "ADD DI, " + len + "\n";  
-                yyval->code += "MOV AX, " + yyvsp[0]->getName(); + "\n";
-                yyval->code += "MOV [DI], AX\n";
-				if(yyvsp[0]->data==integer)
-				{
-					yyvsp[-2]->val.arrayi[ix->val.i]=yyvsp[0]->val.i;
-					yyvsp[-2]->data=yyvsp[0]->data;
-				}
-				
-			table->print(output);	
-			}
-		}
-		}
-#line 2124 "y.tab.c"
+#line 462 "test_code_generation.y"
+                                                     { 
+                fprintf(output,"expression : variable ASSIGNOP logic_expression\n\n"); 
+        		if(yyvsp[0]->data==invalid){}
+		        else if((yyvsp[-2]->data==integer||yyvsp[-2]->data==character)&&yyvsp[0]->data==floating) {
+                    yyerror("Type mismatch");
+                }
+		        //fprintf(output,"Warning::Casting float to integer/character\n\n");}
+		        else {
+            		yyval=yyvsp[-2];
+		            yyval->code += yyvsp[0]->code+yyvsp[-2]->code;
+		            if(yyvsp[-2]->arraysz==0) {
+		            // add codes for generation part
+		            	yyval->code += "MOV AX, " + yyvsp[0]->getName()+ "\n";	
+                        yyval->code += "MOV " + yyvsp[-2]->getName() + ", AX\n";
+		            	if(yyvsp[0]->data==integer) {
+		            			
+		            	    yyvsp[-2]->val.i=yyvsp[0]->val.i;
+		            		yyvsp[-2]->data=yyvsp[0]->data;
+		            	}
+		            		
+		            	table->print(output);
+		            }
+		            else if(yyvsp[-2]->arraysz>0) {
+		            	string len = to_string(ix->val.i);
+                        // stringstream ss;
+                        // ss << ix->val.i;
+                        // ss >> len;
+                        // sprintf(len, "%d", ix->val.i);
+		            	yyval->code += "LEA DI, " + yyvsp[-2]->getName() + "\n";
+                        yyval->code += "ADD DI, " + len + "\n";
+                        yyval->code += "ADD DI, " + len + "\n";  
+                        yyval->code += "MOV AX, " + yyvsp[0]->getName(); + "\n";
+                        yyval->code += "MOV [DI], AX\n";
+		        		if(yyvsp[0]->data==integer) {
+		         			yyvsp[-2]->val.arrayi[ix->val.i]=yyvsp[0]->val.i;
+		        			yyvsp[-2]->data=yyvsp[0]->data;
+	            		}	            		
+		            	table->print(output);	
+		            }
+		        }
+		    }
+#line 2103 "y.tab.c"
     break;
 
   case 40:
-#line 533 "test_code_generation.y"
-                                  { fprintf(output,"logic_expression : rel_expression\n\n");
-			yyval=yyvsp[0]; 
+#line 505 "test_code_generation.y"
+                             { 
+                fprintf(output,"logic_expression : rel_expression\n\n");
+			    yyval=yyvsp[0]; 
 			}
-#line 2132 "y.tab.c"
+#line 2112 "y.tab.c"
     break;
 
   case 41:
-#line 537 "test_code_generation.y"
-                        { fprintf(output,"logic_expression : rel_expression LOGICOP rel_expression\n\n");
+#line 509 "test_code_generation.y"
+                                                            { 
+                fprintf(output,"logic_expression : rel_expression LOGICOP rel_expression\n\n");
 				yyval=yyvsp[-2];
-				yyval->code+=yyvsp[0]->code;
-				yyval->code+="MOV AX, " + yyvsp[-2]->getName()+"\n";
-				yyval->code+="MOV BX, " + yyvsp[0]->getName()+"\n";
+				yyval->code +=yyvsp[0]->code;
+				yyval->code +="MOV AX, " + yyvsp[-2]->getName()+"\n";
+				yyval->code +="MOV BX, " + yyvsp[0]->getName()+"\n";
 				char *temp=newTemp();
 				char *label1=newLabel();
 				char *label2=newLabel();
 				char *label3=newLabel();
-				if((strcmp(yyvsp[-1]->name.c_str(),"&&"))==0)
-				{
+				if((strcmp(yyvsp[-1]->name.c_str(),"&&"))==0) {
 				//add codes here for generation part		
                     char *label = newLabel();                    
                     char *t = newTemp();
                     yyval->code += "MOV AX, "+ yyvsp[-2]->getName() + "\n";
                     yyval->code += "MOV BX, " + yyvsp[0]->getName() + "\n";
                     yyval->code += "CMP AX, 1\n";
-                    yyval->code += "JNE label\n";
+                    yyval->code += "JNE "+  string(label) + "\n";
                     yyval->code += "CMP BX, 1\n";
-                    yyval->code += "JNE label\n";
+                    yyval->code += "JNE " + string(label) + "\n";
                     yyval->code += "MOV " + string(t) + ", 1\n";
-                    yyval->code += "label:\n";
-                    yyval->code += "MOV " + string(t) + ", 0\n";
-    
-					if (yyvsp[-2]->data==integer&&yyvsp[0]->data==integer)//int&&int
-					{
+                    yyval->code += string(label) + ":\n";
+                    yyval->code += "MOV " + string(t) + ", 0\n";    
+					if (yyvsp[-2]->data==integer&&yyvsp[0]->data==integer) { // int+ int
 							printf("%d",yyvsp[-2]->val.i);
-							if(yyvsp[-2]->val.i==0||yyvsp[0]->val.i==0)
-							{
-							yyval->val.i=0;
-							yyval->data=integer;
+							if(yyvsp[-2]->val.i==0||yyvsp[0]->val.i==0) {
+    							yyval->val.i=0;
+	    						yyval->data=integer;
 							}
-							else
-							{
-							yyval->val.i=1;
-							yyval->data=integer;
+							else {
+	    						yyval->val.i=1;
+    							yyval->data=integer;
 							}
 							printf("&&%d=%d\n",yyvsp[0]->val.i,yyval->val.i);
 					}
-					else if (yyvsp[-2]->data==integer&&yyvsp[0]->data==floating)//int&&float
-					{
+					else if (yyvsp[-2]->data==integer&&yyvsp[0]->data==floating) {//int&&float					
 						printf("%d",yyvsp[-2]->val.i);
-						if(static_cast<float>(yyvsp[-2]->val.i)==0||yyvsp[0]->val.f==0)
-						{
-						yyval->val.i=0;
-						yyval->data=integer;
+						if(static_cast<float>(yyvsp[-2]->val.i)==0||yyvsp[0]->val.f==0) {
+    						yyval->val.i=0;
+	    					yyval->data=integer;
 						}
-						else
-						{
-						yyval->val.i=1;
-						yyval->data=integer;
+						else {						
+    						yyval->val.i=1;
+	    					yyval->data=integer;
 						}
 						printf("&&%f=%d\n",yyvsp[0]->val.f,yyval->val.i);
 					}
-					else if (yyvsp[-2]->data==floating&&yyvsp[0]->data==integer)//float&&int
-					{
+					else if (yyvsp[-2]->data==floating&&yyvsp[0]->data==integer) {//float&&int				
 						printf("%f",yyvsp[-2]->val.f);
-						if(yyvsp[0]->val.i==0||yyvsp[-2]->val.f==0)
-						{
-						yyval->val.i=0;
-						yyval->data=integer;
+						if(yyvsp[0]->val.i==0||yyvsp[-2]->val.f==0) {						
+    						yyval->val.i=0;
+	    					yyval->data=integer;
 						}
-						else
-						{
-						yyval->val.i=1;
-						yyval->data=integer;
+						else {						
+    						yyval->val.i=1;
+	    					yyval->data=integer;
 						}
 						printf("&&%d=%d\n",yyvsp[0]->val.i,yyval->val.i);
 					}
-					else if (yyvsp[-2]->data==floating&&yyvsp[0]->data==floating)//float&&float
-					{
+					else if (yyvsp[-2]->data==floating&&yyvsp[0]->data==floating) {//float&&float 					
 						printf("%f",yyvsp[-2]->val.f);
-						if(yyvsp[-2]->val.f==0||yyvsp[0]->val.f==0)
-						{
-						yyval->val.i=0;
-						yyval->data=integer;
+						if(yyvsp[-2]->val.f==0||yyvsp[0]->val.f==0) {
+    						yyval->val.i=0;
+	    					yyval->data=integer;
 						}
-						else
-						{
-						yyval->val.i=1;
-						yyval->data=integer;
+						else {						
+    						yyval->val.i=1;
+	    					yyval->data=integer;
 						}
 						printf("&&%f=%d\n",yyvsp[0]->val.f,yyval->val.i);
 					}
 						
 				}
-				else if((strcmp(yyvsp[-1]->name.c_str(),"||"))==0)
-				{
+				else if((strcmp(yyvsp[-1]->name.c_str(),"||"))==0) {
 					//add codes here for generation part
                     char *label = newLabel();                    
                     char *t = newTemp();
                     yyval->code += "MOV AX, "+ yyvsp[-2]->getName() + "\n";
                     yyval->code += "MOV BX, " + yyvsp[0]->getName() + "\n";
                     yyval->code += "CMP AX, 1\n";
-                    yyval->code += "JE label\n";
+                    yyval->code += "JE " + string(label) + "\n";
                     yyval->code += "CMP BX, 1\n";
-                    yyval->code += "JE label\n";
+                    yyval->code += "JE" + string(label) + "\n";
                     yyval->code += "MOV " + string(t) + ", 0\n";
-                    yyval->code += "label:\n";
-                    yyval->code += "MOV " + string(t) + ", 1\n";
-					
-											
+                    yyval->code += string(label) + ":\n";
+                    yyval->code += "MOV " + string(t) + ", 1\n";															
 				} 
 				yyval->name=temp;
-			}
-#line 2242 "y.tab.c"
+            }
+#line 2206 "y.tab.c"
     break;
 
   case 42:
-#line 643 "test_code_generation.y"
-                                    { fprintf(output,"rel_expression : simple_expression\n\n"); 
+#line 600 "test_code_generation.y"
+                                { 
+                fprintf(output,"rel_expression : simple_expression\n\n"); 
 				yyval= yyvsp[0];}
-#line 2249 "y.tab.c"
+#line 2214 "y.tab.c"
     break;
 
   case 43:
-#line 646 "test_code_generation.y"
-                        { fprintf(output,"rel_expression : simple_expression RELOP simple_expression\n\n"); 
+#line 603 "test_code_generation.y"
+                                                                { 
+                fprintf(output,"rel_expression : simple_expression RELOP simple_expression\n\n"); 
 				yyval=yyvsp[-2];
-				yyval->code+=yyvsp[0]->code;
-				yyval->code+="MOV AX, " + yyvsp[-2]->getName()+"\n";
-				yyval->code+="CMP AX, " + yyvsp[0]->getName()+"\n";
+				yyval->code +=yyvsp[0]->code;
+				yyval->code +="MOV AX, " + yyvsp[-2]->getName()+"\n";
+				yyval->code +="CMP AX, " + yyvsp[0]->getName()+"\n";
 				char *temp=newTemp();
 				char *label1=newLabel();
 				char *label2=newLabel();
-				if((strcmp(yyvsp[-1]->name.c_str(),"<"))==0)
-				{
-					yyval->code+="JL " + string(label1)+"\n";					
-					if (yyvsp[-2]->data==integer&&yyvsp[0]->data==floating)//int<float
-					{
+				if((strcmp(yyvsp[-1]->name.c_str(),"<"))==0) {				
+					yyval->code += "JL " + string(label1)+"\n";					
+					if (yyvsp[-2]->data==integer&&yyvsp[0]->data==floating) {//int<float					
 						printf("%d",yyvsp[-2]->val.i);
-						if(static_cast<float>(yyvsp[-2]->val.i)<yyvsp[0]->val.f)
-						{
-						yyval->val.i=1;
-						yyval->data=integer;
+						if(static_cast<float>(yyvsp[-2]->val.i)<yyvsp[0]->val.f) {
+						    yyval->val.i=1;
+    						yyval->data=integer;
 						}
-						else
-						{
-						yyval->val.i=0;
-						yyval->data=integer;
+						else {						
+    						yyval->val.i=0;
+	    					yyval->data=integer;
 						}
 						printf("<%f=%d\n",yyvsp[0]->val.f,yyval->val.i);
 					}
-					else if (yyvsp[-2]->data==floating&&yyvsp[0]->data==integer)//float<int
-					{
+					else if (yyvsp[-2]->data==floating&&yyvsp[0]->data==integer) {//float<int					
 						printf("%f",yyvsp[-2]->val.f);
-						if(static_cast<float>(yyvsp[0]->val.i)>yyvsp[-2]->val.f)
-						{
-						yyval->val.i=1;
-						yyval->data=integer;
+						if(static_cast<float>(yyvsp[0]->val.i)>yyvsp[-2]->val.f) {						
+	    					yyval->val.i=1;
+    						yyval->data=integer;
 						}
-						else
-						{
-						yyval->val.i=0;
-						yyval->data=integer;
+						else {						
+    						yyval->val.i=0;
+	    					yyval->data=integer;
 						}
 						printf("<%d=%d\n",yyvsp[0]->val.i,yyval->val.i);
 					}
-					else if (yyvsp[-2]->data==integer&&yyvsp[0]->data==integer)//int<int
-					{
+					else if (yyvsp[-2]->data==integer&&yyvsp[0]->data==integer) {//int<int 					
 						printf("%d",yyvsp[-2]->val.i);
-						if(yyvsp[-2]->val.i<yyvsp[0]->val.i)
-						{
-						yyval->val.i=1;
-						yyval->data=integer;
+						if(yyvsp[-2]->val.i<yyvsp[0]->val.i) {						
+    						yyval->val.i=1;
+	    					yyval->data=integer;
 						}
-						else
-						{
-						yyval->val.i=0;
-						yyval->data=integer;
+						else {						
+		    				yyval->val.i=0;
+			    			yyval->data=integer;
 						}
 						printf("<%d=%d\n",yyvsp[0]->val.i,yyval->val.i);
 					}
-					else if (yyvsp[-2]->data==floating&&yyvsp[0]->data==floating)//float<float
-					{
+					else if (yyvsp[-2]->data==floating&&yyvsp[0]->data==floating) {//float<float 					
 						printf("%f",yyvsp[-2]->val.f);
-						if(yyvsp[-2]->val.f<yyvsp[0]->val.f)
-						{
-						yyval->val.i=1;
-						yyval->data=integer;
+						if(yyvsp[-2]->val.f<yyvsp[0]->val.f) {						
+    						yyval->val.i=1;
+	    					yyval->data=integer;
 						}
-						else
-						{
-						yyval->val.i=0;
-						yyval->data=integer;
+						else {						
+    						yyval->val.i=0;
+	    					yyval->data=integer;
 						}
 						printf("<%f=%d\n",yyvsp[0]->val.f,yyval->val.i);
-					}				
-											
+					}															
+				}			
+				else if((strcmp(yyvsp[-1]->name.c_str(),">")==0)) {					
+					yyval->code +="JG " + string(label1)+"\n";					
 				}
-				else if((strcmp(yyvsp[-1]->name.c_str(),">")==0))
-				{
-					
-					yyval->code+="JG " + string(label1)+"\n";					
+				else if((strcmp(yyvsp[-1]->name.c_str(),"<="))==0) {
+					yyval->code +="JLE " + string(label1)+"\n";										
 				}
-				else if((strcmp(yyvsp[-1]->name.c_str(),"<="))==0)
-				{
-					yyval->code+="JLE " + string(label1)+"\n";					
-					
+				else if((strcmp(yyvsp[-1]->name.c_str(),">="))==0) {								
+					yyval->code +="JGE " + string(label1)+"\n";					
 				}
-				else if((strcmp(yyvsp[-1]->name.c_str(),">="))==0)
-				{
-					
-					yyval->code+="JGE " + string(label1)+"\n";					
+				else if((strcmp(yyvsp[-1]->name.c_str(),"!="))==0)	{					
+					yyval->code +="JNE " + string(label1)+"\n";									
 				}
-				else if((strcmp(yyvsp[-1]->name.c_str(),"!="))==0)
-				{
-					
-					yyval->code+="JNE " + string(label1)+"\n";					
-				
-				}
-				yyval->code+="MOV "+string(temp) +", 0\n";
-				yyval->code+="JMP "+string(label2) +"\n";
-				yyval->code+=string(label1)+":\nMOV "+string(temp)+", 1\n";
-				yyval->code+=string(label2)+":\n";
+				yyval->code +="MOV "+string(temp) +", 0\n";
+				yyval->code +="JMP "+string(label2) +"\n";
+				yyval->code +=string(label1)+":\nMOV "+string(temp)+", 1\n";
+				yyval->code +=string(label2)+":\n";
 				yyval->name=temp;
-				}
-#line 2354 "y.tab.c"
+        }
+#line 2297 "y.tab.c"
     break;
 
   case 44:
-#line 749 "test_code_generation.y"
-        { fprintf(output,"simple_expression : term\n\n");
-		yyval= yyvsp[0];
-	}
-#line 2362 "y.tab.c"
+#line 683 "test_code_generation.y"
+               { 
+            fprintf(output,"simple_expression : term\n\n");
+    		yyval= yyvsp[0];
+	    }
+#line 2306 "y.tab.c"
     break;
 
   case 45:
-#line 753 "test_code_generation.y"
-        { fprintf(output,"simple_expression : simple_expression ADDOP term  \n\n"); 
-		yyval=yyvsp[-2];
-		yyval->code+=yyvsp[0]->code;
-		if((strcmp(yyvsp[-1]->name.c_str(),"+"))==0)
-		{
-			//add codes for generation part
-            char *t = newTemp();
-            yyval->code += "MOV AX, " + yyvsp[-2]->getName() + "\n";
-            yyval->code += "ADD AX, " + yyvsp[0]->getName()+ "\n";
-            yyval->code += "MOV " + string(t) + ", AX\n";
-            yyval->name = t;
-			if(yyvsp[-2]->data==integer&&yyvsp[0]->data==integer)//integer+integer
-			{printf("%d",yyvsp[-2]->val.i);
-			yyval->val.i=yyvsp[-2]->val.i+yyvsp[0]->val.i;
-			yyval->data==yyvsp[-2]->data;
-			printf("+%d:%d\n",yyvsp[0]->val.i,yyval->val.i);
-			}
-			else if (yyvsp[-2]->data==floating&&yyvsp[0]->data==floating)//float+float
-			{
-			printf("%f",yyvsp[-2]->val.f);
-			yyval->val.f=yyvsp[-2]->val.f+yyvsp[0]->val.f;
-			yyval->data==yyvsp[-2]->data;
-			printf("+%f:%f\n",yyvsp[0]->val.f,yyval->val.f);
-			}
-			else if (yyvsp[-2]->data==integer&&yyvsp[0]->data==floating)//int+float=float
-			{
-			printf("%f",static_cast<float>(yyvsp[-2]->val.i));
-			yyval->val.f=static_cast<float>(yyvsp[-2]->val.i)+yyvsp[0]->val.f;
-			yyval->data==yyvsp[0]->data;
-			printf("+%f:%f\n",yyvsp[0]->val.f,yyval->val.f);
-			}
-			else if (yyvsp[-2]->data==floating&&yyvsp[0]->data==integer)//int+float=float
-			{
-			printf("%f",yyvsp[-2]->val.f);
-			yyval->val.f=static_cast<float>(yyvsp[0]->val.i)+yyvsp[-2]->val.f;
-			yyval->data==yyvsp[-2]->data;
-			printf("+%f:%f\n",static_cast<float>(yyvsp[0]->val.i),yyval->val.f);
-			}
-			// char *temp=newTemp();
-			// $$->code+="MOV "+string(temp)+", AX\n";
-			// $$->name=temp;
-				
-		} 
-		else if((strcmp(yyvsp[-1]->name.c_str(),"-"))==0)
-		{
-			//add codes for generation as per the + 
-            char *t = newTemp(); 
-            yyval->code += "MOV AX, " + yyvsp[-2]->getName() + "\n";
-            yyval->code += "SUB AX, " + yyvsp[0]->getName()+ "\n";
-            yyval->code += "MOV " + string(t) + ", AX\n";
-            yyval->name = t;
-		} }
-#line 2419 "y.tab.c"
+#line 687 "test_code_generation.y"
+                                               { 
+            fprintf(output,"simple_expression : simple_expression ADDOP term  \n\n"); 
+    		yyval=yyvsp[-2];
+		    yyval->code +=yyvsp[0]->code;
+    		if((strcmp(yyvsp[-1]->name.c_str(),"+"))==0) {	    	
+    			//add codes for generation part
+                char *t = newTemp();
+                yyval->code += "MOV AX, " + yyvsp[-2]->getName() + "\n";
+                yyval->code += "ADD AX, " + yyvsp[0]->getName()+ "\n";
+                yyval->code += "MOV " + string(t) + ", AX\n";
+                yyval->name = t;
+		    	if(yyvsp[-2]->data==integer&&yyvsp[0]->data==integer) {//integer+integer
+			        printf("%d",yyvsp[-2]->val.i);
+        			yyval->val.i=yyvsp[-2]->val.i+yyvsp[0]->val.i;
+		        	yyval->data==yyvsp[-2]->data;
+        			printf("+%d:%d\n",yyvsp[0]->val.i,yyval->val.i);
+			    }
+    			else if (yyvsp[-2]->data==floating&&yyvsp[0]->data==floating) {//float+float	    		
+        			printf("%f",yyvsp[-2]->val.f);
+		        	yyval->val.f=yyvsp[-2]->val.f+yyvsp[0]->val.f;
+        			yyval->data==yyvsp[-2]->data;
+		        	printf("+%f:%f\n",yyvsp[0]->val.f,yyval->val.f);
+			    }
+    			else if (yyvsp[-2]->data==integer&&yyvsp[0]->data==floating) {//int+float=float	
+        			printf("%f",static_cast<float>(yyvsp[-2]->val.i));
+		        	yyval->val.f=static_cast<float>(yyvsp[-2]->val.i)+yyvsp[0]->val.f;
+        			yyval->data==yyvsp[0]->data;
+        			printf("+%f:%f\n",yyvsp[0]->val.f,yyval->val.f);
+			    }
+    			else if (yyvsp[-2]->data==floating&&yyvsp[0]->data==integer) {//int+float=float 
+        			printf("%f",yyvsp[-2]->val.f);
+		        	yyval->val.f=static_cast<float>(yyvsp[0]->val.i)+yyvsp[-2]->val.f;
+        			yyval->data==yyvsp[-2]->data;
+        			printf("+%f:%f\n",static_cast<float>(yyvsp[0]->val.i),yyval->val.f);
+			    }
+    			// char *temp=newTemp();
+		    	// $$->code+="MOV "+string(temp)+", AX\n";
+	    		// $$->name=temp;				
+		    } 
+    		else if((strcmp(yyvsp[-1]->name.c_str(),"-"))==0) {		
+    			//add codes for generation as per the + 
+                char *t = newTemp(); 
+                yyval->code += "MOV AX, " + yyvsp[-2]->getName() + "\n";
+                yyval->code += "SUB AX, " + yyvsp[0]->getName()+ "\n";
+                yyval->code += "MOV " + string(t) + ", AX\n";
+                yyval->name = t;
+		    } 
+        }
+#line 2359 "y.tab.c"
     break;
 
   case 46:
-#line 806 "test_code_generation.y"
-                         { fprintf(output,"term : unary_expression\n\n");
-				yyval= yyvsp[0];
-			}
-#line 2427 "y.tab.c"
+#line 737 "test_code_generation.y"
+                           { 
+            fprintf(output,"term : unary_expression\n\n");
+			yyval= yyvsp[0];
+		}
+#line 2368 "y.tab.c"
     break;
 
   case 47:
-#line 809 "test_code_generation.y"
-                                    { fprintf(output,"term : term MULOP unary_expression\n\n");
-						yyval=yyvsp[-2];
-						yyval->code += yyvsp[0]->code;
-						//add codes for multiplication
-		if((strcmp(yyvsp[-1]->name.c_str(),"*")==0))
-			{
-
+#line 741 "test_code_generation.y"
+                                      { fprintf(output,"term : term MULOP unary_expression\n\n");
+		    yyval=yyvsp[-2];
+			yyval->code += yyvsp[0]->code;
+			//add codes for multiplication
+		    if((strcmp(yyvsp[-1]->name.c_str(),"*")==0)) {
 				//add codes for multiplication
                 char* t = newTemp();
                 yyval->code += "MOV AX, " + yyvsp[-2]->getName() + "\n";
@@ -2451,168 +2390,150 @@ else{
 				
 					
 			} 
-		else if (strcmp(yyvsp[-1]->name.c_str(),"%")==0)
-			{
+    		else if (strcmp(yyvsp[-1]->name.c_str(),"%")==0) {
 				yyval->code += "MOV AX, "+ yyvsp[-2]->getName()+"\n";
-				yyval->code += "MOV BX, "+ yyvsp[0]->getName()+"\n";
 				char *temp=newTemp();
 				yyval->code += "MOV DX, 0\n";
+				yyval->code += "MOV BX, "+ yyvsp[0]->getName()+"\n";
 				yyval->code += "DIV BX\n";
 				yyval->code += "MOV "+ string(temp) + ", DX\n";
 				yyval->name=temp;
-				if (yyvsp[-2]->data!=integer||yyvsp[0]->data!=integer){yyval->data=invalid;yyerror("invalid operands for modulo");}
+				if (yyvsp[-2]->data!=integer||yyvsp[0]->data!=integer) {
+                    yyval->data=invalid;yyerror("invalid operands for modulo");
+                }
 				else if (yyvsp[-2]->data==integer&&yyvsp[0]->data==integer)//other cases are not acceptable
 				{
-				printf("%d",yyvsp[-2]->val.i);
-				yyval->val.i=(yyvsp[-2]->val.i)%(yyvsp[0]->val.i);
-				yyval->data=yyvsp[-2]->data;
-				printf(" %d=%d\n",yyvsp[0]->val.i,yyval->val.i);
-				};
+    				printf("%d",yyvsp[-2]->val.i);
+	    			yyval->val.i=(yyvsp[-2]->val.i)%(yyvsp[0]->val.i);
+		    		yyval->data=yyvsp[-2]->data;
+			    	printf(" %d=%d\n",yyvsp[0]->val.i,yyval->val.i);
+				}
 			}
-		else {
+    		else {
 				//add codes for generation part
+				yyval->code += "MOV DX, 0\n";
 				yyval->code += "MOV AX, "+ yyvsp[-2]->getName()+"\n";
 				yyval->code += "MOV BX, "+ yyvsp[0]->getName()+"\n";
 				char *temp=newTemp();
-				yyval->code += "MOV DX, 0\n";
 				yyval->code += "DIV BX\n";
 				yyval->code += "MOV "+ string(temp) + ", AX\n";
-				yyval->name=temp;
-				
-		      }	}
-#line 2484 "y.tab.c"
+				yyval->name=temp;				
+		    }	
+        }
+#line 2424 "y.tab.c"
     break;
 
   case 48:
-#line 863 "test_code_generation.y"
-                { fprintf(output,"unary_expression : ADDOP unary_expression \n\n"); 
-		if((strcmp(yyvsp[-1]->name.c_str(),"+")==0))
-			{
-				yyval=yyvsp[0];
-				if(yyvsp[0]->data==integer)
-				{
-				yyval->val.i=yyvsp[0]->val.i;
-				yyval->data==yyvsp[0]->data;
-				}
-				else if (yyvsp[0]->data==floating)
-				{
-				yyval->val.f=yyvsp[0]->val.f;
-				yyval->data==yyvsp[0]->data;
-				}
-			} 
-		else {
-				char *temp= newTemp();
-				yyval=yyvsp[0];
-				//add codes for generation part
-                
-				yyval->code="MOV AX, " + yyvsp[0]->getName() + "\n";
-				yyval->code+="NEG AX\n";
-				yyval->code+="MOV "+string(temp)+", AX";
+#line 794 "test_code_generation.y"
+                                 { 
+            fprintf(output,"unary_expression : ADDOP unary_expression \n\n"); 
+		    if((strcmp(yyvsp[-1]->name.c_str(),"+")==0)) {		
+		    	yyval=yyvsp[0];
+		    	if(yyvsp[0]->data==integer) {
+		    		yyval->val.i=yyvsp[0]->val.i;
+		    		yyval->data==yyvsp[0]->data;
+		    	}
+		    	else if (yyvsp[0]->data==floating) {
+		    		yyval->val.f=yyvsp[0]->val.f;
+		    		yyval->data==yyvsp[0]->data;
+		    	}
+		    } 
+		    else {
+		    	char *temp= newTemp();
+		    	yyval=yyvsp[0];
+				//add codes for generation part                
+                yyval->code +="MOV AX, " + yyvsp[0]->getName() + "\n";
+		    	yyval->code +="NEG AX\n";
+		    	yyval->code +="MOV "+string(temp)+", AX";
 				yyval->name=temp;
-    
-				if(yyvsp[0]->data==integer)
-				{
-				yyval->val.i=(yyvsp[0]->val.i)*(-1);
-				yyval->data==yyvsp[0]->data;
-				}
-				else if (yyvsp[0]->data==floating)	
-				{
-				yyval->val.f=(yyvsp[0]->val.f)*(-1);
-				yyval->data==yyvsp[0]->data;
-				}
-		     }
-		}
-#line 2526 "y.tab.c"
+		    	if(yyvsp[0]->data==integer) {
+		    		yyval->val.i=(yyvsp[0]->val.i)*(-1);
+		    		yyval->data==yyvsp[0]->data;
+		    	}
+		    	else if (yyvsp[0]->data==floating) {
+		    		yyval->val.f=(yyvsp[0]->val.f)*(-1);
+		    		yyval->data==yyvsp[0]->data;
+		    	}
+		    }
+        }
+#line 2460 "y.tab.c"
     break;
 
   case 49:
-#line 901 "test_code_generation.y"
-                        { fprintf(output,"unary_expression : NOT unary_expression \n\n");
-				yyval=yyvsp[0];
-				yyval->data==yyvsp[0]->data;
-				char *temp=newTemp();
-				yyval->code="MOV AX, " + yyvsp[0]->getName() + "\n";
-				yyval->code+="NOT AX\n";
-				yyval->code+="MOV "+string(temp)+", AX";
-				yyval->name=temp;
-				if(yyvsp[0]->data==integer)//!5=0 !0=1
-				{
-					if(yyvsp[0]->val.i==0)
-					{
-					yyval->val.i=1;
-					}
-					else
-					{
-					yyval->val.i=0;
-					}
+#line 825 "test_code_generation.y"
+                                       { 
+            fprintf(output,"unary_expression : NOT unary_expression \n\n");
+			yyval=yyvsp[0];
+			yyval->data==yyvsp[0]->data;
+			char *temp=newTemp();
+			yyval->code +="MOV AX, " + yyvsp[0]->getName() + "\n";
+			yyval->code +="NOT AX\n";
+			yyval->code +="MOV "+string(temp)+", AX";
+			yyval->name=temp;
+			if(yyvsp[0]->data==integer) {//!5=0 !0=1			
+				if(yyvsp[0]->val.i==0) {					
+    				yyval->val.i=1;
 				}
-				else if (yyvsp[0]->data==floating)
-				{
-					if(yyvsp[0]->val.f==0)
-					{
-					yyval->val.f=1.0;
-					}
-					else
-					{
-					yyval->val.f=0;
-					}
+				else {					
+    		    	yyval->val.i=0;
 				}
 			}
-#line 2562 "y.tab.c"
+			else if (yyvsp[0]->data==floating) {				
+				if(yyvsp[0]->val.f==0) {					
+    				yyval->val.f=1.0;
+				}
+				else {					
+    				yyval->val.f=0;
+				}
+			}
+		}
+#line 2491 "y.tab.c"
     break;
 
   case 50:
-#line 932 "test_code_generation.y"
-                          { fprintf(output,"unary_expression : factor\n\n");
-				yyval=new symbolInfo(yyvsp[0]->name,yyvsp[0]->type,yyvsp[0]->position);
-				yyval->data=yyvsp[0]->data;
-				yyval->arraysz=yyvsp[0]->arraysz;
-				yyval->code=yyvsp[0]->code;
-				if(yyval->arraysz==0)
-				{
-					printf("normal factor\n ");
-					if(yyvsp[0]->data==integer)
-					{
+#line 851 "test_code_generation.y"
+                         { fprintf(output,"unary_expression : factor\n\n");
+			yyval=new symbolInfo(yyvsp[0]->name,yyvsp[0]->type,yyvsp[0]->position);
+			yyval->data=yyvsp[0]->data;
+			yyval->arraysz=yyvsp[0]->arraysz;
+			yyval->code +=yyvsp[0]->code;
+			if(yyval->arraysz==0) {
+				// printf("normal factor\n ");
+				if(yyvsp[0]->data==integer) {
 					yyval->val.i=yyvsp[0]->val.i;
-					}
-					else if(yyvsp[0]->data==floating)
-					{
-					yyval->val.f=yyvsp[0]->val.f;
-					}
-					else if(yyvsp[0]->data==character)
-					{
-					yyval->val.c=yyvsp[0]->val.c;
-					}
 				}
-				else
-				{
-					printf("array factor\n ");
-					if(yyvsp[0]->data==integer)
-					{
+				else if(yyvsp[0]->data==floating) {
+					yyval->val.f=yyvsp[0]->val.f;
+				}
+				else if(yyvsp[0]->data==character) {				
+					yyval->val.c=yyvsp[0]->val.c;
+				}
+			}
+			else {
+				printf("array factor\n ");
+				if(yyvsp[0]->data==integer) {
 					yyval->val.i=yyvsp[0]->val.arrayi[ix->val.i];
-					}
-					else if(yyvsp[0]->data==floating)
-					{
+				}
+		        else if(yyvsp[0]->data==floating) {				
 					yyval->val.f=yyvsp[0]->val.arrayf[ix->val.i];
-					}
-					else if(yyvsp[0]->data==character)
-					{
+				}
+				else if(yyvsp[0]->data==character) {			
 					yyval->val.c=yyvsp[0]->val.arrayc[ix->val.i];
-					}
-			} }
-#line 2604 "y.tab.c"
+				}
+			} 
+        }
+#line 2526 "y.tab.c"
     break;
 
   case 51:
-#line 970 "test_code_generation.y"
-                   { fprintf(output,"factor : variable\n\n");
-		yyval=yyvsp[0];
-		if(yyvsp[0]->arraysz==0)
-		{
-		}
-		else
-		{
-				yyval->code+="LEA DI, " + yyvsp[0]->getName()+"\n";
+#line 883 "test_code_generation.y"
+                   { 
+            fprintf(output,"factor : variable\n\n");
+		    yyval=yyvsp[0];
+		    if(yyvsp[0]->arraysz==0) {
+		    }
+		    else {		
+				yyval->code +="LEA DI, " + yyvsp[0]->getName()+"\n";
 				for(int s=0;s<2;s++){
 					//ostringstream sin;
 					//sin << ix->val.i;
@@ -2621,142 +2542,129 @@ else{
 				char *temp= newTemp();
 				//$$->code+= "MOV " + string(temp) + ", [DI]\n";
 				//$$->name=temp;
-				yyval->code+= "MOV AX, [DI]\n";
-				yyval->code+= "MOV " + string(temp) + ", AX\n";
+				yyval->code += "MOV AX, [DI]\n";
+				yyval->code += "MOV " + string(temp) + ", AX\n";
 				yyval->name=temp;
 				n="";
-		}
-}
-#line 2631 "y.tab.c"
+		    }
+        }
+#line 2552 "y.tab.c"
     break;
 
   case 52:
-#line 992 "test_code_generation.y"
-                                   {
-				 fprintf(output,"factor : LPAREN expression RPAREN\n\n");
-				 yyval=yyvsp[-1];
-				   }
-#line 2640 "y.tab.c"
+#line 904 "test_code_generation.y"
+                                       {
+			fprintf(output,"factor : LPAREN expression RPAREN\n\n");
+		    yyval=yyvsp[-1];
+		}
+#line 2561 "y.tab.c"
     break;
 
   case 53:
-#line 996 "test_code_generation.y"
+#line 908 "test_code_generation.y"
                     { 
 			fprintf(output,"factor : CONST_INT\n%d\n\n",yyvsp[0]->val.i);
 			yyval=yyvsp[0];
 			
-		    }
-#line 2650 "y.tab.c"
+		}
+#line 2571 "y.tab.c"
     break;
 
   case 54:
-#line 1001 "test_code_generation.y"
-                        { 
+#line 913 "test_code_generation.y"
+                                { 
 			fprintf(output,"factor : CONST_FLOAT\n%s\n\n",yyvsp[0]->name.c_str());
 			yyval=yyvsp[0];
-			}
-#line 2659 "y.tab.c"
+		}
+#line 2580 "y.tab.c"
     break;
 
   case 55:
-#line 1005 "test_code_generation.y"
-                        { 
-		fprintf(output,"factor : CONST_CHAR\n%s\n\n",yyvsp[0]->name.c_str());
-			yyval=yyvsp[0];
-			}
-#line 2668 "y.tab.c"
+#line 917 "test_code_generation.y"
+                                { 
+    		fprintf(output,"factor : CONST_CHAR\n%s\n\n",yyvsp[0]->name.c_str());
+		    yyval=yyvsp[0];
+		}
+#line 2589 "y.tab.c"
     break;
 
   case 56:
-#line 1009 "test_code_generation.y"
-                         { fprintf(output,"variale : variable INCOP\n\n\n"); 
-
-	if(yyvsp[-1]->arraysz==0){
-		if(yyvsp[-1]->data==integer)
-			{
-			yyvsp[-1]->val.i++;
-			yyval=yyvsp[-1];
-			printf("\nfactor++ %d\n",yyval->val.i);
-			}
-		else if(yyvsp[-1]->data==floating)
-			{
-			yyvsp[-1]->val.f++;
-			yyval=yyvsp[-1];
-			}
-		else if(yyvsp[-1]->data==character)
-			{
-			yyvsp[-1]->val.c++;
-			yyval=yyvsp[-1];
-			}
-		yyval->code += "INC " + yyvsp[-1]->getName() + "\n";
-	}
-
-	else
-		{
-				yyval=yyvsp[-1];
-				yyval->code+="LEA DI, " + yyvsp[-1]->getName()+"\n";
-				for(int s=0;s<2;s++){
-					//ostringstream sin;
-					//sin << ix->val.i;
-					yyval->code += "ADD DI, " + n +"\n";
+#line 921 "test_code_generation.y"
+                             { 
+            fprintf(output,"variale : variable INCOP\n\n\n"); 
+	        if(yyvsp[-1]->arraysz==0){
+	        	if(yyvsp[-1]->data==integer) {	        	
+	        		yyvsp[-1]->val.i++;
+	        		yyval=yyvsp[-1];
+	        		printf("\nfactor++ %d\n",yyval->val.i);
+	        	}
+	        	else if(yyvsp[-1]->data==floating) {	        	
+	        		yyvsp[-1]->val.f++;
+	        		yyval=yyvsp[-1];
+	        	}
+	        	else if(yyvsp[-1]->data==character) {	        	
+	        		yyvsp[-1]->val.c++;
+	        		yyval=yyvsp[-1];
+	        	}
+	        	yyval->code += "INC " + yyvsp[-1]->getName() + "\n";
+	        }
+	        else {	
+	        	yyval=yyvsp[-1];
+	        	yyval->code+="LEA DI, " + yyvsp[-1]->getName()+"\n";
+	        	for(int s=0;s<2;s++){
+	            	//stringstream sin;
+    	        	//sin << ix->val.i;
+	        	    yyval->code += "ADD DI, " + n +"\n";
+	        	}
+	        	//char *temp= newTemp();
+	        	yyval->code+= "MOV AX, [DI]\n";
+	        	//$$->name=temp;
+	        	n="";
+	        	// cout<<ix->val.i<<endl;
+	            if(yyvsp[-1]->data==integer) {	        		
+	        		yyvsp[-1]->val.arrayi[ix->val.i]++;
+	        		// cout<<"here1"<<endl;
+	    			//$$=$1;
+	        		// cout<<"here2"<<endl;
+	        		printf("\nfactor-- %d\n",yyval->val.i);
 				}
-				//char *temp= newTemp();
-				yyval->code+= "MOV AX, [DI]\n";
-				//$$->name=temp;
-				n="";
-				cout<<ix->val.i<<endl;
-				if(yyvsp[-1]->data==integer)
-					{
-					yyvsp[-1]->val.arrayi[ix->val.i]++;
-					cout<<"here1"<<endl;
-					//$$=$1;
-					cout<<"here2"<<endl;
-					printf("\nfactor-- %d\n",yyval->val.i);
-					}
-				else if(yyvsp[-1]->data==floating)
-					{
-					yyvsp[-1]->val.arrayf[ix->val.i]++;
-					//$$=$1;
-					printf("\nfactor-- %f\n",yyval->val.f);
-					}
-				else if(yyvsp[-1]->data==character)
-					{
-					yyvsp[-1]->val.arrayc[ix->val.i]++;
-					//$$=$1;
-					printf("\nfactor-- %c\n",yyval->val.c);
-					}
-					yyval->code += "INC AX \n";
-					yyval->code+= "MOV [DI], AX\n";
-		}
-						
- 			}
-#line 2734 "y.tab.c"
+	        	else if(yyvsp[-1]->data==floating) {	        			
+	        		yyvsp[-1]->val.arrayf[ix->val.i]++;
+	        		//$$=$1;
+	        		printf("\nfactor-- %f\n",yyval->val.f);
+	        	}
+	        	else if(yyvsp[-1]->data==character) {	        
+	        		yyvsp[-1]->val.arrayc[ix->val.i]++;
+	        		//$$=$1;
+	        		printf("\nfactor-- %c\n",yyval->val.c);
+	        	}
+	        		yyval->code += "INC AX \n";
+	        		yyval->code+= "MOV [DI], AX\n";
+	        }						
+        }
+#line 2646 "y.tab.c"
     break;
 
   case 57:
-#line 1070 "test_code_generation.y"
-                         { 
-        fprintf(output,"variale : variable DECOP\n\n");
-		if(yyvsp[-1]->arraysz==0){ 		
-				if(yyvsp[-1]->data==integer)
-					{
+#line 973 "test_code_generation.y"
+                             { 
+            fprintf(output,"variale : variable DECOP\n\n");
+    		if(yyvsp[-1]->arraysz==0){ 		
+				if(yyvsp[-1]->data==integer) {					
 					yyvsp[-1]->val.i--;
 					yyval=yyvsp[-1];
-					}
-				else if(yyvsp[-1]->data==floating)
-					{
+				}
+				else if(yyvsp[-1]->data==floating) {					
 					yyvsp[-1]->val.f--;
 					yyval=yyvsp[-1];
-					}
-				else if(yyvsp[-1]->data==character)
-					{
+				}
+				else if(yyvsp[-1]->data==character) {				
 					yyvsp[-1]->val.c--;
 					yyval=yyvsp[-1];
-					}
-					yyval->code += "DEC " + yyvsp[-1]->getName() + "\n";
 				}
-		else
-		{
+				yyval->code += "DEC " + yyvsp[-1]->getName() + "\n";
+			}
+		    else {	
 				//add codes as per the INC operation
 				yyval=yyvsp[-1];
 				yyval->code+="LEA DI, " + yyvsp[-1]->getName()+"\n";
@@ -2770,35 +2678,32 @@ else{
 				//$$->name=temp;
 				n="";
 				cout<<ix->val.i<<endl;
-				if(yyvsp[-1]->data==integer)
-					{
+				if(yyvsp[-1]->data==integer) {					
 					yyvsp[-1]->val.arrayi[ix->val.i]++;
 					cout<<"here1"<<endl;
 					//$$=$1;
 					cout<<"here2"<<endl;
 					printf("\nfactor-- %d\n",yyval->val.i);
-					}
-				else if(yyvsp[-1]->data==floating)
-					{
+				}
+				else if(yyvsp[-1]->data==floating) {					
 					yyvsp[-1]->val.arrayf[ix->val.i]++;
 					//$$=$1;
 					printf("\nfactor-- %f\n",yyval->val.f);
-					}
-				else if(yyvsp[-1]->data==character)
-					{
+				}
+				else if(yyvsp[-1]->data==character) {					
 					yyvsp[-1]->val.arrayc[ix->val.i]++;
 					//$$=$1;
 					printf("\nfactor-- %c\n",yyval->val.c);
-					}
-					yyval->code += "DEC AX \n";
-					yyval->code+= "MOV [DI], AX\n";
-		}
-}
-#line 2798 "y.tab.c"
+				}
+				yyval->code += "DEC AX \n";
+				yyval->code+= "MOV [DI], AX\n";
+		    }
+        }
+#line 2703 "y.tab.c"
     break;
 
 
-#line 2802 "y.tab.c"
+#line 2707 "y.tab.c"
 
       default: break;
     }
@@ -3030,8 +2935,7 @@ yyreturn:
 #endif
   return yyresult;
 }
-#line 1130 "test_code_generation.y"
-
+#line 1026 "test_code_generation.y"
 
 int main(int argc,char *argv[])
 {

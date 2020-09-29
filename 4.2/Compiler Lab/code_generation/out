@@ -1,0 +1,32 @@
+normal factor
+ 
+normal factor
+ normal factor
+ 
+
+
+PRINTLN LPAREN ID RPAREN SEMICOLON  -99999
+
+
+data type:115
+If 
+if ends
+Hey MOV AX, 10
+CMP AX, 12
+JG l0
+MOV t0, 0
+JMP l1
+l0:
+MOV t0, 1
+l1:
+MOV AX, t0
+CMP AX, 1
+JNE l2
+MOV AX, a
+CALL OUTDEC
+l2:
+
+normal factor
+ 
+line   10
+
